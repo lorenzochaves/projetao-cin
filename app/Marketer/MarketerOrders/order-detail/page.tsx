@@ -5,7 +5,6 @@ import Link from "next/link"
 import { ChevronLeft } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { BottomNavigation } from "@/components/ui/bottom-navigation"
-import { StatusBar } from "@/components/ui/status-bar"
 
 export default function OrderDetailPage() {
   const searchParams = useSearchParams()
@@ -244,8 +243,6 @@ export default function OrderDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
-      
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
           <Link href="/MarketerOrders">

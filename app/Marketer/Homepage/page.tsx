@@ -1,12 +1,10 @@
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
-import { StatusBar } from "@/components/ui/status-bar"
 import { BottomNavigation } from "@/components/ui/bottom-navigation"
 
 export default function MarketerHomePage() {
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
       
       <div className="px-4 pt-8 pb-24">
         <h1 className="text-2xl font-bold mb-8">Olá, xxx!</h1>

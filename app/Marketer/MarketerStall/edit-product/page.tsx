@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { StatusBar } from "@/components/ui/status-bar"
 
 export default function MarketerEditProductPage() {
   const router = useRouter()
@@ -43,8 +42,6 @@ export default function MarketerEditProductPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
-      
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
           <Link href="/Marketer/MarketerStall/products">

@@ -2,13 +2,9 @@ import Link from "next/link"
 import { ChevronLeft, Star, Edit } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { BottomNavigation } from "@/components/ui/bottom-navigation"
-import { StatusBar } from "@/components/ui/status-bar"
-
 export default function MarketerStallPage() {
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
-      
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
           <Link href="/">
