@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ArrowLeft } from "lucide-react"
 import { Product, Screen, CartItem, Feirante } from "../types"
 import { products } from "../data"
-import { BottomNav } from "../components/BottomNav"
+import { ClientBottomNavigation } from "../components/BottomNav"
 
 interface ProductPageProps {
   selectedProduct: Product
@@ -111,7 +111,7 @@ export default function ProductPage({
         </DialogContent>
       </Dialog>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

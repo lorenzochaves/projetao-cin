@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ChevronLeft, Star, Edit } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 export default function MarketerStallPage() {
   return (
     <div className="min-h-screen bg-white">
@@ -96,7 +96,7 @@ export default function MarketerStallPage() {
         </div>
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 
 export default function MarketerHomePage() {
   return (
@@ -38,7 +38,7 @@ export default function MarketerHomePage() {
         </Card>
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

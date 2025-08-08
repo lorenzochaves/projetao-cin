@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { StatusBar } from "@/components/ui/status-bar"
 
 export default function CreateUserPage() {
   const [formData, setFormData] = useState({
@@ -26,8 +25,6 @@ export default function CreateUserPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
-      
       <div className="px-4 py-6 pb-24">
         <h1 className="text-xl font-bold text-center mb-8">Crie sua conta</h1>
         

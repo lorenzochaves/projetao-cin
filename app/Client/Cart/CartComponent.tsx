@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Trash2, Plus, Minus, X, ChevronRight, ShoppingBasket } from "lucide-react"
 import { Screen, CartItem } from "../types"
-import { BottomNav } from "../components/BottomNav"
+import { ClientBottomNavigation } from "../components/BottomNav"
 
 interface CartPageProps {
   cart: CartItem[]
@@ -122,7 +122,7 @@ export default function CartPage({
         )}
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

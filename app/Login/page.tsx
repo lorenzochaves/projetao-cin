@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { StatusBar } from "@/components/ui/status-bar"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -13,7 +12,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
       
       <div className="flex flex-col items-center justify-center min-h-screen px-6">
         <div className="w-full max-w-sm space-y-6">

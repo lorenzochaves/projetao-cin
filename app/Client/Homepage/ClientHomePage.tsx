@@ -5,17 +5,17 @@ import { Screen, Feirante, Product, CartItem } from "../types"
 
 // Components
 import HomePage from "./HomepageComponent"
-import FeirantePage from "../Feirantes/page"
-import FeiranteProfilePage from "../Feirantes/profile/page"
-import FeiranteSearchPage from "../Feirantes/search/page"
-import GlobalSearchPage from "../Search/page"
-import ProductPage from "../Products/page"
-import CartPage from "../Cart/page"
-import DeliveryPage from "../Checkout/delivery/page"
-import SchedulePage from "../Checkout/schedule/page"
-import PaymentPage from "../Checkout/payment/page"
-import SuccessPage from "../Checkout/success/page"
-import ProfilePage from "../Profile/page"
+import FeirantePage from "../Feirantes/FeiranteComponent"
+import FeiranteProfilePage from "../Feirantes/profile/FeiranteProfileComponent"
+import FeiranteSearchPage from "../Feirantes/search/FeiranteSearchComponent"
+import GlobalSearchPage from "../Search/GlobalSearchComponent"
+import ProductPage from "../Products/ProductsComponent"
+import CartPage from "../Cart/CartComponent"
+import DeliveryPage from "../Checkout/delivery/DeliveryComponent"
+import SchedulePage from "../Checkout/schedule/ScheduleComponent"
+import PaymentPage from "../Checkout/payment/PaymentComponent"
+import SuccessPage from "../Checkout/success/SuccessComponent"
+import ProfilePage from "../Profile/ClientProfileComponent"
 
 export default function ClientHomePage() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home")

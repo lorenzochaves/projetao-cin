@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts'
 
 const dailyData = [
@@ -268,7 +268,7 @@ export default function MarketerFinancePage() {
         )}
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

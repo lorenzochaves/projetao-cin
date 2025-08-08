@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star } from "lucide-react"
 import { Feirante, Screen } from "../types"
 import { feirantes } from "../data"
-import { BottomNav } from "../components/BottomNav"
+import { ClientBottomNavigation } from "../components/BottomNav"
 import { CartItem } from "../types"
 
 interface HomePageProps {
@@ -77,7 +77,7 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
         </div>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

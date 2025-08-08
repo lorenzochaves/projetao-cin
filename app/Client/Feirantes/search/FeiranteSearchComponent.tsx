@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Search, X } from "lucide-react"
 import { Feirante, Product, Screen, CartItem } from "../../types"
 import { products } from "../../data"
-import { BottomNav } from "../../components/BottomNav"
+import { ClientBottomNavigation } from "../../components/BottomNav"
 
 interface FeiranteSearchPageProps {
   selectedFeirante: Feirante
@@ -95,7 +95,7 @@ export default function FeiranteSearchPage({
         </div>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

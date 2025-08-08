@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ChevronLeft, Star } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 
 const reviews = [
   { client: "Cliente 1", rating: 5, time: "há 2 dias", comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
@@ -68,7 +68,7 @@ export default function ReviewsPage() {
         </div>
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

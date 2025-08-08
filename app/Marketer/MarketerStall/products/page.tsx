@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ChevronLeft, Edit } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 
 const products = [
   { name: "Tomate", price: "3,95", unit: "kg" },
@@ -52,7 +52,7 @@ export default function MarketerProductsListPage() {
         </Link>
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

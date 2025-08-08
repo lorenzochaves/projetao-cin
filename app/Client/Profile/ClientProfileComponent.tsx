@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 import { Screen, CartItem } from "../types"
-import { BottomNav } from "../components/BottomNav"
+import { ClientBottomNavigation } from "../components/BottomNav"
 
 interface ProfilePageProps {
   cart: CartItem[]
@@ -93,7 +93,7 @@ export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) 
         </div>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }
