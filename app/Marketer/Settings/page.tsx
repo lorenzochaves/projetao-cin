@@ -27,7 +27,7 @@ export default function SettingsPage() {
     <div className="min-h-screen bg-white">
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
-          <Link href="/Marketer/Homepage">
+          <Link href="/Marketer">
             <Button variant="ghost" size="icon" className="mr-2">
               <ChevronLeft className="h-6 w-6" />
             </Button>

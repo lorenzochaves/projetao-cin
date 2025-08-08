@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import ClientHomePage from "@/app/Client/Homepage/ClientHomePage"
-import MarketerHomePage from "@/app/Marketer/Homepage/page"
 import UserTypePage, { type UserType } from "@/app/UserType/page"
+import MarketerHomePage from "./Marketer/page"
 
 export default function RootPage() {
   const [userType, setUserType] = useState<UserType | null>(null)
