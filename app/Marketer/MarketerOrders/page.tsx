@@ -2,13 +2,11 @@ import Link from "next/link"
 import { ChevronLeft, ChevronDown, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { StatusBar } from "@/components/ui/status-bar"
 import { BottomNavigation } from "@/components/ui/bottom-navigation"
 
 export default function MarketerOrdersPage() {
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
       
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">

@@ -2,7 +2,6 @@ import Link from "next/link"
 import { ChevronLeft, Star } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { BottomNavigation } from "@/components/ui/bottom-navigation"
-import { StatusBar } from "@/components/ui/status-bar"
 
 const reviews = [
   { client: "Cliente 1", rating: 5, time: "há 2 dias", comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
@@ -14,8 +13,6 @@ const reviews = [
 export default function ReviewsPage() {
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
-      
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
           <Link href="/Marketer/MarketerStall">

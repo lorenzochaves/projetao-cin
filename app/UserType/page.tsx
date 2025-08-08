@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { StatusBar } from "@/components/ui/status-bar"
 
 export type UserType = "client" | "marketer" | "courier"
 
@@ -12,8 +11,6 @@ interface Props {
 export default function UserTypePage({ onSelectUserType }: Props) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-400 to-orange-400">
-      <StatusBar />
-      
       <div className="flex flex-col items-center justify-center min-h-screen px-6">
         <div className="text-center mb-12">
           <p className="text-white text-lg font-medium leading-relaxed">

@@ -2,7 +2,6 @@ import Link from "next/link"
 import { ChevronLeft, Edit } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { BottomNavigation } from "@/components/ui/bottom-navigation"
-import { StatusBar } from "@/components/ui/status-bar"
 
 const products = [
   { name: "Tomate", price: "3,95", unit: "kg" },
@@ -18,8 +17,6 @@ const products = [
 export default function MarketerProductsListPage() {
   return (
     <div className="min-h-screen bg-white">
-      <StatusBar />
-      
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
           <Link href="/Marketer/MarketerStall">
