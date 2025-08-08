@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from "next/link"
 import { ChevronLeft } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 
 export default function OrderDetailPage() {
   const searchParams = useSearchParams()
@@ -256,7 +256,7 @@ export default function OrderDetailPage() {
         {renderContent()}
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ArrowLeft, Heart, Star } from "lucide-react"
 import { Feirante, Screen, CartItem } from "../../types"
 import { categories } from "../../data"
-import { BottomNav } from "../../components/BottomNav"
+import { ClientBottomNavigation } from "../../components/BottomNav"
 
 interface FeiranteProfilePageProps {
   selectedFeirante: Feirante
@@ -82,7 +82,7 @@ export default function FeiranteProfilePage({
         </div>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

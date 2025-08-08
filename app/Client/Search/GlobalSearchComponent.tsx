@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Search, X, Star } from "lucide-react"
 import { Feirante, Screen, CartItem } from "../types"
 import { feirantes, categories } from "../data"
-import { BottomNav } from "../components/BottomNav"
+import { ClientBottomNavigation } from "../components/BottomNav"
 
 interface GlobalSearchPageProps {
   cart: CartItem[]
@@ -140,7 +140,7 @@ export default function GlobalSearchPage({
         </div>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

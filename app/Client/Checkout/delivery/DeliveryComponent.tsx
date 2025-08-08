@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, ChevronRight, Plus } from "lucide-react"
 import { Screen, CartItem } from "../../types"
-import { BottomNav } from "../../components/BottomNav"
+import { ClientBottomNavigation } from "../../components/BottomNav"
 
 interface DeliveryPageProps {
   cart: CartItem[]
@@ -52,7 +52,7 @@ export default function DeliveryPage({ cart, onScreenChange }: DeliveryPageProps
         </Button>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
 import { Screen, CartItem } from "../../types"
-import { BottomNav } from "../../components/BottomNav"
+import { ClientBottomNavigation } from "../../components/BottomNav"
 
 interface SuccessPageProps {
   cart: CartItem[]
@@ -30,7 +30,7 @@ export default function SuccessPage({ cart, onScreenChange }: SuccessPageProps) 
         </Button>
       </div>
 
-      <BottomNav cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

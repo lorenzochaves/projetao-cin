@@ -2,7 +2,7 @@ import Link from "next/link"
 import { ChevronLeft, ChevronDown, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 
 export default function MarketerOrdersPage() {
   return (
@@ -62,7 +62,7 @@ export default function MarketerOrdersPage() {
         </div>
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
-import { BottomNavigation } from "@/components/ui/bottom-navigation"
+import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 
 export default function MarketerHomePage() {
   return (
@@ -22,9 +22,11 @@ export default function MarketerHomePage() {
             </Card>
           </Link>
           
-          <Card className="aspect-square flex items-center justify-center bg-gray-100">
-            <span className="text-lg font-medium">Finanças</span>
-          </Card>
+          <Link href="/Marketer/Finance">
+            <Card className="aspect-square flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors">
+              <span className="text-lg font-medium">Finanças</span>
+            </Card>
+          </Link>
           
           <Card className="aspect-square flex items-center justify-center bg-gray-100">
             <span className="text-lg font-medium">Configurações</span>
@@ -36,7 +38,7 @@ export default function MarketerHomePage() {
         </Card>
       </div>
       
-      <BottomNavigation />
+      <MarketerBottomNavigation />
     </div>
   )
 }
