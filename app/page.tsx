@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import ClientHomePage from "@/app/Client/Homepage/page"
+import ClientHomePage from "@/app/Client/Homepage/ClientHomePage"
 import MarketerHomePage from "@/app/Marketer/Homepage/page"
 import UserTypePage, { type UserType } from "@/app/UserType/page"
 
