@@ -12,13 +12,13 @@ export default function MarketerHomePage() {
         <h1 className="text-2xl font-bold mb-8">Olá, xxx!</h1>
         
         <div className="grid grid-cols-2 gap-4">
-          <Link href="/MarketerOrders">
+          <Link href="/Marketer/MarketerOrders">
             <Card className="aspect-square flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors">
               <span className="text-lg font-medium">Pedidos</span>
             </Card>
           </Link>
           
-          <Link href="/MarketerStall">
+          <Link href="/Marketer/MarketerStall">
             <Card className="aspect-square flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition-colors">
               <span className="text-lg font-medium">Minha banca</span>
             </Card>

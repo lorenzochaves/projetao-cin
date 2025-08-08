@@ -2,16 +2,14 @@
 
 import { Button } from "@/components/ui/button"
 import { StatusBar } from "@/components/ui/status-bar"
-import { useRouter } from "next/navigation"
 
-export default function UserTypePage() {
-  const router = useRouter()
+export type UserType = "client" | "marketer" | "courier"
 
-  const handleUserTypeSelect = (type: string) => {
-    // Here you would typically store the user type and redirect accordingly
-    router.push("/login")
-  }
+interface Props {
+  onSelectUserType: (type: UserType) => void
+}
 
+export default function UserTypePage({ onSelectUserType }: Props) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-400 to-orange-400">
       <StatusBar />
@@ -26,21 +24,21 @@ export default function UserTypePage() {
         
         <div className="w-full max-w-sm space-y-4">
           <Button
-            onClick={() => handleUserTypeSelect("feirante")}
+            onClick={() => onSelectUserType("marketer")}
             className="w-full h-14 bg-white text-gray-800 hover:bg-gray-100 text-lg font-medium rounded-full"
           >
             Sou feirante
           </Button>
           
           <Button
-            onClick={() => handleUserTypeSelect("cliente")}
+            onClick={() => onSelectUserType("client")}
             className="w-full h-14 bg-white text-gray-800 hover:bg-gray-100 text-lg font-medium rounded-full"
           >
             Sou cliente
           </Button>
           
           <Button
-            onClick={() => handleUserTypeSelect("entregador")}
+            onClick={() => onSelectUserType("courier")}
             className="w-full h-14 bg-white text-gray-800 hover:bg-gray-100 text-lg font-medium rounded-full"
           >
             Sou entregador(a)

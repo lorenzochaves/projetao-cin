@@ -27,35 +27,35 @@ export default function MarketerOrdersPage() {
               <ChevronDown className="h-5 w-5" />
             </CollapsibleTrigger>
             <CollapsibleContent className="px-4 pb-4 space-y-2">
-              <Link href="/MarketerOrders/order-detail?status=pendente">
+              <Link href="/Marketer/MarketerOrders/order-detail?status=pendente">
                 <div className="text-gray-700 hover:text-gray-900">Pedido nº xxx</div>
               </Link>
               <div className="text-gray-700">Pedido nº yyy</div>
             </CollapsibleContent>
           </Collapsible>
           
-          <Link href="/MarketerOrders/order-detail?status=separacao">
+          <Link href="/Marketer/MarketerOrders/order-detail?status=separacao">
             <div className="flex items-center justify-between p-4 border-b">
               <span className="text-lg font-medium">Em separação</span>
               <ChevronRight className="h-5 w-5 text-gray-400" />
             </div>
           </Link>
           
-          <Link href="/MarketerOrders/order-detail?status=pronto">
+          <Link href="/Marketer/MarketerOrders/order-detail?status=pronto">
             <div className="flex items-center justify-between p-4 border-b">
               <span className="text-lg font-medium">Prontos</span>
               <ChevronRight className="h-5 w-5 text-gray-400" />
             </div>
           </Link>
           
-          <Link href="/MarketerOrders/order-detail?status=entrega">
+          <Link href="/Marketer/MarketerOrders/order-detail?status=entrega">
             <div className="flex items-center justify-between p-4 border-b">
               <span className="text-lg font-medium">Em entrega</span>
               <ChevronRight className="h-5 w-5 text-gray-400" />
             </div>
           </Link>
           
-          <Link href="/MarketerOrders/order-detail?status=entregue">
+          <Link href="/Marketer/MarketerOrders/order-detail?status=entregue">
             <div className="flex items-center justify-between p-4">
               <span className="text-lg font-medium">Entregues</span>
               <ChevronRight className="h-5 w-5 text-gray-400" />

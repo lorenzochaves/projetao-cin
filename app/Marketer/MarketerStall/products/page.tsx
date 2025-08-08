@@ -22,7 +22,7 @@ export default function MarketerProductsListPage() {
       
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
-          <Link href="/MarketerStall">
+          <Link href="/Marketer/MarketerStall">
             <Button variant="ghost" size="icon" className="mr-2">
               <ChevronLeft className="h-6 w-6" />
             </Button>
@@ -38,7 +38,7 @@ export default function MarketerProductsListPage() {
                 <span className="text-lg font-medium mr-3">
                   R$ {product.price} <span className="text-sm text-gray-500">/{product.unit}</span>
                 </span>
-                <Link href={`/MarketerStall/edit-product?name=${encodeURIComponent(product.name)}`}>
+                <Link href={`/Marketer/MarketerStall/edit-product?name=${encodeURIComponent(product.name)}`}>
                   <Button variant="ghost" size="icon">
                     <Edit className="h-4 w-4 text-gray-500" />
                   </Button>
@@ -48,7 +48,7 @@ export default function MarketerProductsListPage() {
           ))}
         </div>
         
-        <Link href="/MarketerStall/add-product">
+        <Link href="/Marketer/MarketerStall/add-product">
           <Button className="w-full h-12 bg-gray-800 hover:bg-gray-900">
             + Cadastrar produto
           </Button>

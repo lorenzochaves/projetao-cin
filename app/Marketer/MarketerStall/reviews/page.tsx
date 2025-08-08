@@ -18,7 +18,7 @@ export default function ReviewsPage() {
       
       <div className="px-4 py-4 pb-24">
         <div className="flex items-center mb-6">
-          <Link href="/MarketerStall">
+          <Link href="/Marketer/MarketerStall">
             <Button variant="ghost" size="icon" className="mr-2">
               <ChevronLeft className="h-6 w-6" />
             </Button>

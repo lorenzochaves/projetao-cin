@@ -53,11 +53,11 @@ export default function MarketerStallPage() {
             </div>
           </div>
           
-          <Link href="/MarketerStall/products" className="text-gray-600 underline">
+          <Link href="/Marketer/MarketerStall/products" className="text-gray-600 underline">
             Exibir lista completa
           </Link>
           
-          <Link href="/MarketerStall/add-product">
+          <Link href="/Marketer/MarketerStall/add-product">
             <Button className="w-full mt-4 h-12 bg-gray-800 hover:bg-gray-900">
               + Cadastrar produto
             </Button>
@@ -94,7 +94,7 @@ export default function MarketerStallPage() {
             </div>
           </div>
           
-          <Link href="/MarketerStall/reviews" className="text-gray-600 underline">
+          <Link href="/Marketer/MarketerStall/reviews" className="text-gray-600 underline">
             Exibir todas
           </Link>
         </div>

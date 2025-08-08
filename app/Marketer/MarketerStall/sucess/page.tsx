@@ -9,7 +9,7 @@ export default function SuccessPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push('/MarketerStall/products')
+      router.push('/Marketer/MarketerStall/products')
     }, 2000)
 
     return () => clearTimeout(timer)
