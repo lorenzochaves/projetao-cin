@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowLeft, Heart, Star } from "lucide-react"
+import { ArrowLeft, Heart, Star, MapPin, Clock } from "lucide-react"
 import { Feirante, Screen, CartItem } from "../../types"
-import { categories } from "../../data"
 import { ClientBottomNavigation } from "../../components/BottomNav"
+import { useProducts } from "@/hooks/api/useProducts"
+import { useState, useEffect, useMemo } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface FeiranteProfilePageProps {
   selectedFeirante: Feirante
@@ -19,6 +21,42 @@ export default function FeiranteProfilePage({
   cart, 
   onScreenChange 
 }: FeiranteProfilePageProps) {
+  const { products, loading } = useProducts()
+  
+  // Get categories from products of this feirante
+  const feiranteCategories = useMemo(() => {
+    const feiranteProducts = products.filter(p => p.feiranteId === selectedFeirante.id)
+    const uniqueCategories = [...new Set(feiranteProducts.map(p => p.category))]
+    
+    return uniqueCategories.map(category => ({
+      id: category,
+      name: getCategoryDisplayName(category),
+      icon: getCategoryIcon(category)
+    }))
+  }, [products, selectedFeirante.id])
+
+  const getCategoryDisplayName = (category: string) => {
+    const categoryNames: Record<string, string> = {
+      'frutas': 'Frutas',
+      'verduras': 'Verduras',
+      'legumes': 'Legumes',
+      'carnes': 'Carnes',
+      'folhas': 'Folhas'
+    }
+    return categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1)
+  }
+
+  const getCategoryIcon = (category: string) => {
+    const categoryIcons: Record<string, string> = {
+      'frutas': '🍎',
+      'verduras': '🥬',
+      'legumes': '🥕',
+      'carnes': '🥩',
+      'folhas': '🥬'
+    }
+    return categoryIcons[category] || '📦'
+  }
+
   return (
     <div className="min-h-screen bg-white pb-16">
       {/* Header */}
@@ -35,7 +73,7 @@ export default function FeiranteProfilePage({
       <div className="p-4">
         <div className="text-center mb-6">
           <Avatar className="w-24 h-24 mx-auto mb-4">
-            <AvatarImage src={selectedFeirante.avatar || "/placeholder.svg"} />
+            <AvatarImage src={selectedFeirante.avatar} />
             <AvatarFallback className="text-2xl">
               {selectedFeirante.name
                 .split(" ")
@@ -49,36 +87,93 @@ export default function FeiranteProfilePage({
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
               <span className="text-sm">{selectedFeirante.rating}</span>
             </div>
-            <span className="text-gray-300">•</span>
-            <span className="text-sm text-gray-600">{selectedFeirante.time}</span>
           </div>
-          <p className="text-sm text-gray-600 mb-4">{selectedFeirante.location}</p>
+          
+          {/* Status and time */}
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <div className="flex items-center gap-1">
+              <div className={`w-2 h-2 rounded-full ${selectedFeirante.isOpen ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="text-sm text-gray-600">
+                {selectedFeirante.isOpen ? 'Aberto' : 'Fechado'}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="w-3 h-3 text-gray-500" />
+              <span className="text-sm text-gray-600">{selectedFeirante.time}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-center gap-1 mb-4">
+            <MapPin className="w-4 h-4 text-gray-500" />
+            <p className="text-sm text-gray-600">{selectedFeirante.location}</p>
+          </div>
         </div>
 
         <div className="mb-6">
           <p className="text-gray-700 leading-relaxed">{selectedFeirante.description}</p>
         </div>
 
-        <div className="mb-6">
-          <h3 className="font-bold text-lg mb-3">{selectedFeirante.name} vende:</h3>
-          <div className="grid grid-cols-3 gap-4">
-            {categories.slice(0, 5).map((category) => (
-              <div key={category.id} className="text-center">
-                <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-2 flex items-center justify-center text-2xl">
-                  {category.icon}
+        {/* Loading state for categories */}
+        {loading && (
+          <div className="mb-6">
+            <Skeleton className="h-6 w-48 mb-3" />
+            <div className="grid grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="text-center">
+                  <Skeleton className="w-16 h-16 rounded-full mx-auto mb-2" />
+                  <Skeleton className="h-4 w-16 mx-auto" />
                 </div>
-                <p className="text-sm font-medium">{category.name}</p>
-              </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Categories that this feirante sells */}
+        {!loading && feiranteCategories.length > 0 && (
+          <div className="mb-6">
+            <h3 className="font-bold text-lg mb-3">{selectedFeirante.name} vende:</h3>
+            <div className="grid grid-cols-3 gap-4">
+              {feiranteCategories.map((category) => (
+                <div key={category.id} className="text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto mb-2 flex items-center justify-center text-2xl">
+                    {category.icon}
+                  </div>
+                  <p className="text-sm font-medium">{category.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Specialties */}
+        <div className="mb-6">
+          <h3 className="font-bold text-lg mb-3">Especialidades:</h3>
+          <div className="flex flex-wrap gap-2">
+            {selectedFeirante.specialties.map((specialty, index) => (
+              <Badge key={index} variant="secondary" className="text-sm">
+                {specialty}
+              </Badge>
             ))}
           </div>
         </div>
 
-        <div className="space-y-2">
-          {selectedFeirante.specialties.map((specialty, index) => (
-            <Badge key={index} variant="secondary" className="mr-2">
-              {specialty}
-            </Badge>
-          ))}
+        {/* Additional info */}
+        <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Tempo de entrega:</span>
+            <span className="text-sm font-medium">{selectedFeirante.time}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Localização:</span>
+            <span className="text-sm font-medium">{selectedFeirante.location}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Avaliação:</span>
+            <div className="flex items-center gap-1">
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-sm font-medium">{selectedFeirante.rating}/5</span>
+            </div>
+          </div>
         </div>
       </div>
 

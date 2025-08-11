@@ -16,6 +16,11 @@ import SchedulePage from "../Checkout/schedule/ScheduleComponent"
 import PaymentPage from "../Checkout/payment/PaymentComponent"
 import SuccessPage from "../Checkout/success/SuccessComponent"
 import ProfilePage from "../Profile/ClientProfileComponent"
+import OrdersPage from "../Profile/orders/OrdersComponent"
+import AccountPage from "../Profile/account/AccountComponent"
+import ProfilePaymentPage from "../Profile/payment/PaymentComponent"
+import AddressesPage from "../Profile/addresses/AddressesComponent"
+import FavoritesPage from "../Profile/favorites/FavoritesComponent"
 
 export default function ClientHomePage() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home")
@@ -240,6 +245,51 @@ export default function ClientHomePage() {
   if (currentScreen === "profile") {
     return (
       <ProfilePage
+        cart={cart}
+        onScreenChange={handleScreenChange}
+      />
+    )
+  }
+
+  if (currentScreen === "orders") {
+    return (
+      <OrdersPage
+        cart={cart}
+        onScreenChange={handleScreenChange}
+      />
+    )
+  }
+
+  if (currentScreen === "account") {
+    return (
+      <AccountPage
+        cart={cart}
+        onScreenChange={handleScreenChange}
+      />
+    )
+  }
+
+  if (currentScreen === "profilePayment") {
+    return (
+      <ProfilePaymentPage
+        cart={cart}
+        onScreenChange={handleScreenChange}
+      />
+    )
+  }
+
+  if (currentScreen === "addresses") {
+    return (
+      <AddressesPage
+        cart={cart}
+        onScreenChange={handleScreenChange}
+      />
+    )
+  }
+
+  if (currentScreen === "favorites") {
+    return (
+      <FavoritesPage
         cart={cart}
         onScreenChange={handleScreenChange}
       />

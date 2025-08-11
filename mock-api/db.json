@@ -1,0 +1,231 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Marcela",
+      "surname": "Ribeiro",
+      "email": "marcela.ribeiro@email.com",
+      "phone": "(81) 99999-9999",
+      "cpf": "123.456.789-00",
+      "type": "client",
+      "createdAt": "2025-01-01T00:00:00Z",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=MR"
+    },
+    {
+      "id": "2",
+      "name": "João",
+      "surname": "Silva",
+      "email": "joao.feira@email.com",
+      "phone": "(81) 98888-8888",
+      "cpf": "987.654.321-00",
+      "type": "marketer",
+      "stallName": "João da Feira",
+      "createdAt": "2024-06-15T00:00:00Z",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=JS"
+    }
+  ],
+  "feirantes": [
+    {
+      "id": "1",
+      "userId": "2",
+      "name": "João da Feira",
+      "rating": 4.8,
+      "reviewCount": 120,
+      "time": "15-20 min",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=JF",
+      "description": "Frutas e verduras frescas direto da horta",
+      "specialties": [
+        "Frutas",
+        "Verduras",
+        "Legumes"
+      ],
+      "location": "Casa Amarela",
+      "isOpen": true,
+      "openingHours": "06:00-18:00",
+      "address": "Feira de Casa Amarela - Recife, PE"
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "feiranteId": "1",
+      "name": "Banana Prata",
+      "price": 4.5,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Banana",
+      "category": "frutas",
+      "description": "Bananas maduras e doces",
+      "stock": 50,
+      "isAvailable": true
+    },
+    {
+      "id": "2",
+      "feiranteId": "1",
+      "name": "Tomate",
+      "price": 3.2,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Tomate",
+      "category": "verduras",
+      "description": "Tomates frescos e suculentos",
+      "stock": 30,
+      "isAvailable": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Frutas",
+      "icon": "🍎"
+    },
+    {
+      "id": "2",
+      "name": "Verduras",
+      "icon": "🥬"
+    },
+    {
+      "id": "3",
+      "name": "Legumes",
+      "icon": "🥕"
+    },
+    {
+      "id": "4",
+      "name": "Carnes",
+      "icon": "🥩"
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "clientId": "1",
+      "feiranteId": "1",
+      "feiranteName": "João da Feira",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Banana Prata",
+          "price": 4.5,
+          "quantity": 2,
+          "observation": "Bem maduras"
+        }
+      ],
+      "total": 9,
+      "status": "entregue",
+      "createdAt": "2025-08-05T10:00:00Z",
+      "deliveredAt": "2025-08-05T11:30:00Z",
+      "deliveryAddress": {
+        "street": "Rua das Flores, 123",
+        "neighborhood": "Boa Viagem",
+        "city": "Recife",
+        "state": "PE",
+        "zipCode": "51020-120"
+      }
+    }
+  ],
+  "marketerOrders": [
+    {
+      "id": "1",
+      "marketerId": "2",
+      "clientId": "1",
+      "clientName": "Marcela Ribeiro",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Banana Prata",
+          "price": 4.5,
+          "quantity": 2,
+          "observation": "Bem maduras"
+        }
+      ],
+      "total": 9,
+      "status": "entregue",
+      "createdAt": "2025-08-05T10:00:00Z",
+      "deliveredAt": "2025-08-05T11:30:00Z",
+      "clientPhone": "(81) 99999-9999",
+      "deliveryAddress": {
+        "street": "Rua das Flores, 123",
+        "neighborhood": "Boa Viagem",
+        "city": "Recife",
+        "state": "PE",
+        "zipCode": "51020-120"
+      }
+    }
+  ],
+  "addresses": [
+    {
+      "id": "1",
+      "userId": "1",
+      "label": "Casa",
+      "street": "Rua das Flores, 123",
+      "neighborhood": "Boa Viagem",
+      "city": "Recife",
+      "state": "PE",
+      "zipCode": "51020-120",
+      "isPrimary": true
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "label": "Trabalho",
+      "street": "Av. Boa Viagem, 456",
+      "neighborhood": "Boa Viagem",
+      "city": "Recife",
+      "state": "PE",
+      "zipCode": "51021-000",
+      "isPrimary": false
+    }
+  ],
+  "paymentMethods": [
+    {
+      "id": "1",
+      "userId": "1",
+      "type": "credit",
+      "brand": "visa",
+      "lastFourDigits": "1234",
+      "holderName": "Marcela Ribeiro",
+      "expiryMonth": "12",
+      "expiryYear": "2027",
+      "isDefault": true
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "type": "debit",
+      "brand": "mastercard",
+      "lastFourDigits": "5678",
+      "holderName": "Marcela Ribeiro",
+      "expiryMonth": "08",
+      "expiryYear": "2026",
+      "isDefault": false
+    }
+  ],
+  "favorites": [],
+  "reviews": [
+    {
+      "id": "1",
+      "feiranteId": "1",
+      "clientId": "1",
+      "clientName": "Marcela R.",
+      "rating": 5,
+      "comment": "Produtos sempre frescos e de qualidade!",
+      "createdAt": "2025-08-05T12:00:00Z"
+    }
+  ],
+  "finances": [
+    {
+      "id": "1",
+      "marketerId": "2",
+      "month": "2025-08",
+      "totalRevenue": 1250,
+      "totalOrders": 45,
+      "averageOrderValue": 27.78,
+      "topProducts": [
+        {
+          "productId": "1",
+          "name": "Banana Prata",
+          "quantity": 25,
+          "revenue": 112.5
+        }
+      ]
+    }
+  ]
+}

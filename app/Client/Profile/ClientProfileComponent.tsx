@@ -31,65 +31,90 @@ export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) 
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 border-b">
+          <button 
+            onClick={() => onScreenChange("orders")}
+            className="w-full flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div>
+              <div className="text-left">
                 <p className="font-medium">Pedidos</p>
                 <p className="text-sm text-gray-600">Meus pedidos</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
-          </div>
+          </button>
 
-          <div className="flex items-center justify-between p-4 border-b">
+          <button 
+            onClick={() => onScreenChange("account")}
+            className="w-full flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div>
+              <div className="text-left">
                 <p className="font-medium">Dados da conta</p>
                 <p className="text-sm text-gray-600">Minhas informações</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
-          </div>
+          </button>
 
-          <div className="flex items-center justify-between p-4 border-b">
+          <button 
+            onClick={() => onScreenChange("profilePayment")}
+            className="w-full flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div>
+              <div className="text-left">
                 <p className="font-medium">Pagamento</p>
                 <p className="text-sm text-gray-600">Meus cartões</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
-          </div>
+          </button>
 
-          <div className="flex items-center justify-between p-4 border-b">
+          <button 
+            onClick={() => onScreenChange("addresses")}
+            className="w-full flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div>
+              <div className="text-left">
                 <p className="font-medium">Endereços</p>
                 <p className="text-sm text-gray-600">Meus endereços</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
-          </div>
+          </button>
 
-          <div className="flex items-center justify-between p-4 border-b">
+          <button 
+            onClick={() => onScreenChange("favorites")}
+            className="w-full flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div>
+              <div className="text-left">
                 <p className="font-medium">Favoritos</p>
                 <p className="text-sm text-gray-600">Meus feirantes favoritos</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
-          </div>
+          </button>
         </div>
 
-        <div className="mt-8 pt-4 border-t">
-          <p className="font-medium mb-2">Configurações</p>
-          <p className="text-gray-600">Suporte</p>
+        <div className="mt-8 pt-4 border-t space-y-4">
+          <button 
+            onClick={() => onScreenChange("home")}
+            className="w-full text-left hover:text-gray-600 transition-colors"
+          >
+            <p className="font-medium">Configurações</p>
+          </button>
+          <button 
+            onClick={() => onScreenChange("home")}
+            className="w-full text-left hover:text-gray-600 transition-colors"
+          >
+            <p className="text-gray-600">Suporte</p>
+          </button>
         </div>
       </div>
 

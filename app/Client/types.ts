@@ -12,6 +12,11 @@ export type Screen =
   | "payment"
   | "success"
   | "profile"
+  | "orders"
+  | "account"
+  | "profilePayment"
+  | "addresses"
+  | "favorites"
   | "chat"
 
 export interface Product {
@@ -22,6 +27,9 @@ export interface Product {
   image: string
   category: string
   description?: string
+  feiranteId?: string
+  stock?: number
+  isAvailable?: boolean
 }
 
 export interface CartItem extends Product {
