@@ -91,7 +91,7 @@ export default function FavoritesPage({ cart, onScreenChange }: FavoritesPagePro
                         <div className="flex items-center">
                           <Star className="w-4 h-4 text-yellow-500 fill-current" />
                           <span className="text-sm text-gray-600 ml-1">
-                            {feirante.rating} ({feirante.reviewCount} avaliações)
+                            {feirante.rating} {feirante.reviewCount ? `(${feirante.reviewCount} avaliações)` : ''}
                           </span>
                         </div>
                         <div className="flex items-center gap-1 mt-1">
