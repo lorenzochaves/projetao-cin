@@ -12,6 +12,11 @@ export type Screen =
   | "payment"
   | "success"
   | "profile"
+  | "orders"
+  | "account"
+  | "profilePayment"
+  | "addresses"
+  | "favorites"
   | "chat"
 
 export interface Product {
