@@ -13,61 +13,254 @@
     },
     {
       "id": "2",
+      "name": "Lucas",
+      "surname": "Santos",
+      "email": "lucas.cliente@email.com",
+      "phone": "(81) 97777-7777",
+      "cpf": "456.789.123-00",
+      "type": "client",
+      "createdAt": "2024-12-15T00:00:00Z",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=LS"
+    },
+    {
+      "id": "3",
       "name": "João",
       "surname": "Silva",
       "email": "joao.feira@email.com",
       "phone": "(81) 98888-8888",
       "cpf": "987.654.321-00",
       "type": "marketer",
-      "stallName": "João da Feira",
+      "stallName": "João da Horta",
       "createdAt": "2024-06-15T00:00:00Z",
       "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=JS"
+    },
+    {
+      "id": "4",
+      "name": "Maria",
+      "surname": "Oliveira",
+      "email": "maria.frutas@email.com",
+      "phone": "(81) 96666-6666",
+      "cpf": "555.333.111-00",
+      "type": "marketer",
+      "stallName": "Maria das Frutas",
+      "createdAt": "2024-03-20T00:00:00Z",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=MO"
+    },
+    {
+      "id": "5",
+      "name": "Antonio",
+      "surname": "Costa",
+      "email": "antonio.carnes@email.com",
+      "phone": "(81) 95555-5555",
+      "cpf": "777.888.999-00",
+      "type": "marketer",
+      "stallName": "Açougue do Seu Antônio",
+      "createdAt": "2024-01-10T00:00:00Z",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=AC"
     }
   ],
   "feirantes": [
     {
       "id": "1",
-      "userId": "2",
-      "name": "João da Feira",
+      "userId": "3",
+      "name": "João da Horta",
       "rating": 4.8,
       "reviewCount": 120,
       "time": "15-20 min",
-      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=JF",
-      "description": "Frutas e verduras frescas direto da horta",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=JH",
+      "description": "Especialista em verduras orgânicas há mais de 20 anos. Cultivo próprio sem agrotóxicos, direto da fazenda para sua mesa.",
       "specialties": [
-        "Frutas",
-        "Verduras",
-        "Legumes"
+        "Verduras Orgânicas",
+        "Temperos Frescos", 
+        "Folhas"
       ],
       "location": "Casa Amarela",
       "isOpen": true,
       "openingHours": "06:00-18:00",
       "address": "Feira de Casa Amarela - Recife, PE"
+    },
+    {
+      "id": "2",
+      "userId": "4",
+      "name": "Maria das Frutas",
+      "rating": 4.9,
+      "reviewCount": 89,
+      "time": "10-15 min",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=MF",
+      "description": "Frutas selecionadas e sempre frescas. Trabalho com produtores locais para garantir a melhor qualidade.",
+      "specialties": [
+        "Frutas Tropicais",
+        "Frutas da Estação",
+        "Sucos Naturais"
+      ],
+      "location": "Boa Viagem",
+      "isOpen": true,
+      "openingHours": "07:00-17:00",
+      "address": "Feira de Boa Viagem - Recife, PE"
+    },
+    {
+      "id": "3",
+      "userId": "5",
+      "name": "Açougue do Seu Antônio",
+      "rating": 4.7,
+      "reviewCount": 156,
+      "time": "20-25 min",
+      "avatar": "https://placeholder.co/400x400/e5e5e5/666?text=SA",
+      "description": "Tradição familiar de 3 gerações. Carnes frescas e de qualidade premium, com cortes especiais sob encomenda.",
+      "specialties": [
+        "Carnes Bovinas",
+        "Aves Frescas",
+        "Suínos"
+      ],
+      "location": "Zona Norte",
+      "isOpen": false,
+      "openingHours": "08:00-16:00",
+      "address": "Feira da Zona Norte - Recife, PE"
     }
   ],
   "products": [
     {
       "id": "1",
       "feiranteId": "1",
-      "name": "Banana Prata",
-      "price": 4.5,
-      "unit": "kg",
-      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Banana",
-      "category": "frutas",
-      "description": "Bananas maduras e doces",
-      "stock": 50,
+      "name": "Alface Americana",
+      "price": 3.5,
+      "unit": "unidade",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Alface",
+      "category": "folhas",
+      "description": "Alface fresca e crocante, ideal para saladas",
+      "stock": 25,
       "isAvailable": true
     },
     {
       "id": "2",
       "feiranteId": "1",
-      "name": "Tomate",
+      "name": "Couve Manteiga",
+      "price": 2.8,
+      "unit": "maço",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Couve",
+      "category": "folhas",
+      "description": "Couve orgânica, rica em nutrientes",
+      "stock": 30,
+      "isAvailable": true
+    },
+    {
+      "id": "3",
+      "feiranteId": "1",
+      "name": "Rúcula",
+      "price": 4.2,
+      "unit": "maço",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Rucula",
+      "category": "folhas",
+      "description": "Rúcula selvagem com sabor marcante",
+      "stock": 15,
+      "isAvailable": true
+    },
+    {
+      "id": "4",
+      "feiranteId": "2",
+      "name": "Banana Prata",
+      "price": 4.5,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Banana",
+      "category": "frutas",
+      "description": "Banana doce e nutritiva, rica em potássio",
+      "stock": 50,
+      "isAvailable": true
+    },
+    {
+      "id": "5",
+      "feiranteId": "2",
+      "name": "Maçã Gala",
+      "price": 8.9,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Maca",
+      "category": "frutas",
+      "description": "Maçã crocante e doce, perfeita para lanches",
+      "stock": 40,
+      "isAvailable": true
+    },
+    {
+      "id": "6",
+      "feiranteId": "2",
+      "name": "Laranja Lima",
       "price": 3.2,
       "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Laranja",
+      "category": "frutas",
+      "description": "Laranja doce e suculenta, ideal para sucos",
+      "stock": 60,
+      "isAvailable": true
+    },
+    {
+      "id": "7",
+      "feiranteId": "3",
+      "name": "Picanha",
+      "price": 35.9,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Picanha",
+      "category": "carnes",
+      "description": "Picanha premium, marmoreada e suculenta",
+      "stock": 8,
+      "isAvailable": true
+    },
+    {
+      "id": "8",
+      "feiranteId": "3",
+      "name": "Frango Caipira",
+      "price": 12.5,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Frango",
+      "category": "carnes",
+      "description": "Frango caipira criado solto, sabor especial",
+      "stock": 12,
+      "isAvailable": true
+    },
+    {
+      "id": "9",
+      "feiranteId": "1",
+      "name": "Tomate Salada",
+      "price": 6.9,
+      "unit": "kg",
       "image": "https://placeholder.co/400x400/f0f0f0/666?text=Tomate",
-      "category": "verduras",
-      "description": "Tomates frescos e suculentos",
-      "stock": 30,
+      "category": "legumes",
+      "description": "Tomate maduro e saboroso",
+      "stock": 35,
+      "isAvailable": true
+    },
+    {
+      "id": "10",
+      "feiranteId": "2",
+      "name": "Manga Rosa",
+      "price": 5.8,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Manga",
+      "category": "frutas",
+      "description": "Manga doce e perfumada da estação",
+      "stock": 25,
+      "isAvailable": true
+    },
+    {
+      "id": "11",
+      "feiranteId": "1",
+      "name": "Banana Prata",
+      "price": 4.8,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Banana",
+      "category": "frutas",
+      "description": "Banana orgânica cultivada sem agrotóxicos",
+      "stock": 45,
+      "isAvailable": true
+    },
+    {
+      "id": "12",
+      "feiranteId": "3",
+      "name": "Costela Bovina",
+      "price": 18.9,
+      "unit": "kg",
+      "image": "https://placeholder.co/400x400/f0f0f0/666?text=Costela",
+      "category": "carnes",
+      "description": "Costela com osso, ideal para churrasco",
+      "stock": 15,
       "isAvailable": true
     }
   ],
@@ -79,7 +272,7 @@
     },
     {
       "id": "2",
-      "name": "Verduras",
+      "name": "Folhas",
       "icon": "🥬"
     },
     {
@@ -91,6 +284,16 @@
       "id": "4",
       "name": "Carnes",
       "icon": "🥩"
+    },
+    {
+      "id": "5",
+      "name": "Grãos",
+      "icon": "🌾"
+    },
+    {
+      "id": "6",
+      "name": "Tubérculos",
+      "icon": "🥔"
     }
   ],
   "orders": [
@@ -98,20 +301,84 @@
       "id": "1",
       "clientId": "1",
       "feiranteId": "1",
-      "feiranteName": "João da Feira",
+      "feiranteName": "João da Horta",
       "items": [
         {
           "productId": "1",
-          "name": "Banana Prata",
-          "price": 4.5,
+          "name": "Alface Americana",
+          "price": 3.5,
           "quantity": 2,
-          "observation": "Bem maduras"
+          "observation": "Bem fresca"
+        },
+        {
+          "productId": "2",
+          "name": "Couve Manteiga",
+          "price": 2.8,
+          "quantity": 1,
+          "observation": ""
         }
       ],
-      "total": 9,
+      "total": 9.8,
       "status": "entregue",
       "createdAt": "2025-08-05T10:00:00Z",
       "deliveredAt": "2025-08-05T11:30:00Z",
+      "deliveryAddress": {
+        "street": "Rua das Flores, 123",
+        "neighborhood": "Boa Viagem",
+        "city": "Recife",
+        "state": "PE",
+        "zipCode": "51020-120"
+      }
+    },
+    {
+      "id": "2",
+      "clientId": "2",
+      "feiranteId": "2",
+      "feiranteName": "Maria das Frutas",
+      "items": [
+        {
+          "productId": "4",
+          "name": "Banana Prata",
+          "price": 4.5,
+          "quantity": 3,
+          "observation": ""
+        },
+        {
+          "productId": "5",
+          "name": "Maçã Gala",
+          "price": 8.9,
+          "quantity": 1,
+          "observation": "Bem doces"
+        }
+      ],
+      "total": 22.4,
+      "status": "preparando",
+      "createdAt": "2025-08-10T09:15:00Z",
+      "deliveryAddress": {
+        "street": "Av. Conselheiro Aguiar, 789",
+        "neighborhood": "Boa Viagem",
+        "city": "Recife",
+        "state": "PE",
+        "zipCode": "51021-030"
+      }
+    },
+    {
+      "id": "3",
+      "clientId": "1",
+      "feiranteId": "3",
+      "feiranteName": "Açougue do Seu Antônio",
+      "items": [
+        {
+          "productId": "7",
+          "name": "Picanha",
+          "price": 35.9,
+          "quantity": 1,
+          "observation": "Corte bem limpo"
+        }
+      ],
+      "total": 35.9,
+      "status": "pendente",
+      "createdAt": "2025-08-10T14:20:00Z",
       "deliveryAddress": {
         "street": "Rua das Flores, 123",
         "neighborhood": "Boa Viagem",
@@ -124,22 +391,91 @@
   "marketerOrders": [
     {
       "id": "1",
-      "marketerId": "2",
+      "marketerId": "3",
+      "orderId": "1",
       "clientId": "1",
       "clientName": "Marcela Ribeiro",
       "items": [
         {
           "productId": "1",
-          "name": "Banana Prata",
-          "price": 4.5,
+          "name": "Alface Americana",
+          "price": 3.5,
           "quantity": 2,
-          "observation": "Bem maduras"
+          "observation": "Bem fresca"
+        },
+        {
+          "productId": "2",
+          "name": "Couve Manteiga",
+          "price": 2.8,
+          "quantity": 1,
+          "observation": ""
         }
       ],
-      "total": 9,
+      "total": 9.8,
       "status": "entregue",
       "createdAt": "2025-08-05T10:00:00Z",
       "deliveredAt": "2025-08-05T11:30:00Z",
+      "clientPhone": "(81) 99999-9999",
+      "deliveryAddress": {
+        "street": "Rua das Flores, 123",
+        "neighborhood": "Boa Viagem",
+        "city": "Recife",
+        "state": "PE",
+        "zipCode": "51020-120"
+      }
+    },
+    {
+      "id": "2",
+      "marketerId": "4",
+      "orderId": "2",
+      "clientId": "2",
+      "clientName": "Lucas Santos",
+      "items": [
+        {
+          "productId": "4",
+          "name": "Banana Prata",
+          "price": 4.5,
+          "quantity": 3,
+          "observation": ""
+        },
+        {
+          "productId": "5",
+          "name": "Maçã Gala",
+          "price": 8.9,
+          "quantity": 1,
+          "observation": "Bem doces"
+        }
+      ],
+      "total": 22.4,
+      "status": "preparando",
+      "createdAt": "2025-08-10T09:15:00Z",
+      "clientPhone": "(81) 97777-7777",
+      "deliveryAddress": {
+        "street": "Av. Conselheiro Aguiar, 789",
+        "neighborhood": "Boa Viagem",
+        "city": "Recife",
+        "state": "PE",
+        "zipCode": "51021-030"
+      }
+    },
+    {
+      "id": "3",
+      "marketerId": "5",
+      "orderId": "3",
+      "clientId": "1",
+      "clientName": "Marcela Ribeiro",
+      "items": [
+        {
+          "productId": "7",
+          "name": "Picanha",
+          "price": 35.9,
+          "quantity": 1,
+          "observation": "Corte bem limpo"
+        }
+      ],
+      "total": 35.9,
+      "status": "pendente",
+      "createdAt": "2025-08-10T14:20:00Z",
       "clientPhone": "(81) 99999-9999",
       "deliveryAddress": {
         "street": "Rua das Flores, 123",
@@ -172,6 +508,17 @@
       "state": "PE",
       "zipCode": "51021-000",
       "isPrimary": false
+    },
+    {
+      "id": "3",
+      "userId": "2",
+      "label": "Casa",
+      "street": "Av. Conselheiro Aguiar, 789",
+      "neighborhood": "Boa Viagem",
+      "city": "Recife",
+      "state": "PE",
+      "zipCode": "51021-030",
+      "isPrimary": true
     }
   ],
   "paymentMethods": [
@@ -196,34 +543,129 @@
       "expiryMonth": "08",
       "expiryYear": "2026",
       "isDefault": false
+    },
+    {
+      "id": "3",
+      "userId": "2",
+      "type": "credit",
+      "brand": "visa",
+      "lastFourDigits": "9999",
+      "holderName": "Lucas Santos",
+      "expiryMonth": "06",
+      "expiryYear": "2028",
+      "isDefault": true
     }
   ],
-  "favorites": [],
+  "favorites": [
+    {
+      "id": "1",
+      "userId": "1",
+      "feiranteId": "2",
+      "createdAt": "2025-08-01T10:00:00Z"
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "feiranteId": "1",
+      "createdAt": "2025-08-05T15:30:00Z"
+    }
+  ],
   "reviews": [
     {
       "id": "1",
       "feiranteId": "1",
+      "orderId": "1",
       "clientId": "1",
       "clientName": "Marcela R.",
       "rating": 5,
-      "comment": "Produtos sempre frescos e de qualidade!",
+      "comment": "Verduras sempre fresquinhas e orgânicas! Atendimento excelente do João.",
       "createdAt": "2025-08-05T12:00:00Z"
+    },
+    {
+      "id": "2",
+      "feiranteId": "2",
+      "orderId": "2",
+      "clientId": "2",
+      "clientName": "Lucas S.",
+      "rating": 4,
+      "comment": "Frutas de ótima qualidade, muito saborosas. Recomendo!",
+      "createdAt": "2025-08-08T16:30:00Z"
+    },
+    {
+      "id": "3",
+      "feiranteId": "1",
+      "orderId": "1",
+      "clientId": "1",
+      "clientName": "Marcela R.",
+      "rating": 5,
+      "comment": "Produtos orgânicos de primeira qualidade. Vale muito a pena!",
+      "createdAt": "2025-07-28T14:20:00Z"
     }
   ],
   "finances": [
     {
       "id": "1",
-      "marketerId": "2",
+      "marketerId": "3",
       "month": "2025-08",
-      "totalRevenue": 1250,
-      "totalOrders": 45,
-      "averageOrderValue": 27.78,
+      "totalRevenue": 1850.50,
+      "totalOrders": 67,
+      "averageOrderValue": 27.62,
       "topProducts": [
         {
           "productId": "1",
+          "name": "Alface Americana",
+          "quantity": 45,
+          "revenue": 157.50
+        },
+        {
+          "productId": "2", 
+          "name": "Couve Manteiga",
+          "quantity": 38,
+          "revenue": 106.40
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "marketerId": "4",
+      "month": "2025-08",
+      "totalRevenue": 2340.80,
+      "totalOrders": 89,
+      "averageOrderValue": 26.30,
+      "topProducts": [
+        {
+          "productId": "4",
           "name": "Banana Prata",
-          "quantity": 25,
-          "revenue": 112.5
+          "quantity": 85,
+          "revenue": 382.50
+        },
+        {
+          "productId": "5",
+          "name": "Maçã Gala",
+          "quantity": 32,
+          "revenue": 284.80
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "marketerId": "5",
+      "month": "2025-08",
+      "totalRevenue": 3120.40,
+      "totalOrders": 52,
+      "averageOrderValue": 60.01,
+      "topProducts": [
+        {
+          "productId": "7",
+          "name": "Picanha",
+          "quantity": 18,
+          "revenue": 646.20
+        },
+        {
+          "productId": "8",
+          "name": "Frango Caipira",
+          "quantity": 28,
+          "revenue": 350.00
         }
       ]
     }

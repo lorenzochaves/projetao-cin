@@ -69,7 +69,7 @@ export interface Order {
   feiranteName: string
   items: OrderItem[]
   total: number
-  status: 'pendente' | 'em_preparo' | 'entregue' | 'cancelado'
+  status: 'pendente' | 'preparando' | 'entregue' | 'cancelado'
   createdAt: string
   deliveredAt?: string
   estimatedDelivery?: string
@@ -79,11 +79,12 @@ export interface Order {
 export interface MarketerOrder {
   id: string
   marketerId: string
+  orderId: string
   clientId: string
   clientName: string
   items: OrderItem[]
   total: number
-  status: 'pendente' | 'em_preparo' | 'entregue' | 'cancelado'
+  status: 'pendente' | 'preparando' | 'entregue' | 'cancelado'
   createdAt: string
   deliveredAt?: string
   clientPhone: string
@@ -118,11 +119,13 @@ export interface Favorite {
   id: string
   userId: string
   feiranteId: string
+  createdAt: string
 }
 
 export interface Review {
   id: string
   feiranteId: string
+  orderId: string
   clientId: string
   clientName: string
   rating: number

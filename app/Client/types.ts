@@ -40,14 +40,18 @@ export interface CartItem extends Product {
 
 export interface Feirante {
   id: string
+  userId?: string
   name: string
   rating: number
+  reviewCount?: number
   time: string
   avatar: string
   description: string
   specialties: string[]
   location: string
   isOpen: boolean
+  openingHours?: string
+  address?: string
 }
 
 export interface Category {
