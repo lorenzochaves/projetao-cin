@@ -1,8 +1,9 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Star } from "lucide-react"
+import { Star, Check, ShoppingBasket, MessageSquare, MapPin, Info } from "lucide-react"
 import { Feirante, Screen } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { CartItem } from "../types"
@@ -42,7 +43,45 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
       <div className="bg-white p-4 pt-12">
         <h1 className="text-2xl font-bold mb-4">Olá, Marcela!</h1>
 
-        {/* Banner de oferta melhorado */}
+        {/* Descrição de feira finalizada — explicação do app e funcionalidades */}
+        <Card className="p-5 mb-6">
+          <div className="flex items-center gap-2">
+            <Check className="h-5 w-5" />
+            <h2 className="text-lg font-semibold">Descrição de feira finalizada</h2>
+            <Badge variant="secondary" className="ml-1">Beta</Badge>
+          </div>
+
+          <p className="mt-3 text-sm text-muted-foreground">
+            O Feirou conecta você a feirantes locais para montar sua feira de forma rápida e personalizada.
+            Você escolhe o feirante, conversa no chat, monta a lista, confirma o pagamento e acompanha a entrega.
+            Ao final, esta seção mostra um resumo da sua compra.
+          </p>
+
+          <ul className="mt-4 grid gap-2 text-sm">
+            <li className="flex items-center gap-2">
+              <ShoppingBasket className="h-4 w-4" />
+              <span><strong>Catálogo & Pedido:</strong> veja produtos, adicione/remova itens e acompanhe totais em tempo real.</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              <span><strong>Chat com o feirante:</strong> tire dúvidas, combine substituições e personalize sua feira.</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              <span><strong>Entrega/Retirada:</strong> acompanhe previsão de entrega ou combine retirada no ponto.</span>
+            </li>
+          </ul>
+
+          <div className="mt-4 rounded-md bg-muted p-3 text-xs text-muted-foreground flex gap-2">
+            <Info className="h-4 w-4 mt-0.5 shrink-0" />
+            <p>
+              Após concluir um pedido, aqui aparece o resumo da <em>feira finalizada</em>:
+              itens comprados, subtotal, taxa de entrega/descontos, total pago, endereço e observações.
+            </p>
+          </div>
+        </Card>
+
+        {/* Banner de oferta */}
         <Card className="bg-gradient-to-r from-green-500 to-green-600 p-6 mb-6 rounded-xl text-white">
           <div className="text-center">
             <h3 className="text-lg font-bold mb-2">🥬 Oferta Especial!</h3>
@@ -62,9 +101,8 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
         </h2>
       </div>
 
-      {/* Grid de feirantes melhorado */}
+      {/* Grid de feirantes */}
       <div className="px-4">
-        {/* Error state */}
         {error && (
           <div className="text-center py-8">
             <p className="text-red-600 mb-4">Erro ao carregar feirantes</p>
@@ -72,7 +110,6 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
           </div>
         )}
 
-        {/* Loading state */}
         {loading && (
           <div className="grid grid-cols-2 gap-4">
             {[1, 2, 3, 4].map((i) => (
@@ -89,7 +126,6 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
           </div>
         )}
 
-        {/* Feirantes grid */}
         {!loading && !error && (
           <div className="grid grid-cols-2 gap-4">
             {feirantes.length === 0 ? (
