@@ -48,15 +48,7 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
 
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("profile")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="text-xl font-bold ml-2">Meus Pedidos</h1>
-      </div>
-
-      <div className="p-4">
+      <div className="p-4 pt-12">
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
@@ -108,7 +100,6 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
       </div>
 
       <ClientBottomNavigation 
-        cart={cart} 
         onScreenChange={onScreenChange} 
         currentScreen="orders" 
       />

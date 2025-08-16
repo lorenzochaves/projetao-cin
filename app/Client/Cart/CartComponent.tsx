@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, Trash2, Plus, Minus, X, ChevronRight, ShoppingBasket } from "lucide-react"
 import { Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
-import { useCart } from "@/hooks/api/useCart"
+import { useCart } from "@/contexts/CartContext"
 
 interface CartPageProps {
   cart: CartItem[]
@@ -68,19 +68,8 @@ export default function CartPage({
 
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("home")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="text-lg font-bold">Minha feira</h1>
-        <Button variant="ghost" size="sm" onClick={handleClearCart}>
-          <Trash2 className="w-5 h-5" />
-        </Button>
-      </div>
-
       {/* Progress */}
-      <div className="px-4 py-6">
+      <div className="px-4 py-6 pt-12">
         <div className="flex items-center gap-2 mb-6">
           <div className="flex-1 h-1 bg-black rounded"></div>
           <div className="flex-1 h-1 bg-gray-200 rounded"></div>
@@ -97,6 +86,12 @@ export default function CartPage({
           </div>
         ) : (
           <>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold">Minha feira</h2>
+              <Button variant="ghost" size="sm" onClick={handleClearCart}>
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
             {cart.map((item, index) => (
               <div key={`${item.id}-${item.feirante}-${index}`}>
                 {index === 0 || cart[index - 1].feirante !== item.feirante ? (
@@ -165,7 +160,6 @@ export default function CartPage({
       </div>
 
       <ClientBottomNavigation 
-        cart={cart}
         onScreenChange={onScreenChange} 
         currentScreen="cart" 
       />

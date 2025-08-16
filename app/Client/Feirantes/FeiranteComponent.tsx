@@ -8,7 +8,7 @@ import { ArrowLeft, Heart, Info, Search, Star, MapPin, Plus, Minus } from "lucid
 import { Feirante, Product, Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { useProducts } from "@/hooks/api/useProducts"
-import { useCart } from "@/hooks/api/useCart"
+import { useCart } from "@/contexts/CartContext"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface FeirantePageProps {
@@ -73,23 +73,8 @@ export default function FeirantePage({
 
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("home")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" onClick={() => onScreenChange("feirante-profile")}>
-            <Info className="w-5 h-5" />
-          </Button>
-          <Button variant="ghost" size="sm">
-            <Heart className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
-
       {/* Feirante Info */}
-      <div className="p-4">
+      <div className="p-4 pt-12">
         <div className="flex items-center gap-3 mb-4">
           <Avatar className="w-16 h-16">
             <AvatarImage src={selectedFeirante.avatar || "/placeholder.svg"} />
@@ -100,7 +85,7 @@ export default function FeirantePage({
                 .join("")}
             </AvatarFallback>
           </Avatar>
-          <div>
+          <div className="flex-1">
             <h1 className="text-xl font-bold">{selectedFeirante.name}</h1>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -114,6 +99,14 @@ export default function FeirantePage({
               <MapPin className="w-3 h-3 text-gray-500" />
               <span className="text-xs text-gray-500">{selectedFeirante.location}</span>
             </div>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" onClick={() => onScreenChange("feirante-profile")}>
+              <Info className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Heart className="w-5 h-5" />
+            </Button>
           </div>
         </div>
 
@@ -321,7 +314,7 @@ export default function FeirantePage({
         )}
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )
 }

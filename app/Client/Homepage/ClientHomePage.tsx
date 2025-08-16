@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { ClientRoute } from "@/components/ProtectedRoute"
 import HomepageComponent from "./HomepageComponent"
 import { Screen, Feirante, Product } from "../types"
-import { useCart } from "@/hooks/api/useCart"
+import { useCart } from "@/contexts/CartContext"
+import { CartProvider } from "@/contexts/CartContext"
 
 // Importar os componentes das diferentes telas
 import FeiranteComponent from "../Feirantes/FeiranteComponent"
@@ -31,6 +32,14 @@ import FeiranteProfileComponent from "../Feirantes/profile/FeiranteProfileCompon
 import FeiranteSearchComponent from "../Feirantes/search/FeiranteSearchComponent"
 
 export default function ClientHomePage() {
+  return (
+    <CartProvider>
+      <ClientHomePageContent />
+    </CartProvider>
+  )
+}
+
+function ClientHomePageContent() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home")
   const [selectedFeirante, setSelectedFeirante] = useState<Feirante | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)

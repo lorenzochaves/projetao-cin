@@ -13,11 +13,9 @@ interface SchedulePageProps {
 export default function SchedulePage({ cart, onScreenChange }: SchedulePageProps) {
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("delivery")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+      {/* Header simplificado */}
+      <div className="flex items-center justify-center p-4 pt-12 border-b">
+        <h1 className="text-lg font-bold">Agendamento</h1>
       </div>
 
       <div className="p-4">
@@ -48,7 +46,7 @@ export default function SchedulePage({ cart, onScreenChange }: SchedulePageProps
         </Button>
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )
 }

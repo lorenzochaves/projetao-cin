@@ -48,13 +48,7 @@ export default function AccountPage({ cart, onScreenChange }: AccountPageProps) 
   if (loading) {
     return (
       <div className="min-h-screen bg-white pb-16">
-        <div className="flex items-center p-4 pt-12 border-b">
-          <Button variant="ghost" size="sm" onClick={() => onScreenChange("profile")}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <h1 className="text-xl font-bold ml-2">Dados da Conta</h1>
-        </div>
-        <div className="p-4">
+        <div className="p-4 pt-12">
           <div className="space-y-6 animate-pulse">
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i}>
@@ -64,7 +58,7 @@ export default function AccountPage({ cart, onScreenChange }: AccountPageProps) 
             ))}
           </div>
         </div>
-        <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+        <ClientBottomNavigation onScreenChange={onScreenChange} />
       </div>
     )
   }
@@ -83,7 +77,7 @@ export default function AccountPage({ cart, onScreenChange }: AccountPageProps) 
             <p className="text-red-600">Erro ao carregar dados: {error}</p>
           </div>
         </div>
-        <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+        <ClientBottomNavigation onScreenChange={onScreenChange} />
       </div>
     )
   }
@@ -168,7 +162,7 @@ export default function AccountPage({ cart, onScreenChange }: AccountPageProps) 
         </form>
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )
 }

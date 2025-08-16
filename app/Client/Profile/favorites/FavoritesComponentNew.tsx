@@ -103,7 +103,7 @@ export default function FavoritesPage({ cart, onScreenChange }: FavoritesPagePro
         )}
       </div>
 
-      <ClientBottomNavigation onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

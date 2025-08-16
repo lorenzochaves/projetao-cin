@@ -46,15 +46,8 @@ export default function ProductPage({
 
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("feirante")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-      </div>
-
       {/* Product */}
-      <div className="px-4">
+      <div className="px-4 pt-12">
         <div className="text-center mb-8">
           <div className="w-32 h-32 bg-gray-100 rounded-lg mx-auto mb-4 overflow-hidden">
             <img 
@@ -163,7 +156,7 @@ export default function ProductPage({
         </DialogContent>
       </Dialog>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )
 }

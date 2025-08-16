@@ -13,12 +13,9 @@ interface DeliveryPageProps {
 export default function DeliveryPage({ cart, onScreenChange }: DeliveryPageProps) {
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("cart")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="text-lg font-bold ml-4">Entrega</h1>
+      {/* Header simplificado */}
+      <div className="flex items-center justify-center p-4 pt-12 border-b">
+        <h1 className="text-lg font-bold">Entrega</h1>
       </div>
 
       <div className="p-4">
@@ -52,7 +49,7 @@ export default function DeliveryPage({ cart, onScreenChange }: DeliveryPageProps
         </Button>
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )
 }

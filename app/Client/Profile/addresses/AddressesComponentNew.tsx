@@ -256,7 +256,7 @@ export default function AddressesPage({ cart, onScreenChange }: AddressesPagePro
         )}
       </div>
 
-      <ClientBottomNavigation onScreenChange={onScreenChange} />
+      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
     </div>
   )
 }

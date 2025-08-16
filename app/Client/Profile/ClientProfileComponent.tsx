@@ -13,18 +13,17 @@ import {
   Settings,
   HelpCircle 
 } from "lucide-react"
-import { Screen } from "../types"
+import { Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { getCurrentUser } from "@/lib/utils"
 import { useEffect, useState } from "react"
-import { useCart } from "@/hooks/api/useCart"
 
 interface ProfilePageProps {
+  cart: CartItem[]
   onScreenChange: (screen: Screen) => void
 }
 
-export default function ProfilePage({ onScreenChange }: ProfilePageProps) {
-  const { cart } = useCart()
+export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) {
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
@@ -45,14 +44,7 @@ export default function ProfilePage({ onScreenChange }: ProfilePageProps) {
 
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("home")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-      </div>
-
-      <div className="p-4">
+      <div className="p-4 pt-12">
         <div className="text-center mb-8">
           <Avatar className="w-20 h-20 mx-auto mb-4">
             <AvatarImage src={user.avatar} alt={user.name} />
@@ -169,17 +161,6 @@ export default function ProfilePage({ onScreenChange }: ProfilePageProps) {
       </div>
 
       <ClientBottomNavigation 
-        cart={cart.items.map(item => ({
-          id: item.productId,
-          name: item.name,
-          price: item.price,
-          unit: item.unit,
-          image: item.image,
-          category: 'geral',
-          quantity: item.quantity,
-          feirante: item.feiranteName,
-          observation: item.observation
-        }))} 
         onScreenChange={onScreenChange} 
         currentScreen="profile" 
       />

@@ -22,6 +22,42 @@ export default function FeiranteProfilePage({
   onScreenChange 
 }: FeiranteProfilePageProps) {
   const { products, loading } = useProducts()
+  const [isFavorite, setIsFavorite] = useState(false)
+  
+  // Check if feirante is already favorited
+  useEffect(() => {
+    const stored = localStorage.getItem('userFavorites')
+    if (stored) {
+      const favorites = JSON.parse(stored)
+      setIsFavorite(favorites.some((fav: any) => fav.id === selectedFeirante.id))
+    }
+  }, [selectedFeirante.id])
+
+  // Toggle favorite
+  const toggleFavorite = () => {
+    const stored = localStorage.getItem('userFavorites')
+    let favorites = stored ? JSON.parse(stored) : []
+    
+    if (isFavorite) {
+      // Remove from favorites
+      favorites = favorites.filter((fav: any) => fav.id !== selectedFeirante.id)
+    } else {
+      // Add to favorites
+      const newFavorite = {
+        id: selectedFeirante.id,
+        name: selectedFeirante.name,
+        avatar: selectedFeirante.avatar,
+        rating: selectedFeirante.rating,
+        specialty: selectedFeirante.specialties?.[0] || 'Produtos variados',
+        location: selectedFeirante.location,
+        addedAt: new Date().toISOString()
+      }
+      favorites.push(newFavorite)
+    }
+    
+    localStorage.setItem('userFavorites', JSON.stringify(favorites))
+    setIsFavorite(!isFavorite)
+  }
   
   // Get categories from products of this feirante
   const feiranteCategories = useMemo(() => {
@@ -59,18 +95,8 @@ export default function FeiranteProfilePage({
 
   return (
     <div className="min-h-screen bg-white pb-16">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 pt-12 border-b">
-        <Button variant="ghost" size="sm" onClick={() => onScreenChange("feirante")}>
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <Button variant="ghost" size="sm">
-          <Heart className="w-5 h-5" />
-        </Button>
-      </div>
-
       {/* Profile */}
-      <div className="p-4">
+      <div className="p-4 pt-12">
         <div className="text-center mb-6">
           <Avatar className="w-24 h-24 mx-auto mb-4">
             <AvatarImage src={selectedFeirante.avatar} />
@@ -82,6 +108,23 @@ export default function FeiranteProfilePage({
             </AvatarFallback>
           </Avatar>
           <h1 className="text-2xl font-bold mb-2">{selectedFeirante.name}</h1>
+          
+          {/* Favorite and Info buttons */}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleFavorite}
+              className={`${isFavorite ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
+            >
+              <Heart className={`w-4 h-4 mr-2 ${isFavorite ? 'fill-current text-red-600' : ''}`} />
+              {isFavorite ? 'Favoritado' : 'Favoritar'}
+            </Button>
+            <Button variant="outline" size="sm">
+              <span className="text-sm">ℹ️ Info</span>
+            </Button>
+          </div>
+          
           <div className="flex items-center justify-center gap-2 mb-2">
             <div className="flex items-center gap-1">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -177,7 +220,7 @@ export default function FeiranteProfilePage({
         </div>
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )
 }

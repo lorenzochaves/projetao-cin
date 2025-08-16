@@ -187,7 +187,6 @@ export default function HomePage({
       </div>
 
       <ClientBottomNavigation 
-        cart={cart} 
         onScreenChange={onScreenChange} 
         currentScreen={currentScreen} 
       />

@@ -2,22 +2,22 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Home, Search, ShoppingBasket, User, Package } from "lucide-react"
-import { Screen, CartItem } from "../types"
+import { Screen } from "../types"
 import { useState, useEffect } from "react"
 import { getCurrentUser } from "@/lib/utils"
+import { useCart } from "@/contexts/CartContext"
 
 interface ClientBottomNavigationProps {
-  cart: CartItem[]
   onScreenChange: (screen: Screen) => void
   currentScreen?: Screen
 }
 
 export function ClientBottomNavigation({ 
-  cart,
   onScreenChange, 
   currentScreen = "home" 
 }: ClientBottomNavigationProps) {
   const [activeOrders, setActiveOrders] = useState(0)
+  const { cart } = useCart() // Usar o hook diretamente
 
   useEffect(() => {
     // Simular pedidos ativos - você pode conectar com dados reais depois
@@ -63,9 +63,9 @@ export function ClientBottomNavigation({
         >
           <div className="relative">
             <ShoppingBasket className={`h-6 w-6 ${isActive("cart") ? "text-orange-500" : "text-gray-600"}`} />
-            {cart.length > 0 && (
+            {cart.items.length > 0 && (
               <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full p-0 flex items-center justify-center text-xs bg-orange-500 hover:bg-orange-500">
-                {cart.reduce((total, item) => total + item.quantity, 0)}
+                {cart.items.reduce((total, item) => total + item.quantity, 0)}
               </Badge>
             )}
           </div>

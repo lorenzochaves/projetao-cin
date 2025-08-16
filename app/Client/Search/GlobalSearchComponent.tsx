@@ -9,7 +9,7 @@ import { Feirante, Screen } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { feiranteService } from "@/lib/api/userService"
 import { useProducts } from "@/hooks/api/useProducts"
-import { useCart } from "@/hooks/api/useCart"
+import { useCart } from "@/contexts/CartContext"
 import { useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -659,17 +659,6 @@ export default function GlobalSearchPage({
       )}
 
       <ClientBottomNavigation 
-        cart={(cart?.items || []).map(item => ({
-          id: item.productId,
-          name: item.name,
-          price: item.price,
-          unit: item.unit,
-          image: item.image,
-          category: 'geral',
-          quantity: item.quantity,
-          feirante: item.feiranteName,
-          observation: item.observation
-        }))} 
         onScreenChange={onScreenChange} 
         currentScreen="global-search" 
       />
