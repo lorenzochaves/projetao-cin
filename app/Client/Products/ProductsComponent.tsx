@@ -98,7 +98,7 @@ export default function ProductPage({
 
         <Button
           className="w-full mb-8 bg-gray-200 text-black hover:bg-gray-300 rounded-xl py-3 disabled:opacity-50"
-          onClick={() => selectedFeirante && onAddToCart(selectedProduct, selectedFeirante.name)}
+          onClick={() => onObservationModalChange(true)}
           disabled={selectedProduct.isAvailable === false || selectedProduct.stock === 0}
         >
           {selectedProduct.isAvailable === false || selectedProduct.stock === 0 

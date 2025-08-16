@@ -17,7 +17,9 @@ export function useCart() {
   }, [])
 
   const addToCart = useCallback((product: Omit<CartItem, 'quantity'>, quantity: number = 1) => {
+    console.log('useCart.addToCart chamado com:', { product, quantity })
     const newCart = cartService.addToCart(product, quantity)
+    console.log('Novo carrinho após adicionar:', newCart)
     setCart(newCart)
   }, [])
 

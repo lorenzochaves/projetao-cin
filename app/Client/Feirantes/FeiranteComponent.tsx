@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowLeft, Heart, Info, Search, Star, MapPin } from "lucide-react"
+import { ArrowLeft, Heart, Info, Search, Star, MapPin, Plus, Minus } from "lucide-react"
 import { Feirante, Product, Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { useProducts } from "@/hooks/api/useProducts"
+import { useCart } from "@/hooks/api/useCart"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface FeirantePageProps {
@@ -21,13 +22,30 @@ interface FeirantePageProps {
 
 export default function FeirantePage({ 
   selectedFeirante, 
-  cart, 
+  cart: propCart, 
   searchQuery, 
   onScreenChange, 
   onSelectProduct, 
   onSearchChange 
 }: FeirantePageProps) {
   const { products, loading, error } = useProducts()
+  const { cart: hookCart, addToCart, updateQuantity } = useCart()
+  
+  // Usar o cart do hook em vez do prop para ter sempre os dados mais atualizados
+  const cart = hookCart.items.map(item => ({
+    id: item.productId,
+    name: item.name,
+    price: item.price,
+    unit: item.unit,
+    image: item.image,
+    category: 'geral',
+    quantity: item.quantity,
+    feirante: item.feiranteName,
+    observation: item.observation
+  }))
+  
+  console.log('🛒 FeiranteComponent - hookCart:', hookCart)
+  console.log('🛒 FeiranteComponent - cart convertido:', cart)
   
   // Filter products by current feirante
   const feiranteProducts = products.filter(p => p.feiranteId === selectedFeirante.id)
@@ -159,18 +177,19 @@ export default function FeirantePage({
               Object.entries(groupedProducts).map(([category, categoryProducts]) => (
                 <div key={category} className="mb-8">
                   <h2 className="text-xl font-bold mb-4">{getCategoryDisplayName(category)}</h2>
-                  <div className="grid grid-cols-3 gap-4">
-                    {categoryProducts.map((product) => (
-                      <Card
-                        key={product.id}
-                        className="p-3 cursor-pointer hover:shadow-md transition-shadow"
-                        onClick={() => {
-                          onSelectProduct(product)
-                          onScreenChange("product")
-                        }}
-                      >
-                        <div className="text-center">
-                          <div className="w-16 h-16 bg-gray-100 rounded-lg mx-auto mb-2 overflow-hidden">
+                  <div className="grid grid-cols-2 gap-3">
+                    {categoryProducts.map((product) => {
+                      // Verificar se o produto já está no carrinho
+                      const cartItem = cart.find(item => item.id === product.id && item.feirante === selectedFeirante.name)
+                      const quantity = cartItem?.quantity || 0
+                      
+                      return (
+                        <div
+                          key={product.id}
+                          className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                        >
+                          {/* Imagem do produto */}
+                          <div className="relative h-32 bg-gray-100">
                             <img 
                               src={product.image} 
                               alt={product.name}
@@ -178,26 +197,122 @@ export default function FeirantePage({
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement
                                 target.style.display = 'none'
-                                target.parentElement!.classList.add('flex', 'items-center', 'justify-center')
+                                target.parentElement!.classList.add('flex', 'items-center', 'justify-center', 'text-4xl')
                                 target.parentElement!.innerHTML = '📦'
                               }}
                             />
-                          </div>
-                          <div className="flex items-center justify-center gap-1 mb-1">
+                            
+                            {/* Avatar do feirante no canto inferior esquerdo */}
+                            <div className="absolute bottom-2 left-2">
+                              <img
+                                src={selectedFeirante.avatar}
+                                alt={selectedFeirante.name}
+                                className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
+                              />
+                            </div>
+                            
+                            {/* Controles de quantidade no canto superior direito */}
+                            <div className="absolute top-2 right-2">
+                              {quantity > 0 ? (
+                                <div className="flex items-center gap-1 bg-white rounded-full px-2 py-1 shadow-md">
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      console.log('🔄 FeiranteComponent - Decrementar:', { productId: product.id, currentQuantity: quantity, newQuantity: quantity - 1 })
+                                      updateQuantity(product.id, quantity - 1)
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
+                                  >
+                                    <Minus className="w-3 h-3" />
+                                  </button>
+                                  <span className="text-xs font-medium text-gray-900 px-1">{quantity}</span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      console.log('🔄 FeiranteComponent - Incrementar:', { productId: product.id, currentQuantity: quantity, newQuantity: quantity + 1 })
+                                      updateQuantity(product.id, quantity + 1)
+                                    }}
+                                    className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm hover:bg-green-600 transition-colors"
+                                  >
+                                    <Plus className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                    
+                                    addToCart({
+                                      productId: product.id,
+                                      name: product.name,
+                                      price: product.price,
+                                      unit: product.unit,
+                                      feiranteId: selectedFeirante.id,
+                                      feiranteName: selectedFeirante.name,
+                                      image: product.image
+                                    }, 1)
+                                  }}
+                                  className="w-8 h-8 rounded-full bg-white text-green-600 flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors"
+                                >
+                                  <Plus className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                            
+                            {/* Badge de indisponível */}
                             {!product.isAvailable && (
-                              <span className="text-xs text-red-500">Indisponível</span>
+                              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+                                  Indisponível
+                                </span>
+                              </div>
                             )}
                           </div>
-                          <p className="text-sm font-medium">
-                            R$ {product.price.toFixed(2)}/{product.unit}
-                          </p>
-                          <p className="text-xs text-gray-600">{product.name}</p>
-                          {product.stock !== undefined && product.stock < 10 && product.isAvailable && (
-                            <p className="text-xs text-orange-500">Últimas unidades</p>
-                          )}
+                          
+                          {/* Informações do produto */}
+                          <div 
+                            className="p-3 cursor-pointer"
+                            onClick={() => {
+                              onSelectProduct(product)
+                              onScreenChange("product")
+                            }}
+                          >
+                            {/* Preço */}
+                            <div className="text-lg font-bold text-gray-900 mb-1">
+                              R$ {product.price.toFixed(2)}
+                            </div>
+                            
+                            {/* Nome do produto */}
+                            <div className="font-medium text-gray-900 text-sm mb-2 line-clamp-2">
+                              {product.name}
+                            </div>
+                            
+                            {/* Informações do feirante */}
+                            <div className="flex items-center justify-between text-xs text-gray-600">
+                              <div className="flex items-center gap-1">
+                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                <span>{selectedFeirante.rating}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span>Grátis</span>
+                                <span>•</span>
+                                <span>{selectedFeirante.time}</span>
+                              </div>
+                            </div>
+                            
+                            {/* Estoque baixo */}
+                            {product.stock !== undefined && product.stock < 10 && product.isAvailable && (
+                              <div className="mt-2">
+                                <span className="text-xs text-orange-500 font-medium">Últimas unidades</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </Card>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               ))

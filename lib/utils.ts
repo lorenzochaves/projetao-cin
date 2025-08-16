@@ -37,7 +37,7 @@ const INITIAL_DATA = {
       cpf: "123.456.789-00",
       type: "client" as const,
       createdAt: "2025-01-01T00:00:00Z",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=MR"
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Marcela&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
     },
     {
       id: "2",
@@ -49,7 +49,7 @@ const INITIAL_DATA = {
       cpf: "456.789.123-00",
       type: "client" as const,
       createdAt: "2024-12-15T00:00:00Z",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=LS"
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Lucas&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
     },
     {
       id: "3",
@@ -62,7 +62,7 @@ const INITIAL_DATA = {
       type: "marketer" as const,
       stallName: "João da Horta",
       createdAt: "2024-06-15T00:00:00Z",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=JS"
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Joao&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
     },
     {
       id: "4",
@@ -75,7 +75,7 @@ const INITIAL_DATA = {
       type: "marketer" as const,
       stallName: "Maria das Frutas",
       createdAt: "2024-03-20T00:00:00Z",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=MO"
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Maria&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
     },
     {
       id: "5",
@@ -87,7 +87,33 @@ const INITIAL_DATA = {
       cpf: "777.888.999-00",
       type: "delivery" as const,
       createdAt: "2024-01-10T00:00:00Z",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=AC"
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Antonio&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
+    },
+    {
+      id: "6",
+      name: "Carlos",
+      surname: "Mendes",
+      email: "carlos.carnes@email.com",
+      password: "123456",
+      phone: "(81) 94444-4444",
+      cpf: "111.222.333-44",
+      type: "marketer" as const,
+      stallName: "Carnes do Carlos",
+      createdAt: "2024-05-10T00:00:00Z",
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Carlos&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
+    },
+    {
+      id: "7",
+      name: "Ana",
+      surname: "Peixoto",
+      email: "ana.peixes@email.com",
+      password: "123456",
+      phone: "(81) 93333-3333",
+      cpf: "222.333.444-55",
+      type: "marketer" as const,
+      stallName: "Peixaria da Ana",
+      createdAt: "2024-04-15T00:00:00Z",
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=Ana&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400"
     }
   ],
   feirantes: [
@@ -98,7 +124,7 @@ const INITIAL_DATA = {
       rating: 4.8,
       reviewCount: 120,
       time: "15-20 min",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=JH",
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=JoaoHorta&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400",
       description: "Especialista em verduras orgânicas há mais de 20 anos. Cultivo próprio sem agrotóxicos, direto da fazenda para sua mesa.",
       specialties: ["Verduras Orgânicas", "Temperos Frescos", "Folhas"],
       location: "Casa Amarela",
@@ -113,13 +139,43 @@ const INITIAL_DATA = {
       rating: 4.9,
       reviewCount: 89,
       time: "10-15 min",
-      avatar: "https://placeholder.co/400x400/e5e5e5/666?text=MF",
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=MariaFrutas&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400",
       description: "Frutas selecionadas e sempre frescas. Trabalho com produtores locais para garantir a melhor qualidade.",
       specialties: ["Frutas Tropicais", "Frutas da Estação", "Sucos Naturais"],
       location: "Boa Viagem",
       isOpen: true,
       openingHours: "07:00-17:00",
       address: "Feira de Boa Viagem - Recife, PE"
+    },
+    {
+      id: "3",
+      userId: "6",
+      name: "Carnes do Carlos",
+      rating: 4.7,
+      reviewCount: 95,
+      time: "20-25 min",
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=CarlosCarnes&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400",
+      description: "Carnes selecionadas e frescas todos os dias. Cortes especiais e atendimento personalizado.",
+      specialties: ["Carnes Bovinas", "Aves", "Suínos"],
+      location: "Ipsep",
+      isOpen: true,
+      openingHours: "06:00-16:00",
+      address: "Feira do Ipsep - Recife, PE"
+    },
+    {
+      id: "4",
+      userId: "7",
+      name: "Peixaria da Ana",
+      rating: 4.6,
+      reviewCount: 67,
+      time: "25-30 min",
+      avatar: "https://api.dicebear.com/7.x/personas/svg?seed=AnaPeixes&backgroundColor=c0aede,d1d4f9,ffd5dc&size=400",
+      description: "Peixes e frutos do mar frescos, chegados direto do mar. Qualidade garantida!",
+      specialties: ["Peixes Frescos", "Camarão", "Frutos do Mar"],
+      location: "Brasília Teimosa",
+      isOpen: false,
+      openingHours: "05:00-14:00",
+      address: "Brasília Teimosa - Recife, PE"
     }
   ],
   products: [
@@ -129,7 +185,7 @@ const INITIAL_DATA = {
       name: "Alface Americana",
       price: 3.5,
       unit: "unidade",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Alface",
+      image: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&h=400&fit=crop&crop=center",
       category: "folhas",
       description: "Alface fresca e crocante, ideal para saladas",
       stock: 25,
@@ -141,7 +197,7 @@ const INITIAL_DATA = {
       name: "Couve Manteiga",
       price: 2.8,
       unit: "maço",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Couve",
+      image: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=400&fit=crop&crop=center",
       category: "folhas",
       description: "Couve orgânica, rica em nutrientes",
       stock: 30,
@@ -153,7 +209,7 @@ const INITIAL_DATA = {
       name: "Rúcula",
       price: 4.2,
       unit: "maço",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Rucula",
+      image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?w=400&h=400&fit=crop&crop=center",
       category: "folhas",
       description: "Rúcula selvagem com sabor marcante",
       stock: 15,
@@ -165,7 +221,7 @@ const INITIAL_DATA = {
       name: "Banana Prata",
       price: 4.5,
       unit: "kg",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Banana",
+      image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop&crop=center",
       category: "frutas",
       description: "Banana doce e nutritiva, rica em potássio",
       stock: 50,
@@ -177,7 +233,7 @@ const INITIAL_DATA = {
       name: "Maçã Gala",
       price: 8.9,
       unit: "kg",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Maca",
+      image: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&h=400&fit=crop&crop=center",
       category: "frutas",
       description: "Maçã crocante e doce, perfeita para lanches",
       stock: 40,
@@ -189,7 +245,7 @@ const INITIAL_DATA = {
       name: "Laranja Lima",
       price: 3.2,
       unit: "kg",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Laranja",
+      image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=400&h=400&fit=crop&crop=center",
       category: "frutas",
       description: "Laranja doce e suculenta, ideal para sucos",
       stock: 60,
@@ -201,7 +257,7 @@ const INITIAL_DATA = {
       name: "Tomate Salada",
       price: 6.9,
       unit: "kg",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Tomate",
+      image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=400&fit=crop&crop=center",
       category: "legumes",
       description: "Tomate maduro e saboroso",
       stock: 35,
@@ -213,11 +269,59 @@ const INITIAL_DATA = {
       name: "Manga Rosa",
       price: 5.8,
       unit: "kg",
-      image: "https://placeholder.co/400x400/f0f0f0/666?text=Manga",
+      image: "https://images.unsplash.com/photo-1605027990121-3b2c6ed2bb34?w=400&h=400&fit=crop&crop=center",
       category: "frutas",
       description: "Manga doce e perfumada da estação",
       stock: 25,
       isAvailable: true
+    },
+    {
+      id: "9",
+      feiranteId: "3",
+      name: "Picanha",
+      price: 65.9,
+      unit: "kg",
+      image: "https://images.unsplash.com/photo-1588347818837-7b5d6896da8e?w=400&h=400&fit=crop&crop=center",
+      category: "carnes",
+      description: "Picanha macia e saborosa, corte especial",
+      stock: 12,
+      isAvailable: true
+    },
+    {
+      id: "10",
+      feiranteId: "3",
+      name: "Frango Caipira",
+      price: 18.5,
+      unit: "kg",
+      image: "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=400&fit=crop&crop=center",
+      category: "carnes",
+      description: "Frango caipira criado solto, mais saboroso",
+      stock: 8,
+      isAvailable: true
+    },
+    {
+      id: "11",
+      feiranteId: "4",
+      name: "Pargo",
+      price: 35.0,
+      unit: "kg",
+      image: "https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=400&h=400&fit=crop&crop=center",
+      category: "peixes",
+      description: "Pargo fresco pescado ontem",
+      stock: 6,
+      isAvailable: true
+    },
+    {
+      id: "12",
+      feiranteId: "4",
+      name: "Camarão Médio",
+      price: 42.0,
+      unit: "kg",
+      image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=400&fit=crop&crop=center",
+      category: "peixes",
+      description: "Camarão médio fresco e limpo",
+      stock: 4,
+      isAvailable: false
     }
   ],
   categories: [
@@ -226,7 +330,8 @@ const INITIAL_DATA = {
     { id: "3", name: "Legumes", icon: "🥕" },
     { id: "4", name: "Carnes", icon: "🥩" },
     { id: "5", name: "Grãos", icon: "🌾" },
-    { id: "6", name: "Tubérculos", icon: "🥔" }
+    { id: "6", name: "Tubérculos", icon: "🥔" },
+    { id: "7", name: "Peixes", icon: "🐟" }
   ],
   orders: [],
   marketerOrders: [],
@@ -418,17 +523,15 @@ export function forceInitializeData() {
   
   console.log('🔄 Forçando reinicialização dos dados...')
   
-  // Limpar dados existentes
+  // Limpar TODOS os dados existentes
   Object.entries(STORAGE_KEYS).forEach(([key, storageKey]) => {
-    if (key !== 'CURRENT_USER' && key !== 'AUTH_TOKEN' && key !== 'CART') {
-      localStorage.removeItem(storageKey)
-    }
+    localStorage.removeItem(storageKey)
   })
   
   // Reinicializar
   initializeLocalStorage()
   
-  console.log('✅ Dados reinicializados!')
+  console.log('✅ Dados reinicializados com avatares reais!')
 }
 
 export function getFromStorage<T>(key: string): T | null {

@@ -32,7 +32,16 @@ export const cartService = {
   // Get cart from localStorage
   getCart(): Cart {
     const cart = getFromStorage<Cart>(STORAGE_KEYS.CART)
-    return cart || { items: [], total: 0, itemCount: 0 }
+    
+    // Verificar se a estrutura está correta
+    if (!cart || !Array.isArray(cart.items)) {
+      console.log('Cart inválido, criando novo:', cart)
+      const newCart = { items: [], total: 0, itemCount: 0 }
+      this.saveCart(newCart)
+      return newCart
+    }
+    
+    return cart
   },
 
   // Save cart to localStorage
@@ -43,6 +52,15 @@ export const cartService = {
   // Add item to cart
   addToCart(product: Omit<CartItem, 'quantity'>, quantity: number = 1): Cart {
     const cart = this.getCart()
+    
+    // Verificar se cart e cart.items existem
+    if (!cart || !cart.items) {
+      console.error('Cart ou cart.items é undefined:', cart)
+      const newCart = { items: [], total: 0, itemCount: 0 }
+      this.saveCart(newCart)
+      return this.addToCart(product, quantity) // Tentar novamente
+    }
+    
     const existingItemIndex = cart.items.findIndex(
       item => item.productId === product.productId
     )

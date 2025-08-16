@@ -107,7 +107,11 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
         )}
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation 
+        cart={cart} 
+        onScreenChange={onScreenChange} 
+        currentScreen="orders" 
+      />
     </div>
   )
 }

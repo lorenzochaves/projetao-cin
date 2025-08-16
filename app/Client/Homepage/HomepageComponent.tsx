@@ -10,17 +10,30 @@ import { CartItem } from "../types"
 import { useState, useEffect } from "react"
 import { feiranteService } from "@/lib/api/userService"
 import { Skeleton } from "@/components/ui/skeleton"
+import { getCurrentUser } from "@/lib/utils"
 
 interface HomePageProps {
   cart: CartItem[]
   onScreenChange: (screen: Screen) => void
   onSelectFeirante: (feirante: Feirante) => void
+  currentScreen?: Screen
 }
 
-export default function HomePage({ cart, onScreenChange, onSelectFeirante }: HomePageProps) {
+export default function HomePage({ 
+  cart, 
+  onScreenChange, 
+  onSelectFeirante, 
+  currentScreen = "home" 
+}: HomePageProps) {
   const [feirantes, setFeirantes] = useState<Feirante[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const currentUser = getCurrentUser()
+    setUser(currentUser)
+  }, [])
 
   useEffect(() => {
     async function loadFeirantes() {
@@ -41,7 +54,9 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
       <div className="bg-white p-4 pt-12">
-        <h1 className="text-2xl font-bold mb-4">Olá, Marcela!</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          Olá, {user?.name || 'Cliente'}!
+        </h1>
 
         {/* Descrição de feira finalizada — explicação do app e funcionalidades */}
         <Card className="p-5 mb-6">
@@ -171,7 +186,11 @@ export default function HomePage({ cart, onScreenChange, onSelectFeirante }: Hom
         )}
       </div>
 
-      <ClientBottomNavigation cart={cart} onScreenChange={onScreenChange} />
+      <ClientBottomNavigation 
+        cart={cart} 
+        onScreenChange={onScreenChange} 
+        currentScreen={currentScreen} 
+      />
     </div>
   )
 }
