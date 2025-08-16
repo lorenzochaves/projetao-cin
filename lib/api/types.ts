@@ -3,9 +3,10 @@ export interface User {
   name: string
   surname: string
   email: string
+  password: string
   phone: string
   cpf: string
-  type: 'client' | 'marketer'
+  type: 'client' | 'marketer' | 'delivery'
   stallName?: string
   createdAt: string
   avatar?: string

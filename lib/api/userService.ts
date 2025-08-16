@@ -1,95 +1,182 @@
-import { apiClient } from './client'
 import { User, UserAddress, PaymentMethod, Order, Favorite, Feirante } from './types'
+import { 
+  getFromStorage, 
+  setToStorage, 
+  getUsers, 
+  getFeirantes, 
+  getAddresses, 
+  getPaymentMethods, 
+  getFavorites, 
+  getOrders,
+  generateId,
+  STORAGE_KEYS
+} from '../utils'
 
 export const userService = {
   // Get user profile
   async getProfile(userId: string): Promise<User> {
-    return apiClient.get<User>(`/users/${userId}`)
+    const users = getUsers()
+    const user = users.find(u => u.id === userId)
+    if (!user) {
+      throw new Error('Usuário não encontrado')
+    }
+    return user
   },
 
   // Update user profile
   async updateProfile(userId: string, data: Partial<User>): Promise<User> {
-    return apiClient.patch<User>(`/users/${userId}`, data)
+    const users = getUsers()
+    const userIndex = users.findIndex(u => u.id === userId)
+    if (userIndex === -1) {
+      throw new Error('Usuário não encontrado')
+    }
+    
+    const updatedUser = { ...users[userIndex], ...data }
+    users[userIndex] = updatedUser
+    setToStorage(STORAGE_KEYS.USERS, users)
+    
+    return updatedUser
   },
 
   // Get user orders
   async getOrders(userId: string): Promise<Order[]> {
-    return apiClient.get<Order[]>(`/orders?clientId=${userId}&_sort=createdAt&_order=desc`)
+    const orders = getOrders()
+    return orders
+      .filter(order => order.clientId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   },
 
   // Get user addresses
   async getAddresses(userId: string): Promise<UserAddress[]> {
-    return apiClient.get<UserAddress[]>(`/addresses?userId=${userId}`)
+    const addresses = getAddresses()
+    return addresses.filter(addr => addr.userId === userId)
   },
 
   // Add new address
   async addAddress(address: Omit<UserAddress, 'id'>): Promise<UserAddress> {
-    return apiClient.post<UserAddress>('/addresses', address)
+    const addresses = getAddresses()
+    const newAddress: UserAddress = {
+      ...address,
+      id: generateId()
+    }
+    
+    addresses.push(newAddress)
+    setToStorage(STORAGE_KEYS.ADDRESSES, addresses)
+    
+    return newAddress
   },
 
   // Update address
   async updateAddress(addressId: string, data: Partial<UserAddress>): Promise<UserAddress> {
-    return apiClient.patch<UserAddress>(`/addresses/${addressId}`, data)
+    const addresses = getAddresses()
+    const addressIndex = addresses.findIndex(addr => addr.id === addressId)
+    if (addressIndex === -1) {
+      throw new Error('Endereço não encontrado')
+    }
+    
+    const updatedAddress = { ...addresses[addressIndex], ...data }
+    addresses[addressIndex] = updatedAddress
+    setToStorage(STORAGE_KEYS.ADDRESSES, addresses)
+    
+    return updatedAddress
   },
 
   // Delete address
   async deleteAddress(addressId: string): Promise<void> {
-    return apiClient.delete(`/addresses/${addressId}`)
+    const addresses = getAddresses()
+    const filteredAddresses = addresses.filter(addr => addr.id !== addressId)
+    setToStorage(STORAGE_KEYS.ADDRESSES, filteredAddresses)
   },
 
   // Get payment methods
   async getPaymentMethods(userId: string): Promise<PaymentMethod[]> {
-    return apiClient.get<PaymentMethod[]>(`/paymentMethods?userId=${userId}`)
+    const paymentMethods = getPaymentMethods()
+    return paymentMethods.filter(pm => pm.userId === userId)
   },
 
   // Add payment method
   async addPaymentMethod(paymentMethod: Omit<PaymentMethod, 'id'>): Promise<PaymentMethod> {
-    return apiClient.post<PaymentMethod>('/paymentMethods', paymentMethod)
+    const paymentMethods = getPaymentMethods()
+    const newPaymentMethod: PaymentMethod = {
+      ...paymentMethod,
+      id: generateId()
+    }
+    
+    paymentMethods.push(newPaymentMethod)
+    setToStorage(STORAGE_KEYS.PAYMENT_METHODS, paymentMethods)
+    
+    return newPaymentMethod
   },
 
   // Delete payment method
   async deletePaymentMethod(paymentMethodId: string): Promise<void> {
-    return apiClient.delete(`/paymentMethods/${paymentMethodId}`)
+    const paymentMethods = getPaymentMethods()
+    const filteredPaymentMethods = paymentMethods.filter(pm => pm.id !== paymentMethodId)
+    setToStorage(STORAGE_KEYS.PAYMENT_METHODS, filteredPaymentMethods)
   },
 
   // Get user favorites
   async getFavorites(userId: string): Promise<Feirante[]> {
-    const favorites = await apiClient.get<Favorite[]>(`/favorites?userId=${userId}`)
-    const feiranteIds = favorites.map(f => f.feiranteId)
+    const favorites = getFavorites()
+    const feirantes = getFeirantes()
     
-    if (feiranteIds.length === 0) return []
+    const favoriteFeiranteIds = favorites
+      .filter(f => f.userId === userId)
+      .map(f => f.feiranteId)
     
-    const feirantes = await apiClient.get<Feirante[]>(`/feirantes?id=${feiranteIds.join('&id=')}`)
-    return feirantes
+    return feirantes.filter(f => favoriteFeiranteIds.includes(f.id))
   },
 
   // Add to favorites
   async addFavorite(userId: string, feiranteId: string): Promise<Favorite> {
-    return apiClient.post<Favorite>('/favorites', { userId, feiranteId })
+    const favorites = getFavorites()
+    const newFavorite: Favorite = {
+      id: generateId(),
+      userId,
+      feiranteId,
+      createdAt: new Date().toISOString()
+    }
+    
+    favorites.push(newFavorite)
+    setToStorage(STORAGE_KEYS.FAVORITES, favorites)
+    
+    return newFavorite
   },
 
   // Remove from favorites
   async removeFavorite(userId: string, feiranteId: string): Promise<void> {
-    const favorites = await apiClient.get<Favorite[]>(`/favorites?userId=${userId}&feiranteId=${feiranteId}`)
-    if (favorites.length > 0) {
-      return apiClient.delete(`/favorites/${favorites[0].id}`)
-    }
+    const favorites = getFavorites()
+    const filteredFavorites = favorites.filter(
+      f => !(f.userId === userId && f.feiranteId === feiranteId)
+    )
+    setToStorage(STORAGE_KEYS.FAVORITES, filteredFavorites)
   }
 }
 
 export const feiranteService = {
   // Get all feirantes
   async getAll(): Promise<Feirante[]> {
-    return apiClient.get<Feirante[]>('/feirantes')
+    return getFeirantes()
   },
 
   // Get feirante by id
   async getById(id: string): Promise<Feirante> {
-    return apiClient.get<Feirante>(`/feirantes/${id}`)
+    const feirantes = getFeirantes()
+    const feirante = feirantes.find(f => f.id === id)
+    if (!feirante) {
+      throw new Error('Feirante não encontrado')
+    }
+    return feirante
   },
 
   // Search feirantes
   async search(query: string): Promise<Feirante[]> {
-    return apiClient.get<Feirante[]>(`/feirantes?name_like=${query}`)
+    const feirantes = getFeirantes()
+    const lowerQuery = query.toLowerCase()
+    return feirantes.filter(f => 
+      f.name.toLowerCase().includes(lowerQuery) ||
+      f.description.toLowerCase().includes(lowerQuery) ||
+      f.specialties.some(s => s.toLowerCase().includes(lowerQuery))
+    )
   }
 }

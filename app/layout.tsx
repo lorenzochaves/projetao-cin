@@ -2,10 +2,11 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
+import { ClientInitializer } from '../components/ClientInitializer'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Feira App',
+  description: 'Aplicativo de feira com produtos frescos',
   generator: 'v0.dev',
 }
 
@@ -15,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <style>{`
 html {
@@ -25,7 +26,10 @@ html {
 }
         `}</style>
       </head>
-      <body>{children}</body>
+      <body>
+        <ClientInitializer />
+        {children}
+      </body>
     </html>
   )
 }

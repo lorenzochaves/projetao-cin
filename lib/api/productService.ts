@@ -1,51 +1,92 @@
-import { apiClient } from './client'
 import { Product, Category } from './types'
+import { 
+  getFromStorage, 
+  setToStorage, 
+  getProducts, 
+  getCategories,
+  generateId,
+  STORAGE_KEYS
+} from '../utils'
 
 export const productService = {
   // Get all products
   async getAll(): Promise<Product[]> {
-    return apiClient.get<Product[]>('/products')
+    return getProducts()
   },
 
   // Get products by feirante
   async getByFeirante(feiranteId: string): Promise<Product[]> {
-    return apiClient.get<Product[]>(`/products?feiranteId=${feiranteId}`)
+    const products = getProducts()
+    return products.filter(product => product.feiranteId === feiranteId)
   },
 
   // Get product by id
   async getById(id: string): Promise<Product> {
-    return apiClient.get<Product>(`/products/${id}`)
+    const products = getProducts()
+    const product = products.find(p => p.id === id)
+    if (!product) {
+      throw new Error('Produto não encontrado')
+    }
+    return product
   },
 
   // Search products
   async search(query: string): Promise<Product[]> {
-    return apiClient.get<Product[]>(`/products?name_like=${query}`)
+    const products = getProducts()
+    const lowerQuery = query.toLowerCase()
+    return products.filter(product => 
+      product.name.toLowerCase().includes(lowerQuery) ||
+      product.description.toLowerCase().includes(lowerQuery) ||
+      product.category.toLowerCase().includes(lowerQuery)
+    )
   },
 
   // Get products by category
   async getByCategory(category: string): Promise<Product[]> {
-    return apiClient.get<Product[]>(`/products?category=${category}`)
+    const products = getProducts()
+    return products.filter(product => product.category === category)
   },
 
   // Add new product (for marketers)
   async create(product: Omit<Product, 'id'>): Promise<Product> {
-    return apiClient.post<Product>('/products', product)
+    const products = getProducts()
+    const newProduct: Product = {
+      ...product,
+      id: generateId()
+    }
+    
+    products.push(newProduct)
+    setToStorage(STORAGE_KEYS.PRODUCTS, products)
+    
+    return newProduct
   },
 
   // Update product
   async update(id: string, product: Partial<Product>): Promise<Product> {
-    return apiClient.patch<Product>(`/products/${id}`, product)
+    const products = getProducts()
+    const productIndex = products.findIndex(p => p.id === id)
+    if (productIndex === -1) {
+      throw new Error('Produto não encontrado')
+    }
+    
+    const updatedProduct = { ...products[productIndex], ...product }
+    products[productIndex] = updatedProduct
+    setToStorage(STORAGE_KEYS.PRODUCTS, products)
+    
+    return updatedProduct
   },
 
   // Delete product
   async delete(id: string): Promise<void> {
-    return apiClient.delete(`/products/${id}`)
+    const products = getProducts()
+    const filteredProducts = products.filter(p => p.id !== id)
+    setToStorage(STORAGE_KEYS.PRODUCTS, filteredProducts)
   }
 }
 
 export const categoryService = {
   // Get all categories
   async getAll(): Promise<Category[]> {
-    return apiClient.get<Category[]>('/categories')
+    return getCategories()
   }
 }
