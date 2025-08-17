@@ -127,7 +127,7 @@ export default function PaymentPage({ cart, onScreenChange }: PaymentPageProps) 
               Adicionar novo cartão
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md max-w-[90vw] rounded-2xl p-6">
             <DialogHeader>
               <DialogTitle>Adicionar Cartão</DialogTitle>
             </DialogHeader>

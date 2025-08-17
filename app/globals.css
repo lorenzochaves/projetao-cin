@@ -10,7 +10,7 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 14 86% 43%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -22,8 +22,20 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 14 86% 43%;
     --radius: 0.5rem;
+    
+    /* Custom orange variations based on #db4708 */
+    --orange-50: 14 100% 95%;
+    --orange-100: 14 100% 90%;
+    --orange-200: 14 100% 80%;
+    --orange-300: 14 100% 70%;
+    --orange-400: 14 100% 60%;
+    --orange-500: 14 86% 43%;
+    --orange-600: 14 86% 38%;
+    --orange-700: 14 86% 33%;
+    --orange-800: 14 86% 28%;
+    --orange-900: 14 86% 23%;
   }
 }
 

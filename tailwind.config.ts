@@ -46,6 +46,18 @@ const config: Config = {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+  			orange: {
+  				50: '#fef7f0',
+  				100: '#fdeee0',
+  				200: '#fad9b8',
+  				300: '#f7c48f',
+  				400: '#f4ae66',
+  				500: '#db4708',
+  				600: '#c63f07',
+  				700: '#b13706',
+  				800: '#9c2f05',
+  				900: '#872804',
+  			},
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
