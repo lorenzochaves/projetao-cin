@@ -119,7 +119,7 @@ export default function ChatPage({
               💬
             </div>
             <h3 className="text-lg font-medium text-gray-600 mb-2">
-              Começe uma conversa!
+              Comece uma conversa!
             </h3>
             <p className="text-gray-500 text-sm">
               Envie uma mensagem para {feiranteName} e tire suas dúvidas sobre os produtos.

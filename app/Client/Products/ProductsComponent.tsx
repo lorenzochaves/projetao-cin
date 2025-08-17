@@ -6,6 +6,7 @@ import { Product, Screen, CartItem, Feirante } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { useProducts } from "@/hooks/api/useProducts"
 import { useState } from "react"
+import { ChevronLeft } from "lucide-react"
 import ProductVariationModal from "@/components/ui/product-variation-modal"
 
 interface ProductPageProps {
@@ -19,6 +20,9 @@ interface ProductPageProps {
   onObservationModalChange: (show: boolean) => void
   onObservationChange: (observation: string) => void
   onConfirmAddToCart: () => void
+  onProductSelect?: (product: Product) => void
+  onFeiranteSelect?: (feirante: Feirante) => void
+  previousScreen?: Screen
 }
 
 export default function ProductsComponent({ 
@@ -26,7 +30,10 @@ export default function ProductsComponent({
   selectedFeirante,
   cart, 
   onScreenChange, 
-  onAddToCart
+  onAddToCart,
+  onProductSelect,
+  onFeiranteSelect,
+  previousScreen = "home"
 }: ProductPageProps) {
   const { products } = useProducts()
   const [showVariationModal, setShowVariationModal] = useState(false)
@@ -38,6 +45,34 @@ export default function ProductsComponent({
       (p.feiranteId === selectedProduct.feiranteId || p.category === selectedProduct.category)
     )
     .slice(0, 4)
+
+  const handleRelatedProductClick = (product: Product) => {
+    // Atualizar o produto selecionado se a função estiver disponível
+    if (onProductSelect) {
+      onProductSelect(product)
+    }
+    
+    // Se o produto é de outro feirante, precisamos atualizar o feirante também
+    if (onFeiranteSelect && product.feiranteId && product.feiranteId !== selectedProduct.feiranteId) {
+      // Buscar o feirante do produto pelos dados disponíveis
+      // Por enquanto, vamos criar um feirante temporário baseado no produto
+      const newFeirante: Feirante = {
+        id: product.feiranteId,
+        name: "Feirante",
+        rating: 4.5,
+        time: "10 min",
+        avatar: "/placeholder-user.jpg",
+        description: "",
+        specialties: [product.category],
+        location: "Feira local",
+        isOpen: true
+      }
+      onFeiranteSelect(newFeirante)
+    }
+    
+    // Navegar para os detalhes do produto relacionado
+    onScreenChange("product")
+  }
 
   const handleAddToCartClick = () => {
     setShowVariationModal(true)
@@ -54,8 +89,25 @@ export default function ProductsComponent({
 
   return (
     <div className="min-h-screen bg-white pb-16">
+      {/* Header com botão de voltar */}
+      <div className="sticky top-0 bg-white border-b border-gray-100 z-40">
+        <div className="flex items-center gap-4 p-4">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => onScreenChange(previousScreen)}
+            className="p-2 hover:bg-gray-100 rounded-full"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Button>
+          <div className="flex-1">
+            <h2 className="font-semibold text-gray-900">Detalhes do Produto</h2>
+          </div>
+        </div>
+      </div>
+
       {/* Product */}
-      <div className="px-4 pt-12">
+      <div className="px-4 pt-4">
         <div className="text-center mb-8">
           <div className="w-32 h-32 bg-gray-100 rounded-lg mx-auto mb-4 overflow-hidden">
             <img 
@@ -114,7 +166,11 @@ export default function ProductsComponent({
             <h2 className="text-lg font-bold mb-4">Peça também</h2>
             <div className="grid grid-cols-4 gap-4">
               {relatedProducts.map((product) => (
-                <Card key={product.id} className="p-2 cursor-pointer hover:shadow-md transition-shadow">
+                <Card 
+                  key={product.id} 
+                  className="p-2 cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => handleRelatedProductClick(product)}
+                >
                   <div className="text-center">
                     <div className="w-12 h-12 bg-gray-100 rounded-lg mx-auto mb-1 overflow-hidden">
                       <img 

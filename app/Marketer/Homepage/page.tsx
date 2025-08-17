@@ -20,7 +20,8 @@ import {
   BarChart3,
   Bell,
   Store,
-  Settings
+  Settings,
+  Heart
 } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts'
 
@@ -157,6 +158,16 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                 </Button>
               </Link>
             </div>
+            
+            {/* Botão de Ajuda em destaque */}
+            <Button 
+              onClick={() => onScreenChange?.("help")}
+              variant="outline" 
+              className="h-12 w-full flex items-center gap-3 border-blue-200 hover:bg-blue-50 text-blue-700 hover:text-blue-800"
+            >
+              <Heart className="w-5 h-5 text-red-500" />
+              <span className="font-medium">Precisa de Ajuda? Estamos aqui!</span>
+            </Button>
           </CardContent>
         </Card>
 

@@ -5,7 +5,7 @@ import { ClientRoute } from "@/components/ProtectedRoute"
 import HomepageComponent from "./HomepageComponent"
 import { Screen, Feirante, Product } from "../types"
 import { useCart } from "@/hooks/api/useCart"
-
+import { useUser } from "@/hooks/api/useUser"
 // Importar os componentes das diferentes telas
 import FeiranteComponent from "../Feirantes/FeiranteComponent"
 import ChatComponent from "../Chat/ChatComponent"
@@ -39,6 +39,7 @@ export default function ClientHomePage() {
 
 function ClientHomePageContent() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("home")
+  const [previousScreen, setPreviousScreen] = useState<Screen>("home")
   const [selectedFeirante, setSelectedFeirante] = useState<Feirante | null>(null)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const { cart, addToCart, updateQuantity, removeFromCart, clearCart } = useCart()
@@ -69,6 +70,7 @@ function ClientHomePageContent() {
   const handleScreenChange = (screen: Screen) => {
     console.log('🔄 Mudando para tela:', screen)
     if (screen !== currentScreen) {
+      setPreviousScreen(currentScreen)
       setCurrentScreen(screen)
     }
   }
@@ -273,6 +275,9 @@ function ClientHomePageContent() {
             onAddToCart={handleAddToCartFromProducts}
             onObservationModalChange={setShowObservationModal}
             onObservationChange={setCurrentObservation}
+            onProductSelect={setSelectedProduct}
+            onFeiranteSelect={setSelectedFeirante}
+            previousScreen={previousScreen}
             onConfirmAddToCart={() => {
               if (selectedProduct && selectedFeirante) {
                 handleAddToCart(selectedProduct, selectedFeirante)
