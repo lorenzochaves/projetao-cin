@@ -9,19 +9,7 @@ import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 import { useMarketer } from "@/hooks/api/useMarketer"
 
 export default function MarketerStallPage() {
-  const { products, reviews, loading, getStats } = useMarketer()
-  const stats = getStats()
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center pb-20">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando...</p>
-        </div>
-      </div>
-    )
-  }
+  const { products, stats } = useMarketer()
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -47,8 +35,8 @@ export default function MarketerStallPage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center">
                   <Star className="h-4 w-4 fill-current text-yellow-500 mr-1" />
-                  <span className="font-medium">{stats.averageRating}</span>
-                  <span className="text-sm text-gray-500 ml-1">({stats.totalReviews})</span>
+                  <span className="font-medium">4.8</span>
+                  <span className="text-sm text-gray-500 ml-1">(42)</span>
                 </div>
                 <Badge 
                   variant="default"
@@ -82,7 +70,7 @@ export default function MarketerStallPage() {
             <Card className="bg-yellow-50 border-yellow-200">
               <CardContent className="p-3 text-center">
                 <Star className="h-5 w-5 text-yellow-600 mx-auto mb-1" />
-                <p className="text-lg font-bold text-yellow-800">{stats.averageRating}</p>
+                <p className="text-lg font-bold text-yellow-800">4.8</p>
                 <p className="text-xs text-yellow-600">Avaliação</p>
               </CardContent>
             </Card>
@@ -194,38 +182,11 @@ export default function MarketerStallPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {reviews.length === 0 ? (
-              <div className="text-center py-6">
-                <Star className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600">Nenhuma avaliação ainda</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {reviews.slice(0, 3).map((review) => (
-                  <div key={review.id} className="border-b border-gray-100 last:border-0 pb-3 last:pb-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm">{review.clientName}</span>
-                        <div className="flex">
-                          {[1,2,3,4,5].map((star) => (
-                            <Star 
-                              key={star} 
-                              className={`h-4 w-4 ${star <= review.rating ? 'fill-current text-yellow-500' : 'text-gray-300'}`} 
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {new Date(review.createdAt).toLocaleDateString('pt-BR')}
-                      </span>
-                    </div>
-                    {review.comment && (
-                      <p className="text-sm text-gray-600">{review.comment}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="text-center py-6">
+              <Star className="h-10 w-10 text-gray-400 mx-auto mb-3" />
+              <p className="text-gray-600">Nenhuma avaliação ainda</p>
+              <p className="text-sm text-gray-500 mt-2">As avaliações dos clientes aparecerão aqui</p>
+            </div>
           </CardContent>
         </Card>
       </div>

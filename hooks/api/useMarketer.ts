@@ -66,6 +66,7 @@ export interface MarketerOrder {
 export function useMarketer(feiranteId: string = "1") {
   const [products, setProducts] = useState<MarketerProduct[]>([])
   const [orders, setOrders] = useState<MarketerOrder[]>([])
+  const [isClient, setIsClient] = useState(false)
   const [stats, setStats] = useState<MarketerStats>({
     totalProducts: 0,
     totalOrders: 0,
@@ -77,32 +78,44 @@ export function useMarketer(feiranteId: string = "1") {
     monthlyRevenue: 0
   })
 
+  // Only run on client side
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   // Load data from localStorage on mount
   useEffect(() => {
-    loadProducts()
-    loadOrders()
-    // Initialize with sample data if empty
-    initializeSampleData()
-  }, [feiranteId])
+    if (isClient) {
+      loadProducts()
+      loadOrders()
+      // Initialize with sample data if empty
+      initializeSampleData()
+    }
+  }, [feiranteId, isClient])
 
   // Calculate stats when products or orders change
   useEffect(() => {
-    calculateStats()
-  }, [products, orders])
+    if (isClient) {
+      calculateStats()
+    }
+  }, [products, orders, isClient])
 
   const loadProducts = useCallback(() => {
+    if (typeof window === 'undefined') return
     const allProducts = getFromStorage<MarketerProduct[]>('feira_marketer_products') || []
     const feiranteProducts = allProducts.filter(p => p.feiranteId === feiranteId)
     setProducts(feiranteProducts)
   }, [feiranteId])
 
   const loadOrders = useCallback(() => {
+    if (typeof window === 'undefined') return
     const allOrders = getFromStorage<MarketerOrder[]>('feira_marketer_orders') || []
     const feiranteOrders = allOrders.filter(o => o.items.some(item => item.productId.startsWith(feiranteId)))
     setOrders(feiranteOrders)
   }, [feiranteId])
 
   const initializeSampleData = useCallback(() => {
+    if (typeof window === 'undefined') return
     const existingProducts = getFromStorage<MarketerProduct[]>('feira_marketer_products') || []
     const feiranteProducts = existingProducts.filter(p => p.feiranteId === feiranteId)
     
