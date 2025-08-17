@@ -81,9 +81,17 @@ function ClientHomePageContent() {
     setCurrentScreen("feirante")
   }
 
-  const handleSelectProduct = (product: Product) => {
-    console.log('📦 Produto selecionado:', product)
+  const handleSelectProduct = (product: Product, feirante?: Feirante) => {
     setSelectedProduct(product)
+    
+    // Se um feirante foi passado, usar ele. Senão, manter o selectedFeirante atual
+    if (feirante) {
+      setSelectedFeirante(feirante)
+    } else if (!selectedFeirante) {
+      console.error('⚠️ Produto selecionado sem feirante definido:', product)
+      return
+    }
+    
     setCurrentScreen("product")
   }
 

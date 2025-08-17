@@ -12,6 +12,7 @@ import { useProducts } from "@/hooks/api/useProducts"
 import { useCart } from "@/hooks/api/useCart"
 import { useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import ProductVariationModal from "@/components/ui/product-variation-modal"
 
 interface GlobalSearchPageProps {
   searchQuery: string
@@ -19,7 +20,7 @@ interface GlobalSearchPageProps {
   searchHistory: string[]
   onScreenChange: (screen: Screen) => void
   onSelectFeirante: (feirante: Feirante) => void
-  onSelectProduct?: (product: any) => void
+  onSelectProduct?: (product: any, feirante?: Feirante) => void
   onSearchChange: (query: string) => void
   onShowSearchHistoryChange: (show: boolean) => void
   onRemoveFromSearchHistory: (term: string) => void
@@ -43,6 +44,11 @@ export default function GlobalSearchPage({
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("todo")
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+  
+  // Estados para o modal de produto
+  const [showVariationModal, setShowVariationModal] = useState(false)
+  const [selectedProductForModal, setSelectedProductForModal] = useState<any>(null)
+  const [selectedFeiranteForModal, setSelectedFeiranteForModal] = useState<Feirante | null>(null)
   
   const tabs = [
     { id: "todo", name: "Todo o Feirou" },
@@ -146,6 +152,34 @@ export default function GlobalSearchPage({
   const handleSearchFocus = () => {
     setIsSearchFocused(true)
     onShowSearchHistoryChange(true)
+  }
+
+  // Função para abrir o modal de produto
+  const handleAddToCartClick = (product: any, feirante: Feirante) => {
+    setSelectedProductForModal(product)
+    setSelectedFeiranteForModal(feirante)
+    setShowVariationModal(true)
+  }
+
+  // Função para confirmar adição ao carrinho via modal
+  const handleConfirmAddToCart = (variation: string, quantity: number, observation: string) => {
+    if (!selectedProductForModal || !selectedFeiranteForModal) return
+
+    // Adicionar ao carrinho com as informações do modal
+    addToCart({
+      productId: selectedProductForModal.id,
+      name: selectedProductForModal.name,
+      price: selectedProductForModal.price,
+      unit: selectedProductForModal.unit,
+      feiranteId: selectedProductForModal.feiranteId!,
+      feiranteName: selectedFeiranteForModal.name,
+      image: selectedProductForModal.image
+    }, quantity)
+
+    // Fechar modal
+    setShowVariationModal(false)
+    setSelectedProductForModal(null)
+    setSelectedFeiranteForModal(null)
   }
 
   return (
@@ -256,7 +290,21 @@ export default function GlobalSearchPage({
                         return (
                           <div 
                             key={product.id}
-                            className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                            className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+                            onClick={(e) => {
+                              // Verificar se o clique foi no botão + ou - (evitar conflito)
+                              if ((e.target as HTMLElement).closest('button')) {
+                                return // Se clicou em um botão, não processar o clique do card
+                              }
+                              
+                              if (!productFeirante) {
+                                console.error('Feirante não encontrado para o produto:', product)
+                                return
+                              }
+                              
+                              // Abrir modal em vez de navegar para outra tela
+                              handleAddToCartClick(product, productFeirante)
+                            }}
                           >
                             {/* Imagem do produto */}
                             <div className="relative h-32 bg-gray-100">
@@ -303,8 +351,18 @@ export default function GlobalSearchPage({
                                       onClick={(e) => {
                                         e.preventDefault()
                                         e.stopPropagation()
-                                        console.log('🔄 GlobalSearch - Incrementar:', { productId: product.id, currentQuantity: quantity, newQuantity: quantity + 1 })
-                                        updateQuantity(product.id, quantity + 1)
+                                        
+                                        console.log('� [Search] Clicou no + (produto com quantidade):', product.name)
+                                        console.log('🔍 [Search] Quantidade atual:', quantity)
+                                        
+                                        if (!productFeirante) {
+                                          console.error('Feirante não encontrado para o produto:', product)
+                                          return
+                                        }
+                                        
+                                        // Abrir modal para adicionar mais quantidade com observações
+                                        console.log('🔍 [Search] Abrindo modal para produto com quantidade existente')
+                                        handleAddToCartClick(product, productFeirante)
                                       }}
                                       className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm hover:bg-green-600 transition-colors"
                                     >
@@ -322,22 +380,12 @@ export default function GlobalSearchPage({
                                         return
                                       }
                                       
-                                      console.log('Adicionando produto ao carrinho:', {
-                                        productId: product.id,
-                                        name: product.name,
-                                        feiranteId: product.feiranteId,
-                                        feiranteName: productFeirante.name
-                                      })
+                                      console.log('🔍 [Search] Clicou no + do produto:', product.name)
+                                      console.log('🔍 [Search] Feirante do produto:', productFeirante?.name)
                                       
-                                      addToCart({
-                                        productId: product.id,
-                                        name: product.name,
-                                        price: product.price,
-                                        unit: product.unit,
-                                        feiranteId: product.feiranteId!,
-                                        feiranteName: productFeirante.name,
-                                        image: product.image
-                                      }, 1)
+                                      // Abrir modal para primeira adição
+                                      console.log('🔍 [Search] Abrindo modal para primeira adição')
+                                      handleAddToCartClick(product, productFeirante)
                                     }}
                                     className="w-8 h-8 rounded-full bg-white text-green-600 flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors"
                                   >
@@ -539,11 +587,8 @@ export default function GlobalSearchPage({
                           // Encontrar o feirante correspondente ao produto
                           const productFeirante = feirantes.find(f => f.id === product.feiranteId)
                           if (productFeirante) {
-                            // Primeiro selecionar o feirante
-                            onSelectFeirante(productFeirante)
-                            // Depois selecionar o produto
-                            onSelectProduct(product)
-                            onScreenChange("product")
+                            // Selecionar o produto e feirante juntos
+                            onSelectProduct(product, productFeirante)
                           }
                         }
                       }}
@@ -679,6 +724,14 @@ export default function GlobalSearchPage({
       <ClientBottomNavigation 
         onScreenChange={onScreenChange} 
         currentScreen="global-search" 
+      />
+
+      {/* Modal de Variações do Produto */}
+      <ProductVariationModal
+        isOpen={showVariationModal}
+        onClose={() => setShowVariationModal(false)}
+        product={selectedProductForModal}
+        onConfirm={handleConfirmAddToCart}
       />
     </div>
   )
