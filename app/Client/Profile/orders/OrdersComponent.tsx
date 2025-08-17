@@ -202,80 +202,105 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
                 </Button>
               </div>
             ) : (
-              ongoingOrders.map((order) => (
-                <div key={order.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                  {/* Order header with delivery info */}
-                  <div className="p-4 bg-orange-50 border-b">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
-                          <Truck className="w-5 h-5 text-white" />
+              ongoingOrders.map((order) => {
+                // Buscar dados reais do feirante
+                const feiranteData = feirantes.find(f => f.name === order.feiranteName)
+                
+                return (
+                <div key={order.id} className="bg-white rounded-lg shadow-sm p-4">
+                  {/* Header com feirante */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      {feiranteData?.avatar ? (
+                        <div className="w-12 h-12 rounded-lg overflow-hidden">
+                          <Image
+                            src={feiranteData.avatar}
+                            alt={order.feiranteName}
+                            width={48}
+                            height={48}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">Carlos Entregador</h3>
-                          <p className="text-sm text-gray-600">Motocicleta • ABC-1234</p>
+                      ) : (
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <span className="text-2xl">🏪</span>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm font-medium text-green-600">Em trânsito</span>
+                      )}
+                      <div>
+                        <h4 className="font-medium text-gray-900">{order.feiranteName}</h4>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">
-                        Previsão: {order.estimatedDelivery ? 
+                    <Button variant="ghost" size="sm" className="p-2">
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  {/* Status com entregador */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-5 h-5 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <span className="text-sm text-gray-600">
+                      Em trânsito com Carlos Entregador
+                    </span>
+                    <span className="text-sm text-gray-400">• N° {order.id}</span>
+                  </div>
+                  
+                  {/* Lista de itens */}
+                  <div className="space-y-2 mb-3">
+                    {order.items.map((item, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-gray-100 rounded flex items-center justify-center">
+                          <span className="text-xs font-semibold text-gray-700">
+                            {item.quantity}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-600 flex-1">
+                          {item.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Informações de entrega */}
+                  <div className="pt-3 border-t">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-600">Previsão de entrega</span>
+                      <span className="text-sm font-medium text-orange-600">
+                        {order.estimatedDelivery ? 
                           new Date(order.estimatedDelivery).toLocaleTimeString('pt-BR', { 
                             hour: '2-digit', 
                             minute: '2-digit' 
-                          }) : 'Em breve'
+                          }) : '18:30'
                         }
                       </span>
-                      <Badge className={getStatusColor(order.status)}>
-                        {getStatusIcon(order.status)}
-                        <span className="ml-1">{getStatusText(order.status)}</span>
-                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Total do pedido</span>
+                      <span className="text-sm font-bold text-gray-900">R$ {order.total.toFixed(2)}</span>
                     </div>
                   </div>
                   
-                  {/* Order details */}
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          Pedido #{order.id} • {order.feiranteName}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          {new Date(order.createdAt).toLocaleDateString('pt-BR')}
-                        </p>
-                      </div>
-                      <p className="font-bold text-orange-600">R$ {order.total.toFixed(2)}</p>
+                  {/* Ações */}
+                  <div className="pt-4 border-t">
+                    <div className="flex gap-32">
+                      <button className="text-orange-500 font-medium text-sm py-2 pl-12">
+                        Detalhes
+                      </button>
+                      <button className="text-orange-500 font-medium text-sm py-2 flex items-center gap-2">
+                        <Image
+                          src="/chat.svg"
+                          alt="Chat"
+                          width={32}
+                          height={32}
+                          className="w-6 h-6"
+                        />
+                      </button>
                     </div>
-                    
-                    <div className="space-y-2 mb-3">
-                      {order.items.slice(0, 2).map((item, index) => (
-                        <div key={index} className="flex justify-between text-sm">
-                          <span className="text-gray-600">
-                            {item.quantity}x {item.name}
-                          </span>
-                          <span className="text-gray-900">
-                            R$ {(item.price * item.quantity).toFixed(2)}
-                          </span>
-                        </div>
-                      ))}
-                      {order.items.length > 2 && (
-                        <p className="text-sm text-gray-500">
-                          + {order.items.length - 2} item(s)
-                        </p>
-                      )}
-                    </div>
-                    
-                    <Button variant="outline" className="w-full">
-                      Ver detalhes do pedido
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
                   </div>
                 </div>
-              ))
+                )
+              })
             )}
           </div>
         ) : (
