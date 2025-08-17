@@ -85,7 +85,10 @@ export default function FeirantePage({
       'verduras': 'Verduras',
       'legumes': 'Legumes',
       'carnes': 'Carnes',
-      'folhas': 'Folhas'
+      'folhas': 'Folhas',
+      'tuberculos': 'Tubérculos',
+      'temperos': 'Temperos',
+      'peixes': 'Peixes'
     }
     return categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1)
   }
