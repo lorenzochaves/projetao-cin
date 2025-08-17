@@ -353,6 +353,7 @@ function ClientHomePageContent() {
           <FavoritesComponent
             cart={convertCartForComponents()}
             onScreenChange={handleScreenChange}
+            onSelectFeirante={handleSelectFeirante}
           />
         )
 
