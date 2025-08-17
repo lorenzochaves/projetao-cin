@@ -1,8 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, ChevronRight, CreditCard, Smartphone, DollarSign, Shield } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { ArrowLeft, ChevronRight, CreditCard, Smartphone, DollarSign, Shield, Plus } from "lucide-react"
 import { Screen, CartItem } from "../../types"
 import { ClientBottomNavigation } from "../../components/BottomNav"
 import { useCart } from "@/hooks/api/useCart"
@@ -12,53 +16,146 @@ interface PaymentPageProps {
   onScreenChange: (screen: Screen) => void
 }
 
+interface SavedPaymentMethod {
+  id: string
+  type: 'credit' | 'debit'
+  brand: 'visa' | 'mastercard' | 'elo'
+  lastFourDigits: string
+  holderName: string
+  expiryMonth: string
+  expiryYear: string
+}
+
 interface PaymentMethod {
   id: string
-  type: 'pix' | 'credit' | 'debit'
+  type: 'pix' | 'credit' | 'debit' | 'cash'
   name: string
   description?: string
   icon: React.ReactNode
   fee?: number
+  isCard?: boolean
+  cardData?: SavedPaymentMethod
 }
-
-const paymentMethods: PaymentMethod[] = [
-  {
-    id: 'pix',
-    type: 'pix',
-    name: 'PIX',
-    description: 'Pagamento instantâneo',
-    icon: <Smartphone className="w-6 h-6 text-purple-600" />,
-    fee: 0
-  },
-  {
-    id: 'debit',
-    type: 'debit',
-    name: 'Cartão de Débito',
-    description: 'Cartão final ****1234',
-    icon: <CreditCard className="w-6 h-6 text-blue-600" />,
-    fee: 0
-  },
-  {
-    id: 'credit',
-    type: 'credit',
-    name: 'Cartão de Crédito',
-    description: 'Cartão final ****5678',
-    icon: <CreditCard className="w-6 h-6 text-green-600" />,
-    fee: 2.50
-  },
-  {
-    id: 'cash',
-    type: 'debit',
-    name: 'Dinheiro na Entrega',
-    description: 'Pague ao receber o pedido',
-    icon: <DollarSign className="w-6 h-6 text-yellow-600" />,
-    fee: 0
-  }
-]
 
 export default function PaymentPage({ cart, onScreenChange }: PaymentPageProps) {
   const [selectedPayment, setSelectedPayment] = useState<string>("pix")
+  const [savedCards, setSavedCards] = useState<SavedPaymentMethod[]>([])
+  const [isAddCardDialogOpen, setIsAddCardDialogOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { cart: hookCart } = useCart()
+
+  // Load saved cards from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('userPaymentMethods')
+      if (stored) {
+        setSavedCards(JSON.parse(stored))
+      }
+    }
+  }, [])
+
+  // Save cards to localStorage
+  const saveCastomCards = (cards: SavedPaymentMethod[]) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('userPaymentMethods', JSON.stringify(cards))
+      setSavedCards(cards)
+    }
+  }
+
+  const handleAddCard = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+
+    const formData = new FormData(e.currentTarget)
+    const cardNumber = formData.get('cardNumber') as string
+    
+    // Get card brand from number
+    const getBrandFromNumber = (number: string): 'visa' | 'mastercard' | 'elo' => {
+      if (number.startsWith('4')) return 'visa'
+      if (number.startsWith('5') || number.startsWith('2')) return 'mastercard'
+      return 'elo'
+    }
+
+    const newCard: SavedPaymentMethod = {
+      id: Date.now().toString(),
+      type: formData.get('type') as 'credit' | 'debit',
+      brand: getBrandFromNumber(cardNumber),
+      lastFourDigits: cardNumber.slice(-4),
+      holderName: formData.get('holderName') as string,
+      expiryMonth: formData.get('expiryMonth') as string,
+      expiryYear: formData.get('expiryYear') as string,
+    }
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    const updatedCards = [...savedCards, newCard]
+    saveCastomCards(updatedCards)
+    
+    setLoading(false)
+    setIsAddCardDialogOpen(false)
+    
+    // Reset form
+    ;(e.target as HTMLFormElement).reset()
+  }
+
+  const getCardIcon = (brand: string) => {
+    const colors = {
+      visa: "text-blue-600",
+      mastercard: "text-red-600", 
+      elo: "text-yellow-600"
+    }
+    return colors[brand as keyof typeof colors] || "text-gray-600"
+  }
+
+  const getBrandName = (brand: string) => {
+    const names = {
+      visa: "Visa",
+      mastercard: "Mastercard",
+      elo: "Elo"
+    }
+    return names[brand as keyof typeof names] || brand
+  }
+
+  const getCardType = (type: string) => {
+    return type === 'credit' ? 'Crédito' : 'Débito'
+  }
+
+  // Build payment methods array including saved cards
+  const buildPaymentMethods = (): PaymentMethod[] => {
+    const baseMethod: PaymentMethod[] = [
+      {
+        id: 'pix',
+        type: 'pix',
+        name: 'PIX',
+        description: 'Pagamento instantâneo',
+        icon: <Smartphone className="w-6 h-6 text-purple-600" />,
+      },
+      {
+        id: 'cash',
+        type: 'cash',
+        name: 'Dinheiro na Entrega',
+        description: 'Pague ao receber o pedido',
+        icon: <DollarSign className="w-6 h-6 text-yellow-600" />,
+      }
+    ]
+
+    // Add saved cards as payment methods
+    const cardMethods: PaymentMethod[] = savedCards.map(card => ({
+      id: `card_${card.id}`,
+      type: card.type,
+      name: `${getBrandName(card.brand)} ${getCardType(card.type)}`,
+      description: `•••• •••• •••• ${card.lastFourDigits}`,
+      icon: <CreditCard className={`w-6 h-6 ${getCardIcon(card.brand)}`} />,
+      fee: card.type === 'credit' ? 2.50 : 0,
+      isCard: true,
+      cardData: card
+    }))
+
+    return [...baseMethod, ...cardMethods]
+  }
+
+  const paymentMethods = buildPaymentMethods()
 
   const cartTotal = hookCart.items.reduce((total, item) => {
     // Para produtos com selectedWeight, usar o peso real
@@ -164,6 +261,119 @@ export default function PaymentPage({ cart, onScreenChange }: PaymentPageProps) 
               </div>
             </div>
           ))}
+
+          {/* Add new card button */}
+          <Dialog open={isAddCardDialogOpen} onOpenChange={setIsAddCardDialogOpen}>
+            <DialogTrigger asChild>
+              <div className="bg-white rounded-lg p-4 shadow-sm border-2 border-dashed border-gray-300 hover:border-gray-400 transition-all cursor-pointer">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="p-2 bg-gray-50 rounded-lg">
+                    <Plus className="w-6 h-6 text-gray-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-700">
+                      Adicionar novo cartão
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Salve um cartão para pagamentos futuros
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md max-w-[90vw] rounded-2xl p-6">
+              <DialogHeader>
+                <DialogTitle>Adicionar Cartão</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleAddCard} className="space-y-4">
+                <div>
+                  <Label htmlFor="holderName">Nome do Portador</Label>
+                  <Input
+                    id="holderName"
+                    name="holderName"
+                    placeholder="João Silva"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="cardNumber">Número do Cartão</Label>
+                  <Input
+                    id="cardNumber"
+                    name="cardNumber"
+                    placeholder="1234 5678 9012 3456"
+                    maxLength={19}
+                    required
+                  />
+                </div>
+                
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <Label htmlFor="expiryMonth">Mês</Label>
+                    <Select name="expiryMonth" required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="MM" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({length: 12}, (_, i) => (
+                          <SelectItem key={i+1} value={String(i+1).padStart(2, '0')}>
+                            {String(i+1).padStart(2, '0')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="expiryYear">Ano</Label>
+                    <Select name="expiryYear" required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="AA" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Array.from({length: 10}, (_, i) => (
+                          <SelectItem key={i} value={String(2024 + i).slice(-2)}>
+                            {String(2024 + i).slice(-2)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="type">Tipo</Label>
+                    <Select name="type" required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="credit">Crédito</SelectItem>
+                        <SelectItem value="debit">Débito</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3 pt-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setIsAddCardDialogOpen(false)}
+                    className="flex-1"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={loading}
+                    className="flex-1"
+                  >
+                    {loading ? 'Salvando...' : 'Salvar'}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Security notice */}
