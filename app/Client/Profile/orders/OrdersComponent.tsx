@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Clock, CheckCircle, XCircle, Star, Truck, Package, ChevronRight, MoreVertical } from "lucide-react"
+import { Clock, CheckCircle, XCircle, Star, Truck, Package, ChevronRight, MoreVertical, MessageSquare } from "lucide-react"
 import { Screen, CartItem } from "../../types"
 import { ClientBottomNavigation } from "../../components/BottomNav"
 import { Order } from "@/lib/api/types"
 import { getUserOrders, getFeirantes } from "@/lib/utils"
+import { ChatModal } from "@/components/ui/chat-modal"
 import Image from "next/image"
 
 interface OrdersPageProps {
@@ -99,6 +100,36 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
   const [activeTab, setActiveTab] = useState<'ongoing' | 'history'>('ongoing')
   const [loading, setLoading] = useState(true)
   const [feirantes, setFeirantes] = useState<any[]>([])
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
+  const [chatModal, setChatModal] = useState<{
+    isOpen: boolean
+    feiranteId: string
+    feiranteName: string
+  }>({
+    isOpen: false,
+    feiranteId: '',
+    feiranteName: ''
+  })
+
+  const openChatModal = (feiranteId: string, feiranteName: string) => {
+    setChatModal({
+      isOpen: true,
+      feiranteId,
+      feiranteName
+    })
+  }
+
+  const closeChatModal = () => {
+    setChatModal({
+      isOpen: false,
+      feiranteId: '',
+      feiranteName: ''
+    })
+  }
+
+  const toggleOrderDetails = (orderId: string) => {
+    setExpandedOrder(expandedOrder === orderId ? null : orderId)
+  }
 
   useEffect(() => {
     // Mock user ID - in a real app, this would come from auth context
@@ -284,20 +315,66 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
                   {/* Ações */}
                   <div className="pt-4 border-t">
                     <div className="flex gap-32">
-                      <button className="text-orange-500 font-medium text-sm py-2 pl-12">
-                        Detalhes
+                      <button 
+                        className="text-orange-500 font-medium text-sm py-2 pl-12"
+                        onClick={() => toggleOrderDetails(order.id)}
+                      >
+                        {expandedOrder === order.id ? 'Ocultar' : 'Detalhes'}
                       </button>
-                      <button className="text-orange-500 font-medium text-sm py-2 flex items-center gap-2">
-                        <Image
-                          src="/chat.svg"
-                          alt="Chat"
-                          width={32}
-                          height={32}
-                          className="w-6 h-6"
-                        />
+                      <button 
+                        className="text-orange-500 font-medium text-sm py-2 flex items-center gap-2"
+                        onClick={() => openChatModal(feiranteData?.id || order.feiranteName, order.feiranteName)}
+                      >
+                        <MessageSquare className="w-5 h-5" />
+                        Chat
                       </button>
                     </div>
                   </div>
+
+                  {/* Dropdown com detalhes expandidos */}
+                  {expandedOrder === order.id && (
+                    <div className="mt-4 pt-4 border-t bg-gray-50 -mx-4 px-4 pb-4 rounded-b-lg">
+                      <h5 className="font-medium text-gray-900 mb-3">Detalhes do pedido</h5>
+                      
+                      {/* Itens detalhados */}
+                      <div className="space-y-3 mb-4">
+                        {order.items.map((item, index) => (
+                          <div key={index} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">{item.name}</p>
+                              {item.observation && (
+                                <p className="text-xs text-orange-600">{item.observation}</p>
+                              )}
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-medium">
+                                {item.quantity}x × R$ {item.price.toFixed(2)}
+                              </p>
+                              <p className="text-sm font-bold text-orange-600">
+                                R$ {(item.price * item.quantity).toFixed(2)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Resumo financeiro */}
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Subtotal</span>
+                          <span>R$ {(order.total - 5).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Taxa de entrega</span>
+                          <span>R$ 5,00</span>
+                        </div>
+                        <div className="flex justify-between font-bold text-base pt-2 border-t">
+                          <span>Total</span>
+                          <span className="text-orange-600">R$ {order.total.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 )
               })
@@ -408,14 +485,83 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
                         </div>
                         <div className="pt-4 border-t">
                           <div className="flex gap-20">
-                            <button className="text-orange-500 font-medium text-sm py-2 pl-12">
-                              Ajuda
+                            <button 
+                              className="text-orange-500 font-medium text-sm py-2 pl-12"
+                              onClick={() => toggleOrderDetails(order.id)}
+                            >
+                              {expandedOrder === order.id ? 'Ocultar' : 'Detalhes'}
                             </button>
-                            <button className="text-orange-500 font-medium text-sm py-2">
-                              Adicionar à sacola
+                            <button 
+                              className="text-orange-500 font-medium text-sm py-2"
+                              onClick={() => openChatModal(feiranteData?.id || order.feiranteName, order.feiranteName)}
+                            >
+                              Falar com vendedor
                             </button>
                           </div>
                         </div>
+
+                        {/* Dropdown com detalhes expandidos */}
+                        {expandedOrder === order.id && (
+                          <div className="mt-4 pt-4 border-t bg-gray-50 -mx-4 px-4 pb-4 rounded-b-lg">
+                            <h5 className="font-medium text-gray-900 mb-3">Detalhes do pedido</h5>
+                            
+                            {/* Itens detalhados */}
+                            <div className="space-y-3 mb-4">
+                              {order.items.map((item, index) => (
+                                <div key={index} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-b-0">
+                                  <div className="flex-1">
+                                    <p className="font-medium text-gray-900">{item.name}</p>
+                                    {item.observation && (
+                                      <p className="text-xs text-orange-600">{item.observation}</p>
+                                    )}
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="text-sm font-medium">
+                                      {item.quantity}x × R$ {item.price.toFixed(2)}
+                                    </p>
+                                    <p className="text-sm font-bold text-orange-600">
+                                      R$ {(item.price * item.quantity).toFixed(2)}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Resumo financeiro */}
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Subtotal</span>
+                                <span>R$ {(order.total - 5).toFixed(2)}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Taxa de entrega</span>
+                                <span>R$ 5,00</span>
+                              </div>
+                              <div className="flex justify-between font-bold text-base pt-2 border-t">
+                                <span>Total</span>
+                                <span className="text-orange-600">R$ {order.total.toFixed(2)}</span>
+                              </div>
+                            </div>
+
+                            {/* Data de entrega */}
+                            {order.deliveredAt && (
+                              <div className="mt-4 pt-3 border-t">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-gray-600">Entregue em</span>
+                                  <span className="font-medium">
+                                    {new Date(order.deliveredAt).toLocaleDateString('pt-BR', {
+                                      day: '2-digit',
+                                      month: '2-digit',
+                                      year: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                       )
                     })}
@@ -430,6 +576,14 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
       <ClientBottomNavigation 
         onScreenChange={onScreenChange} 
         currentScreen="orders" 
+      />
+
+      {/* Chat Modal */}
+      <ChatModal
+        isOpen={chatModal.isOpen}
+        onClose={closeChatModal}
+        feiranteId={chatModal.feiranteId}
+        feiranteName={chatModal.feiranteName}
       />
     </div>
   )
