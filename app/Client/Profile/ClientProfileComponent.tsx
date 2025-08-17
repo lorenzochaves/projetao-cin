@@ -11,12 +11,14 @@ import {
   MapPin, 
   Heart,
   Settings,
-  HelpCircle 
+  HelpCircle,
+  LogOut
 } from "lucide-react"
 import { Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
-import { getCurrentUser } from "@/lib/utils"
+import { getCurrentUser, logout } from "@/lib/utils"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface ProfilePageProps {
   cart: CartItem[]
@@ -25,6 +27,12 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) {
   const [user, setUser] = useState<any>(null)
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout()
+    router.push('/UserType')
+  }
 
   useEffect(() => {
     const currentUser = getCurrentUser()
@@ -156,6 +164,15 @@ export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) 
               <HelpCircle className="w-4 h-4 text-gray-600" />
             </div>
             <p className="text-gray-600">Suporte</p>
+          </button>
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-2 hover:bg-red-50 transition-colors rounded-lg border-t pt-4 mt-4"
+          >
+            <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+              <LogOut className="w-4 h-4 text-red-600" />
+            </div>
+            <p className="text-red-600 font-medium">Sair da conta</p>
           </button>
         </div>
       </div>

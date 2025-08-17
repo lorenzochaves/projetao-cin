@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowLeft, Heart, Info, Search, Star, MapPin, Plus, Minus } from "lucide-react"
+import { Heart, MessageCircle, Search, Star, MapPin, Plus, Minus } from "lucide-react"
 import { Feirante, Product, Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { useProducts } from "@/hooks/api/useProducts"
 import { useCart } from "@/contexts/CartContext"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useState, useEffect } from "react"
+import { getCurrentUser, addToFavorites, removeFromFavorites, isFavorite } from "@/lib/utils"
 
 interface FeirantePageProps {
   selectedFeirante: Feirante
@@ -30,7 +32,27 @@ export default function FeirantePage({
 }: FeirantePageProps) {
   const { products, loading, error } = useProducts()
   const { cart: hookCart, addToCart, updateQuantity } = useCart()
-  
+  const [isFavorited, setIsFavorited] = useState(false)
+  const currentUser = getCurrentUser()
+
+  useEffect(() => {
+    if (currentUser) {
+      setIsFavorited(isFavorite(currentUser.id, selectedFeirante.id))
+    }
+  }, [currentUser, selectedFeirante.id])
+
+  const handleToggleFavorite = () => {
+    if (!currentUser) return
+
+    if (isFavorited) {
+      const success = removeFromFavorites(currentUser.id, selectedFeirante.id)
+      if (success) setIsFavorited(false)
+    } else {
+      const success = addToFavorites(currentUser.id, selectedFeirante.id)
+      if (success) setIsFavorited(true)
+    }
+  }
+
   // Usar o cart do hook em vez do prop para ter sempre os dados mais atualizados
   const cart = hookCart.items.map(item => ({
     id: item.productId,
@@ -43,9 +65,6 @@ export default function FeirantePage({
     feirante: item.feiranteName,
     observation: item.observation
   }))
-  
-  console.log('🛒 FeiranteComponent - hookCart:', hookCart)
-  console.log('🛒 FeiranteComponent - cart convertido:', cart)
   
   // Filter products by current feirante
   const feiranteProducts = products.filter(p => p.feiranteId === selectedFeirante.id)
@@ -101,11 +120,21 @@ export default function FeirantePage({
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm" onClick={() => onScreenChange("feirante-profile")}>
-              <Info className="w-5 h-5" />
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => onScreenChange("chat")}
+              className="text-orange-600 hover:bg-orange-50"
+            >
+              <MessageCircle className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm">
-              <Heart className="w-5 h-5" />
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={handleToggleFavorite}
+              className={isFavorited ? "text-red-600 hover:bg-red-50" : "text-gray-600 hover:bg-gray-50"}
+            >
+              <Heart className={`w-5 h-5 ${isFavorited ? "fill-current" : ""}`} />
             </Button>
           </div>
         </div>
@@ -179,7 +208,11 @@ export default function FeirantePage({
                       return (
                         <div
                           key={product.id}
-                          className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                          className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
+                          onClick={() => {
+                            onSelectProduct(product)
+                            onScreenChange("product")
+                          }}
                         >
                           {/* Imagem do produto */}
                           <div className="relative h-32 bg-gray-100">
@@ -212,7 +245,6 @@ export default function FeirantePage({
                                     onClick={(e) => {
                                       e.preventDefault()
                                       e.stopPropagation()
-                                      console.log('🔄 FeiranteComponent - Decrementar:', { productId: product.id, currentQuantity: quantity, newQuantity: quantity - 1 })
                                       updateQuantity(product.id, quantity - 1)
                                     }}
                                     className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
@@ -224,7 +256,6 @@ export default function FeirantePage({
                                     onClick={(e) => {
                                       e.preventDefault()
                                       e.stopPropagation()
-                                      console.log('🔄 FeiranteComponent - Incrementar:', { productId: product.id, currentQuantity: quantity, newQuantity: quantity + 1 })
                                       updateQuantity(product.id, quantity + 1)
                                     }}
                                     className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm hover:bg-green-600 transition-colors"
@@ -266,13 +297,7 @@ export default function FeirantePage({
                           </div>
                           
                           {/* Informações do produto */}
-                          <div 
-                            className="p-3 cursor-pointer"
-                            onClick={() => {
-                              onSelectProduct(product)
-                              onScreenChange("product")
-                            }}
-                          >
+                          <div className="p-3">
                             {/* Preço */}
                             <div className="text-lg font-bold text-gray-900 mb-1">
                               R$ {product.price.toFixed(2)}
@@ -313,7 +338,6 @@ export default function FeirantePage({
           </>
         )}
       </div>
-
       <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )

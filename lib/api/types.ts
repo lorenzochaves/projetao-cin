@@ -148,3 +148,26 @@ export interface Finance {
     revenue: number
   }[]
 }
+
+export interface ChatMessage {
+  id: string
+  chatId: string
+  senderId: string
+  senderName: string
+  senderType: 'client' | 'marketer'
+  message: string
+  timestamp: string
+  read: boolean
+}
+
+export interface Chat {
+  id: string
+  clientId: string
+  feiranteId: string
+  clientName: string
+  feiranteName: string
+  lastMessage?: string
+  lastMessageTime?: string
+  unreadCount: number
+  createdAt: string
+}

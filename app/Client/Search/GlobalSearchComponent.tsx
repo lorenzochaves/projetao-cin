@@ -19,6 +19,7 @@ interface GlobalSearchPageProps {
   searchHistory: string[]
   onScreenChange: (screen: Screen) => void
   onSelectFeirante: (feirante: Feirante) => void
+  onSelectProduct?: (product: any) => void
   onSearchChange: (query: string) => void
   onShowSearchHistoryChange: (show: boolean) => void
   onRemoveFromSearchHistory: (term: string) => void
@@ -30,6 +31,7 @@ export default function GlobalSearchPage({
   searchHistory,
   onScreenChange, 
   onSelectFeirante, 
+  onSelectProduct,
   onSearchChange,
   onShowSearchHistoryChange,
   onRemoveFromSearchHistory
@@ -529,7 +531,23 @@ export default function GlobalSearchPage({
                 <h3 className="font-semibold text-base mb-3">Produtos</h3>
                 <div className="grid grid-cols-3 gap-4">
                   {filteredProducts.slice(0, 9).map((product) => (
-                    <Card key={product.id} className="p-2 cursor-pointer hover:shadow-md transition-shadow border-0">
+                    <Card 
+                      key={product.id} 
+                      className="p-2 cursor-pointer hover:shadow-md transition-shadow border-0"
+                      onClick={() => {
+                        if (onSelectProduct) {
+                          // Encontrar o feirante correspondente ao produto
+                          const productFeirante = feirantes.find(f => f.id === product.feiranteId)
+                          if (productFeirante) {
+                            // Primeiro selecionar o feirante
+                            onSelectFeirante(productFeirante)
+                            // Depois selecionar o produto
+                            onSelectProduct(product)
+                            onScreenChange("product")
+                          }
+                        }
+                      }}
+                    >
                       <div className="text-center">
                         <div className="w-12 h-12 bg-gray-100 rounded-lg mx-auto mb-1 overflow-hidden">
                           <img 

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { User, Feirante, Product, Category, Order, MarketerOrder, UserAddress, PaymentMethod, Favorite, Review, Finance } from './api/types'
+import { User, Feirante, Product, Category, Order, MarketerOrder, UserAddress, PaymentMethod, Favorite, Review, Finance, Chat, ChatMessage } from './api/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -21,7 +21,9 @@ const STORAGE_KEYS = {
   FINANCES: 'feira_finances',
   CURRENT_USER: 'feira_current_user',
   AUTH_TOKEN: 'feira_auth_token',
-  CART: 'feira_cart'
+  CART: 'feira_cart',
+  CHATS: 'feira_chats',
+  CHAT_MESSAGES: 'feira_chat_messages'
 } as const
 
 // Dados mockados iniciais com senhas
@@ -486,7 +488,9 @@ const INITIAL_DATA = {
         }
       ]
     }
-  ]
+  ],
+  chats: [] as Chat[],
+  chatMessages: [] as ChatMessage[]
 }
 
 // Funções utilitárias para localStorage
@@ -680,6 +684,132 @@ export function getReviews(): Review[] {
 
 export function getFinances(): Finance[] {
   return getFromStorage<Finance[]>(STORAGE_KEYS.FINANCES) || []
+}
+
+// Funções de Chat
+export function getChats(): Chat[] {
+  return getFromStorage<Chat[]>(STORAGE_KEYS.CHATS) || []
+}
+
+export function getChatMessages(): ChatMessage[] {
+  return getFromStorage<ChatMessage[]>(STORAGE_KEYS.CHAT_MESSAGES) || []
+}
+
+export function createOrGetChat(clientId: string, feiranteId: string, clientName: string, feiranteName: string): Chat {
+  const chats = getChats()
+  const existingChat = chats.find(c => c.clientId === clientId && c.feiranteId === feiranteId)
+  
+  if (existingChat) {
+    return existingChat
+  }
+  
+  const newChat: Chat = {
+    id: Date.now().toString(),
+    clientId,
+    feiranteId,
+    clientName,
+    feiranteName,
+    unreadCount: 0,
+    createdAt: new Date().toISOString()
+  }
+  
+  chats.push(newChat)
+  setToStorage(STORAGE_KEYS.CHATS, chats)
+  return newChat
+}
+
+export function sendMessage(chatId: string, senderId: string, senderName: string, senderType: 'client' | 'marketer', message: string): ChatMessage {
+  const messages = getChatMessages()
+  const chats = getChats()
+  
+  const newMessage: ChatMessage = {
+    id: Date.now().toString(),
+    chatId,
+    senderId,
+    senderName,
+    senderType,
+    message,
+    timestamp: new Date().toISOString(),
+    read: false
+  }
+  
+  messages.push(newMessage)
+  setToStorage(STORAGE_KEYS.CHAT_MESSAGES, messages)
+  
+  // Atualizar chat com última mensagem
+  const chat = chats.find(c => c.id === chatId)
+  if (chat) {
+    chat.lastMessage = message
+    chat.lastMessageTime = newMessage.timestamp
+    if (senderType === 'client') {
+      chat.unreadCount += 1
+    }
+    setToStorage(STORAGE_KEYS.CHATS, chats)
+  }
+  
+  return newMessage
+}
+
+export function getChatMessages_ByChat(chatId: string): ChatMessage[] {
+  const messages = getChatMessages()
+  return messages.filter(m => m.chatId === chatId).sort((a, b) => 
+    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  )
+}
+
+export function markMessagesAsRead(chatId: string, userId: string) {
+  const messages = getChatMessages()
+  const chats = getChats()
+  
+  messages.forEach(message => {
+    if (message.chatId === chatId && message.senderId !== userId) {
+      message.read = true
+    }
+  })
+  
+  setToStorage(STORAGE_KEYS.CHAT_MESSAGES, messages)
+  
+  // Reset unread count
+  const chat = chats.find(c => c.id === chatId)
+  if (chat) {
+    chat.unreadCount = 0
+    setToStorage(STORAGE_KEYS.CHATS, chats)
+  }
+}
+
+// Funções de Favoritos
+export function addToFavorites(userId: string, feiranteId: string): boolean {
+  const favorites = getFavorites()
+  const exists = favorites.find(f => f.userId === userId && f.feiranteId === feiranteId)
+  
+  if (exists) return false
+  
+  const newFavorite: Favorite = {
+    id: Date.now().toString(),
+    userId,
+    feiranteId,
+    createdAt: new Date().toISOString()
+  }
+  
+  favorites.push(newFavorite)
+  setToStorage(STORAGE_KEYS.FAVORITES, favorites)
+  return true
+}
+
+export function removeFromFavorites(userId: string, feiranteId: string): boolean {
+  const favorites = getFavorites()
+  const index = favorites.findIndex(f => f.userId === userId && f.feiranteId === feiranteId)
+  
+  if (index === -1) return false
+  
+  favorites.splice(index, 1)
+  setToStorage(STORAGE_KEYS.FAVORITES, favorites)
+  return true
+}
+
+export function isFavorite(userId: string, feiranteId: string): boolean {
+  const favorites = getFavorites()
+  return favorites.some(f => f.userId === userId && f.feiranteId === feiranteId)
 }
 
 export { STORAGE_KEYS, INITIAL_DATA }

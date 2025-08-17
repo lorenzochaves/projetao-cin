@@ -9,6 +9,7 @@ import { CartProvider } from "@/contexts/CartContext"
 
 // Importar os componentes das diferentes telas
 import FeiranteComponent from "../Feirantes/FeiranteComponent"
+import ChatComponent from "../Chat/ChatComponent"
 import CartComponent from "../Cart/CartComponent"
 import ClientProfileComponent from "../Profile/ClientProfileComponent"
 import GlobalSearchComponent from "../Search/GlobalSearchComponent"
@@ -68,14 +69,11 @@ function ClientHomePageContent() {
     }
   }, [])
 
-  // Forçar re-render quando o carrinho mudar (mas não duplicar o localStorage)
-  useEffect(() => {
-    // Apenas para triggering re-render dos componentes filhos
-  }, [cart])
-
   const handleScreenChange = (screen: Screen) => {
     console.log('🔄 Mudando para tela:', screen)
-    setCurrentScreen(screen)
+    if (screen !== currentScreen) {
+      setCurrentScreen(screen)
+    }
   }
 
   const handleSelectFeirante = (feirante: Feirante) => {
@@ -259,6 +257,7 @@ function ClientHomePageContent() {
             searchHistory={searchHistory}
             onScreenChange={handleScreenChange}
             onSelectFeirante={handleSelectFeirante}
+            onSelectProduct={handleSelectProduct}
             onSearchChange={handleSearchChange}
             onShowSearchHistoryChange={setShowSearchHistory}
             onRemoveFromSearchHistory={handleRemoveFromSearchHistory}
@@ -316,10 +315,6 @@ function ClientHomePageContent() {
         )
 
       case "success":
-        // Limpar carrinho quando chegar na tela de sucesso
-        if (cart.items.length > 0) {
-          clearCart()
-        }
         return (
           <SuccessComponent
             cart={convertCartForComponents()}
@@ -356,6 +351,22 @@ function ClientHomePageContent() {
           <FavoritesComponent
             cart={convertCartForComponents()}
             onScreenChange={handleScreenChange}
+          />
+        )
+
+      case "chat":
+        return selectedFeirante ? (
+          <ChatComponent
+            feiranteId={selectedFeirante.id}
+            feiranteName={selectedFeirante.name}
+            onScreenChange={handleScreenChange}
+          />
+        ) : (
+          <HomepageComponent
+            cart={convertCartForComponents()}
+            onScreenChange={handleScreenChange}
+            onSelectFeirante={handleSelectFeirante}
+            currentScreen={currentScreen}
           />
         )
 
