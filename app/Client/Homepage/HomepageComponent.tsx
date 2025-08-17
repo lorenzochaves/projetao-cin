@@ -29,6 +29,12 @@ interface Notification {
 
 const mockNotifications: Notification[] = [
   {
+    id: "welcome",
+    message: "Bem-vindo ao Feirou! Conheça como funciona nossa plataforma",
+    date: "17/08",
+    read: false
+  },
+  {
     id: "1",
     message: "Seu pedido #1234 foi entregue com sucesso!",
     date: "16/08",
@@ -72,6 +78,7 @@ export default function HomePage({
   const [user, setUser] = useState<any>(null)
   const [showNotifications, setShowNotifications] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false)
   const notificationRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -146,6 +153,13 @@ export default function HomePage({
 
   const markAsRead = (id: string) => {
     console.log('🔔 Marcando como lida:', id)
+    
+    // Se for a notificação de boas-vindas, abrir modal
+    if (id === 'welcome') {
+      setShowWelcomeModal(true)
+      setShowNotifications(false)
+    }
+    
     setNotifications(prev => {
       const updated = prev.map(notification => 
         notification.id === id 
@@ -231,44 +245,6 @@ export default function HomePage({
             )}
           </div>
         </div>
-
-        {/* Descrição de feira finalizada — explicação do app e funcionalidades */}
-        <Card className="p-5 mb-6">
-          <div className="flex items-center gap-2">
-            <Check className="h-5 w-5" />
-            <h2 className="text-lg font-semibold">Descrição de feira finalizada</h2>
-            <Badge variant="secondary" className="ml-1">Beta</Badge>
-          </div>
-
-          <p className="mt-3 text-sm text-muted-foreground">
-            O Feirou conecta você a feirantes locais para montar sua feira de forma rápida e personalizada.
-            Você escolhe o feirante, conversa no chat, monta a lista, confirma o pagamento e acompanha a entrega.
-            Ao final, esta seção mostra um resumo da sua compra.
-          </p>
-
-          <ul className="mt-4 grid gap-2 text-sm">
-            <li className="flex items-center gap-2">
-              <ShoppingBasket className="h-4 w-4" />
-              <span><strong>Catálogo & Pedido:</strong> veja produtos, adicione/remova itens e acompanhe totais em tempo real.</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
-              <span><strong>Chat com o feirante:</strong> tire dúvidas, combine substituições e personalize sua feira.</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              <span><strong>Entrega/Retirada:</strong> acompanhe previsão de entrega ou combine retirada no ponto.</span>
-            </li>
-          </ul>
-
-          <div className="mt-4 rounded-md bg-muted p-3 text-xs text-muted-foreground flex gap-2">
-            <Info className="h-4 w-4 mt-0.5 shrink-0" />
-            <p>
-              Após concluir um pedido, aqui aparece o resumo da <em>feira finalizada</em>:
-              itens comprados, subtotal, taxa de entrega/descontos, total pago, endereço e observações.
-            </p>
-          </div>
-        </Card>
 
         {/* Banner de oferta */}
         <Card className="bg-gradient-to-r from-green-500 to-green-600 p-6 mb-6 rounded-xl text-white">
@@ -359,6 +335,72 @@ export default function HomePage({
           </div>
         )}
       </div>
+
+      {/* Modal de Boas-vindas */}
+      {showWelcomeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-green-600" />
+                  <h2 className="text-lg font-semibold">Bem-vindo ao Feirou!</h2>
+                  <Badge variant="secondary" className="ml-1">Beta</Badge>
+                </div>
+                <button
+                  onClick={() => setShowWelcomeModal(false)}
+                  className="p-1 hover:bg-gray-100 rounded"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-600 mb-4">
+                O Feirou conecta você a feirantes locais para montar sua feira de forma rápida e personalizada.
+                Você escolhe o feirante, conversa no chat, monta a lista, confirma o pagamento e acompanha a entrega.
+              </p>
+
+              <ul className="space-y-3 text-sm mb-4">
+                <li className="flex items-start gap-3">
+                  <ShoppingBasket className="h-4 w-4 mt-0.5 text-orange-500 flex-shrink-0" />
+                  <div>
+                    <strong>Catálogo & Pedido:</strong> veja produtos, adicione/remova itens e acompanhe totais em tempo real.
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MessageSquare className="h-4 w-4 mt-0.5 text-orange-500 flex-shrink-0" />
+                  <div>
+                    <strong>Chat com o feirante:</strong> tire dúvidas, combine substituições e personalize sua feira.
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MapPin className="h-4 w-4 mt-0.5 text-orange-500 flex-shrink-0" />
+                  <div>
+                    <strong>Entrega/Retirada:</strong> acompanhe previsão de entrega ou combine retirada no ponto.
+                  </div>
+                </li>
+              </ul>
+
+              <div className="bg-gray-50 rounded-md p-3 text-xs text-gray-600 flex gap-2">
+                <Info className="h-4 w-4 mt-0.5 shrink-0" />
+                <p>
+                  Após concluir um pedido, na sua home aparece o resumo da <em>feira finalizada</em>:
+                  itens comprados, subtotal, taxa de entrega/descontos, total pago, endereço e observações.
+                </p>
+              </div>
+
+              <div className="mt-4 pt-4 border-t">
+                <button
+                  onClick={() => setShowWelcomeModal(false)}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+                >
+                  Entendi, vamos começar!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ClientBottomNavigation 
         onScreenChange={onScreenChange} 
