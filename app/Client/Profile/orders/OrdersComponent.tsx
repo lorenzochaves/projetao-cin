@@ -14,6 +14,7 @@ import Image from "next/image"
 interface OrdersPageProps {
   cart: CartItem[]
   onScreenChange: (screen: Screen) => void
+  onSelectFeirante?: (feirante: any) => void
 }
 
 const getStatusColor = (status: string) => {
@@ -95,7 +96,7 @@ const groupOrdersByDate = (orders: Order[]) => {
   return groups
 }
 
-export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
+export default function OrdersPage({ cart, onScreenChange, onSelectFeirante }: OrdersPageProps) {
   const [orders, setOrders] = useState<Order[]>([])
   const [activeTab, setActiveTab] = useState<'ongoing' | 'history'>('ongoing')
   const [loading, setLoading] = useState(true)
@@ -261,7 +262,17 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
                         <h4 className="font-medium text-gray-900">{order.feiranteName}</h4>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="p-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="p-2"
+                      onClick={() => {
+                        if (onSelectFeirante && feiranteData) {
+                          onSelectFeirante(feiranteData)
+                        }
+                        onScreenChange("feirante")
+                      }}
+                    >
                       <ChevronRight className="w-4 h-4" />
                     </Button>
                   </div>
@@ -429,7 +440,17 @@ export default function OrdersPage({ cart, onScreenChange }: OrdersPageProps) {
                               <h4 className="font-medium text-gray-900">{order.feiranteName}</h4>
                             </div>
                           </div>
-                          <Button variant="ghost" size="sm" className="p-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="p-2"
+                            onClick={() => {
+                              if (onSelectFeirante && feiranteData) {
+                                onSelectFeirante(feiranteData)
+                              }
+                              onScreenChange("feirante")
+                            }}
+                          >
                             <ChevronRight className="w-4 h-4" />
                           </Button>
                         </div>

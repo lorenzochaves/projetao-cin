@@ -337,6 +337,7 @@ function ClientHomePageContent() {
           <OrdersComponent
             cart={convertCartForComponents()}
             onScreenChange={handleScreenChange}
+            onSelectFeirante={handleSelectFeirante}
           />
         )
 
