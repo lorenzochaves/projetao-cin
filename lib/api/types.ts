@@ -28,17 +28,28 @@ export interface Feirante {
   address: string
 }
 
+export interface ProductVariation {
+  id: string
+  name: string
+  price?: number // Se tiver preço diferente
+}
+
 export interface Product {
   id: string
   feiranteId: string
   name: string
   price: number
   unit: string
+  unitType: 'kg' | 'unit' | 'bunch' | 'tray' | 'mao' | 'bandeja'
   image: string
   category: string
   description: string
   stock: number
   isAvailable: boolean
+  variations?: ProductVariation[]
+  minWeight?: number // Para produtos por kg
+  maxWeight?: number // Para produtos por kg
+  weightStep?: number // Incremento de peso (ex: 250g)
 }
 
 export interface Category {

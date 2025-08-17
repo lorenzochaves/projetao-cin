@@ -19,6 +19,12 @@ export type Screen =
   | "favorites"
   | "chat"
 
+export interface ProductVariation {
+  id: string
+  name: string
+  description?: string
+}
+
 export interface Product {
   id: string
   name: string
@@ -30,12 +36,20 @@ export interface Product {
   feiranteId?: string
   stock?: number
   isAvailable?: boolean
+  unitType?: 'kg' | 'unidade' | 'maco' | 'mao' | 'bandeja'
+  variations?: ProductVariation[]
+  allowWeightSelection?: boolean
+  minWeight?: number
+  maxWeight?: number
+  weightIncrement?: number
 }
 
 export interface CartItem extends Product {
   quantity: number
   feirante: string
   observation?: string
+  selectedVariation?: string
+  selectedWeight?: number
 }
 
 export interface Feirante {

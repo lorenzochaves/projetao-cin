@@ -61,10 +61,17 @@ export default function DeliveryPage({ cart, onScreenChange }: DeliveryPageProps
   const [addresses, setAddresses] = useState<Address[]>(mockAddresses)
   const { cart: hookCart } = useCart()
 
-  const cartTotal = hookCart.items.reduce((total, item) => total + item.price * item.quantity, 0)
+  const cartTotal = hookCart.items.reduce((total, item) => {
+    // Para produtos com selectedWeight, usar o peso real
+    if (item.selectedWeight) {
+      return total + item.price * item.selectedWeight
+    }
+    // Para outros produtos, usar a quantidade normal
+    return total + item.price * item.quantity
+  }, 0)
   const deliveryFee = 5.0
   const finalTotal = cartTotal + deliveryFee
-  const totalItems = hookCart.items.reduce((total, item) => total + item.quantity, 0)
+  const totalItems = hookCart.items.length // Contar tipos de produtos, não quantidade total
 
   const getAddressIcon = (label: string) => {
     switch (label.toLowerCase()) {

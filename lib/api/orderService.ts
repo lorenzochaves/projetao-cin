@@ -20,6 +20,8 @@ export interface CartItem {
   feiranteName: string
   image: string
   observation?: string
+  selectedVariation?: string
+  selectedWeight?: number
 }
 
 export interface Cart {
@@ -39,6 +41,32 @@ export const cartService = {
       const newCart = { items: [], total: 0, itemCount: 0 }
       this.saveCart(newCart)
       return newCart
+    }
+    
+    // Verificar se há dados antigos que precisam ser migrados
+    let needsUpdate = false
+    const updatedItems = cart.items.map(item => {
+      // Se o item não tem selectedWeight mas deveria ter (produtos por kg)
+      if (!item.selectedWeight && item.unit === 'kg' && item.quantity > 0) {
+        console.log('Migrando item antigo para novo formato:', item.name)
+        needsUpdate = true
+        return {
+          ...item,
+          selectedWeight: item.quantity * 0.25 // Converter quantity para peso
+        }
+      }
+      return item
+    })
+    
+    if (needsUpdate) {
+      const migratedCart = {
+        items: updatedItems,
+        total: this.calculateTotal(updatedItems),
+        itemCount: this.calculateItemCount(updatedItems)
+      }
+      console.log('Cart migrado:', migratedCart)
+      this.saveCart(migratedCart)
+      return migratedCart
     }
     
     return cart
@@ -62,17 +90,17 @@ export const cartService = {
     }
     
     const existingItemIndex = cart.items.findIndex(
-      item => item.productId === product.productId
+      item => item.productId === product.productId && item.feiranteName === product.feiranteName
     )
 
     let newItems: CartItem[]
 
     if (existingItemIndex >= 0) {
-      // Update existing item
+      // Update existing item - substituir completamente em vez de incrementar
       newItems = [...cart.items]
       newItems[existingItemIndex] = {
-        ...newItems[existingItemIndex],
-        quantity: newItems[existingItemIndex].quantity + quantity
+        ...product,
+        quantity
       }
     } else {
       // Add new item
@@ -175,12 +203,19 @@ export const cartService = {
 
   // Calculate total
   calculateTotal(items: CartItem[]): number {
-    return items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    return items.reduce((sum, item) => {
+      // Para produtos com selectedWeight, usar o peso real
+      if (item.selectedWeight) {
+        return sum + (item.price * item.selectedWeight)
+      }
+      // Para outros produtos, usar a quantidade normal
+      return sum + (item.price * item.quantity)
+    }, 0)
   },
 
-  // Calculate item count
+  // Calculate item count (contar tipos de produtos, não quantidade total)
   calculateItemCount(items: CartItem[]): number {
-    return items.reduce((sum, item) => sum + item.quantity, 0)
+    return items.length // Cada item único conta como 1
   }
 }
 

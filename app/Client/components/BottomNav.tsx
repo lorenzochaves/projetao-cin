@@ -5,7 +5,7 @@ import { Home, Search, ShoppingBasket, User, Package } from "lucide-react"
 import { Screen } from "../types"
 import { useState, useEffect } from "react"
 import { getCurrentUser } from "@/lib/utils"
-import { useCart } from "@/contexts/CartContext"
+import { useCart } from "@/hooks/api/useCart"
 
 interface ClientBottomNavigationProps {
   onScreenChange: (screen: Screen) => void
@@ -65,7 +65,7 @@ export function ClientBottomNavigation({
             <ShoppingBasket className={`h-6 w-6 ${isActive("cart") ? "text-orange-500" : "text-gray-600"}`} />
             {cart.items.length > 0 && (
               <Badge className="absolute -top-2 -right-2 w-5 h-5 rounded-full p-0 flex items-center justify-center text-xs bg-orange-500 hover:bg-orange-500">
-                {cart.items.reduce((total, item) => total + item.quantity, 0)}
+                {cart.items.length}
               </Badge>
             )}
           </div>

@@ -2,12 +2,11 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ArrowLeft } from "lucide-react"
 import { Product, Screen, CartItem, Feirante } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { useProducts } from "@/hooks/api/useProducts"
+import { useState } from "react"
+import ProductVariationModal from "@/components/ui/product-variation-modal"
 
 interface ProductPageProps {
   selectedProduct: Product
@@ -22,27 +21,36 @@ interface ProductPageProps {
   onConfirmAddToCart: () => void
 }
 
-export default function ProductPage({ 
+export default function ProductsComponent({ 
   selectedProduct, 
   selectedFeirante,
   cart, 
-  showObservationModal,
-  currentObservation,
   onScreenChange, 
-  onAddToCart, 
-  onObservationModalChange,
-  onObservationChange,
-  onConfirmAddToCart
+  onAddToCart
 }: ProductPageProps) {
   const { products } = useProducts()
+  const [showVariationModal, setShowVariationModal] = useState(false)
   
   // Get suggested products from the same feirante or same category
-  const suggestedProducts = products
+  const relatedProducts = products
     .filter(p => 
       p.id !== selectedProduct.id && 
       (p.feiranteId === selectedProduct.feiranteId || p.category === selectedProduct.category)
     )
     .slice(0, 4)
+
+  const handleAddToCartClick = () => {
+    setShowVariationModal(true)
+  }
+
+  const handleConfirmAddToCart = (variation: string, quantity: number, observation: string) => {
+    if (!selectedFeirante) return
+    
+    // Aqui você pode implementar a lógica de adicionar ao carrinho com variação
+    // Por agora, vamos usar a função existente
+    onAddToCart(selectedProduct, selectedFeirante.name)
+    setShowVariationModal(false)
+  }
 
   return (
     <div className="min-h-screen bg-white pb-16">
@@ -91,7 +99,7 @@ export default function ProductPage({
 
         <Button
           className="w-full mb-8 bg-gray-200 text-black hover:bg-gray-300 rounded-xl py-3 disabled:opacity-50"
-          onClick={() => onObservationModalChange(true)}
+          onClick={handleAddToCartClick}
           disabled={selectedProduct.isAvailable === false || selectedProduct.stock === 0}
         >
           {selectedProduct.isAvailable === false || selectedProduct.stock === 0 
@@ -101,11 +109,11 @@ export default function ProductPage({
         </Button>
 
         {/* Peça também */}
-        {suggestedProducts.length > 0 && (
+        {relatedProducts.length > 0 && (
           <div>
             <h2 className="text-lg font-bold mb-4">Peça também</h2>
             <div className="grid grid-cols-4 gap-4">
-              {suggestedProducts.map((product) => (
+              {relatedProducts.map((product) => (
                 <Card key={product.id} className="p-2 cursor-pointer hover:shadow-md transition-shadow">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-gray-100 rounded-lg mx-auto mb-1 overflow-hidden">
@@ -131,30 +139,13 @@ export default function ProductPage({
         )}
       </div>
 
-      {/* Modal de Observação */}
-      <Dialog open={showObservationModal} onOpenChange={onObservationModalChange}>
-        <DialogContent className="max-w-sm mx-auto">
-          <DialogHeader>
-            <DialogTitle className="text-left">
-              Você tem alguma
-              <br />
-              observação sobre o item?
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <Textarea
-              placeholder="Quero uma fruta mais madura..."
-              value={currentObservation}
-              onChange={(e) => onObservationChange(e.target.value)}
-              className="bg-gray-100 border-0 resize-none"
-              rows={3}
-            />
-            <Button onClick={onConfirmAddToCart} className="w-full bg-gray-200 text-black hover:bg-gray-300">
-              Adicionar à feira
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Modal de Variações */}
+      <ProductVariationModal
+        isOpen={showVariationModal}
+        onClose={() => setShowVariationModal(false)}
+        product={selectedProduct}
+        onConfirm={handleConfirmAddToCart}
+      />
 
       <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>

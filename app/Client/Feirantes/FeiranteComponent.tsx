@@ -12,6 +12,7 @@ import { useCart } from "@/contexts/CartContext"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useState, useEffect } from "react"
 import { getCurrentUser, addToFavorites, removeFromFavorites, isFavorite } from "@/lib/utils"
+import ProductVariationModal from "@/components/ui/product-variation-modal"
 
 interface FeirantePageProps {
   selectedFeirante: Feirante
@@ -33,6 +34,8 @@ export default function FeirantePage({
   const { products, loading, error } = useProducts()
   const { cart: hookCart, addToCart, updateQuantity } = useCart()
   const [isFavorited, setIsFavorited] = useState(false)
+  const [showVariationModal, setShowVariationModal] = useState(false)
+  const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null)
   const currentUser = getCurrentUser()
 
   useEffect(() => {
@@ -51,6 +54,46 @@ export default function FeirantePage({
       const success = addToFavorites(currentUser.id, selectedFeirante.id)
       if (success) setIsFavorited(true)
     }
+  }
+
+  const handleAddToCartClick = (product: Product) => {
+    setSelectedProductForModal(product)
+    setShowVariationModal(true)
+  }
+
+  const handleConfirmAddToCart = (variation: string, quantity: number, observation: string) => {
+    if (!selectedProductForModal) return
+
+    // Calcular peso selecionado para produtos por kg
+    let selectedWeight: number | undefined
+    const type = selectedProductForModal.unitType || (selectedProductForModal.unit === "kg" ? "kg" : "unidade")
+    if (type === "kg") {
+      selectedWeight = quantity * 0.25
+    }
+
+    console.log('Adicionando ao carrinho:', {
+      product: selectedProductForModal,
+      variation,
+      quantity,
+      selectedWeight,
+      observation
+    })
+
+    addToCart({
+      productId: selectedProductForModal.id,
+      name: selectedProductForModal.name,
+      price: selectedProductForModal.price,
+      unit: selectedProductForModal.unit,
+      feiranteId: selectedFeirante.id,
+      feiranteName: selectedFeirante.name,
+      image: selectedProductForModal.image,
+      observation,
+      selectedVariation: variation,
+      selectedWeight
+    }, quantity)
+
+    setShowVariationModal(false)
+    setSelectedProductForModal(null)
   }
 
   // Usar o cart do hook em vez do prop para ter sempre os dados mais atualizados
@@ -259,7 +302,7 @@ export default function FeirantePage({
                                     onClick={(e) => {
                                       e.preventDefault()
                                       e.stopPropagation()
-                                      updateQuantity(product.id, quantity + 1)
+                                      handleAddToCartClick(product)
                                     }}
                                     className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm hover:bg-green-600 transition-colors"
                                   >
@@ -271,16 +314,7 @@ export default function FeirantePage({
                                   onClick={(e) => {
                                     e.preventDefault()
                                     e.stopPropagation()
-                                    
-                                    addToCart({
-                                      productId: product.id,
-                                      name: product.name,
-                                      price: product.price,
-                                      unit: product.unit,
-                                      feiranteId: selectedFeirante.id,
-                                      feiranteName: selectedFeirante.name,
-                                      image: product.image
-                                    }, 1)
+                                    handleAddToCartClick(product)
                                   }}
                                   className="w-8 h-8 rounded-full bg-white text-green-600 flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors"
                                 >
@@ -341,6 +375,16 @@ export default function FeirantePage({
           </>
         )}
       </div>
+      
+      {/* Modal de Variações */}
+      <ProductVariationModal
+        isOpen={showVariationModal}
+        onClose={() => setShowVariationModal(false)}
+        product={selectedProductForModal}
+        onConfirm={handleConfirmAddToCart}
+        feirante={{ id: selectedFeirante.id, name: selectedFeirante.name }}
+      />
+      
       <ClientBottomNavigation onScreenChange={onScreenChange} />
     </div>
   )

@@ -41,7 +41,14 @@ export default function SuccessPage({ cart, onScreenChange }: SuccessPageProps) 
 
       // Criar um pedido para cada feirante
       const orderPromises = Object.entries(itemsByFeirante).map(async ([feiranteName, items]) => {
-        const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        const total = items.reduce((sum, item) => {
+          // Para produtos com selectedWeight, usar o peso real
+          if (item.selectedWeight) {
+            return sum + item.price * item.selectedWeight
+          }
+          // Para outros produtos, usar a quantidade normal
+          return sum + item.price * item.quantity
+        }, 0)
         const deliveryFee = 5.0
         const finalTotal = total + deliveryFee
 
@@ -92,10 +99,17 @@ export default function SuccessPage({ cart, onScreenChange }: SuccessPageProps) 
     createOrder()
   }, [hookCart.items, clearCart])
 
-  const cartTotal = hookCart.items.reduce((total, item) => total + item.price * item.quantity, 0)
+  const cartTotal = hookCart.items.reduce((total, item) => {
+    // Para produtos com selectedWeight, usar o peso real
+    if (item.selectedWeight) {
+      return total + item.price * item.selectedWeight
+    }
+    // Para outros produtos, usar a quantidade normal
+    return total + item.price * item.quantity
+  }, 0)
   const deliveryFee = 5.0
   const finalTotal = cartTotal + deliveryFee
-  const totalItems = hookCart.items.reduce((total, item) => total + item.quantity, 0)
+  const totalItems = hookCart.items.length // Contar tipos de produtos, não quantidade total
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">

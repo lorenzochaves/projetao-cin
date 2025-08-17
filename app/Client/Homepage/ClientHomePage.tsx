@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { ClientRoute } from "@/components/ProtectedRoute"
 import HomepageComponent from "./HomepageComponent"
-import { Screen, Feirante, Product } from "../types"
+import { Screen, Feirante, Product, ProductVariation } from "../types"
 import { useCart } from "@/contexts/CartContext"
 import { CartProvider } from "@/contexts/CartContext"
 
@@ -124,6 +124,36 @@ function ClientHomePageContent() {
     }
   }
 
+  // Nova função para adicionar produto com variações e peso
+  const handleAddToCartNew = (product: Product, quantity: number, selectedVariation?: ProductVariation, selectedWeight?: number, observation?: string) => {
+    if (!selectedFeirante) return
+    
+    // Calculate final price based on variation and weight
+    let finalPrice = selectedVariation?.price || product.price
+    
+    if (product.unitType === 'kg' && selectedWeight) {
+      finalPrice = (finalPrice * selectedWeight) / 1000 // Convert grams to kg for price calculation
+    } else {
+      finalPrice = finalPrice * quantity
+    }
+    
+    addToCart({
+      productId: product.id,
+      name: product.name,
+      price: finalPrice, // Use calculated price
+      unit: product.unitType === 'kg' && selectedWeight ? `${selectedWeight}g` : product.unit,
+      feiranteId: selectedFeirante.id,
+      feiranteName: selectedFeirante.name,
+      image: product.image,
+      observation: observation
+    }, 1) // Always quantity 1 since price is already calculated
+    
+    setCurrentObservation("")
+    if (showObservationModal) {
+      setShowObservationModal(false)
+    }
+  }
+
   // Função para atualizar quantidade (compatível com CartComponent)
   const handleUpdateQuantity = (productId: string, feiranteName: string, change: number) => {
     const cartItem = cart.items.find(item => item.productId === productId && item.feiranteName === feiranteName)
@@ -150,6 +180,7 @@ function ClientHomePageContent() {
       name: item.name,
       price: item.price,
       unit: item.unit,
+      unitType: 'unit' as const, // Default unitType for legacy compatibility
       image: item.image,
       category: 'geral',
       quantity: item.quantity,
@@ -185,17 +216,7 @@ function ClientHomePageContent() {
       case "home":
         return (
           <HomepageComponent
-            cart={cart.items.map(item => ({
-              id: item.productId,
-              name: item.name,
-              price: item.price,
-              unit: item.unit,
-              image: item.image,
-              category: 'geral',
-              quantity: item.quantity,
-              feirante: item.feiranteName,
-              observation: item.observation
-            }))}
+            cart={convertCartForComponents()}
             onScreenChange={handleScreenChange}
             onSelectFeirante={handleSelectFeirante}
             currentScreen={currentScreen}
@@ -223,17 +244,7 @@ function ClientHomePageContent() {
       case "cart":
         return (
           <CartComponent
-            cart={cart.items.map(item => ({
-              id: item.productId,
-              name: item.name,
-              price: item.price,
-              unit: item.unit,
-              image: item.image,
-              category: 'geral',
-              quantity: item.quantity,
-              feirante: item.feiranteName,
-              observation: item.observation
-            }))}
+            cart={convertCartForComponents()}
             onScreenChange={handleScreenChange}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveFromCart={handleRemoveFromCart}
@@ -281,6 +292,7 @@ function ClientHomePageContent() {
                 handleAddToCart(selectedProduct, selectedFeirante)
               }
             }}
+            onAddToCartNew={handleAddToCartNew}
           />
         ) : (
           <HomepageComponent

@@ -264,7 +264,17 @@ const INITIAL_DATA = {
       category: "legumes",
       description: "Tomate maduro e saboroso",
       stock: 35,
-      isAvailable: true
+      isAvailable: true,
+      unitType: "kg",
+      allowWeightSelection: true,
+      minWeight: 0.25,
+      maxWeight: 5,
+      weightIncrement: 0.25,
+      variations: [
+        { id: "tomate-verde", name: "Mais verdes", description: "Tomates menos maduros, ideais para saladas" },
+        { id: "tomate-maduro", name: "Mais maduros", description: "Tomates bem maduros, ideais para molhos" },
+        { id: "tomate-medio", name: "Ponto médio", description: "Tomates no ponto ideal de maturação" }
+      ]
     },
     {
       id: "8",
@@ -336,7 +346,13 @@ const INITIAL_DATA = {
       category: "temperos",
       description: "Manjericão aromático fresco",
       stock: 15,
-      isAvailable: true
+      isAvailable: true,
+      unitType: "maco",
+      variations: [
+        { id: "manjericao-pequeno", name: "Maço pequeno", description: "Maço menor, ideal para temperar pratos" },
+        { id: "manjericao-grande", name: "Maço grande", description: "Maço generoso, perfeito para fazer pesto" },
+        { id: "manjericao-selecionado", name: "Folhas selecionadas", description: "As melhores folhas, sem talos" }
+      ]
     },
     {
       id: "14",
@@ -542,7 +558,13 @@ const INITIAL_DATA = {
       category: "frutas",
       description: "Coco verde gelado",
       stock: 25,
-      isAvailable: true
+      isAvailable: true,
+      unitType: "unidade",
+      variations: [
+        { id: "coco-pequeno", name: "Pequeno", description: "Coco menor, mais doce" },
+        { id: "coco-medio", name: "Médio", description: "Tamanho padrão, equilibrado" },
+        { id: "coco-grande", name: "Grande", description: "Coco grande, muito refrescante" }
+      ]
     },
 
     // FEIRANTE 3 - Carlos do Açougue (Especialista em carnes)
@@ -738,7 +760,17 @@ const INITIAL_DATA = {
       category: "tuberculos",
       description: "Batata inglesa para purê e frituras",
       stock: 50,
-      isAvailable: true
+      isAvailable: true,
+      unitType: "kg",
+      allowWeightSelection: true,
+      minWeight: 0.5,
+      maxWeight: 10,
+      weightIncrement: 0.5,
+      variations: [
+        { id: "batata-pequena", name: "Pequenas", description: "Batatas pequenas, ideais para cozinhar inteiras" },
+        { id: "batata-media", name: "Médias", description: "Batatas médias, versáteis para todos os pratos" },
+        { id: "batata-grande", name: "Grandes", description: "Batatas grandes, perfeitas para purê e massas" }
+      ]
     },
     {
       id: "47",
@@ -774,7 +806,17 @@ const INITIAL_DATA = {
       category: "tuberculos",
       description: "Mandioca fresca e macia",
       stock: 45,
-      isAvailable: true
+      isAvailable: true,
+      unitType: "kg",
+      allowWeightSelection: true,
+      minWeight: 0.5,
+      maxWeight: 5,
+      weightIncrement: 0.25,
+      variations: [
+        { id: "mandioca-fina", name: "Fina", description: "Mandioca mais fina, cozinha mais rápido" },
+        { id: "mandioca-grossa", name: "Grossa", description: "Mandioca grossa, ideal para farofa" },
+        { id: "mandioca-branca", name: "Bem branca", description: "Mandioca bem branca e macia" }
+      ]
     },
     {
       id: "50",
@@ -1191,6 +1233,77 @@ const INITIAL_DATA = {
           quantity: 32,
           revenue: 284.80
         }
+      ]
+    },
+    {
+      id: "100",
+      feiranteId: "1",
+      name: "Coentro",
+      price: 2.5,
+      unit: "maço",
+      image: "https://images.unsplash.com/photo-1635325738730-8eacc6b73a6c?w=400&h=400&fit=crop&crop=center",
+      category: "temperos",
+      description: "Coentro fresco para temperos",
+      stock: 20,
+      isAvailable: true,
+      unitType: "maco",
+      variations: [
+        { id: "coentro-pequeno", name: "Maço pequeno", description: "Maço pequeno com folhas novas" },
+        { id: "coentro-grande", name: "Maço grande", description: "Maço grande com folhas desenvolvidas" }
+      ]
+    },
+    {
+      id: "101",
+      feiranteId: "2",
+      name: "Ovos Caipira",
+      price: 18.0,
+      unit: "bandeja",
+      image: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&h=400&fit=crop&crop=center",
+      category: "outros",
+      description: "Ovos caipira frescos",
+      stock: 15,
+      isAvailable: true,
+      unitType: "bandeja",
+      variations: [
+        { id: "ovos-12", name: "12 unidades", description: "Bandeja com 12 ovos" },
+        { id: "ovos-24", name: "24 unidades", description: "Bandeja com 24 ovos" },
+        { id: "ovos-30", name: "30 unidades", description: "Bandeja com 30 ovos" }
+      ]
+    },
+    {
+      id: "102",
+      feiranteId: "1",
+      name: "Banana Prata",
+      price: 6.5,
+      unit: "mão",
+      image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop&crop=center",
+      category: "frutas",
+      description: "Banana prata doce e saborosa",
+      stock: 25,
+      isAvailable: true,
+      unitType: "mao",
+      variations: [
+        { id: "banana-verde", name: "Verdes", description: "Bananas verdes para cozinhar" },
+        { id: "banana-madura", name: "Maduras", description: "Bananas maduras para consumo" },
+        { id: "banana-passando", name: "Passando do ponto", description: "Bananas bem maduras, ideais para vitamina" }
+      ]
+    },
+    {
+      id: "103",
+      feiranteId: "3",
+      name: "Pimentão",
+      price: 8.5,
+      unit: "kg",
+      image: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400&h=400&fit=crop&crop=center",
+      category: "legumes",
+      description: "Pimentão colorido fresco",
+      stock: 18,
+      isAvailable: true,
+      unitType: "unidade",
+      variations: [
+        { id: "pimentao-verde", name: "Verde", description: "Pimentão verde tradicional" },
+        { id: "pimentao-vermelho", name: "Vermelho", description: "Pimentão vermelho doce" },
+        { id: "pimentao-amarelo", name: "Amarelo", description: "Pimentão amarelo suave" }
       ]
     }
   ],

@@ -75,10 +75,17 @@ export default function SchedulePage({ cart, onScreenChange }: SchedulePageProps
   const [timeSlots] = useState<TimeSlot[]>(generateTimeSlots())
   const { cart: hookCart } = useCart()
 
-  const cartTotal = hookCart.items.reduce((total, item) => total + item.price * item.quantity, 0)
+  const cartTotal = hookCart.items.reduce((total, item) => {
+    // Para produtos com selectedWeight, usar o peso real
+    if (item.selectedWeight) {
+      return total + item.price * item.selectedWeight
+    }
+    // Para outros produtos, usar a quantidade normal
+    return total + item.price * item.quantity
+  }, 0)
   const deliveryFee = 5.0
   const finalTotal = cartTotal + deliveryFee
-  const totalItems = hookCart.items.reduce((total, item) => total + item.quantity, 0)
+  const totalItems = hookCart.items.length // Contar tipos de produtos, não quantidade total
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">

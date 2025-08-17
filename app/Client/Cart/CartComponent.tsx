@@ -1,13 +1,15 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Trash2, Plus, Minus, X, ChevronRight, ShoppingBasket, MapPin, Star } from "lucide-react"
-import { Screen, CartItem } from "../types"
+import { Screen, CartItem, Product } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
-import { useCart } from "@/contexts/CartContext"
+import { useCart } from "@/hooks/api/useCart"
 import Image from "next/image"
-import { getFeirantes } from "@/lib/utils"
+import { getFeirantes, getProducts } from "@/lib/utils"
+import ProductVariationModal from "@/components/ui/product-variation-modal"
 
 interface CartPageProps {
   cart: CartItem[]
@@ -24,11 +26,22 @@ export default function CartPage({
   onRemoveFromCart, 
   onClearCart 
 }: CartPageProps) {
-  const { cart: hookCart, updateQuantity, removeFromCart, clearCart } = useCart()
+  const { cart: hookCart, updateQuantity, removeFromCart, clearCart, addToCart } = useCart()
+  
+  // Estados para o modal
+  const [showVariationModal, setShowVariationModal] = useState(false)
+  const [selectedProductForModal, setSelectedProductForModal] = useState<Product | null>(null)
+  const [selectedFeiranteForModal, setSelectedFeiranteForModal] = useState<{ id: string; name: string } | null>(null)
+  const [modalInitialValues, setModalInitialValues] = useState<{
+    variation: string
+    quantity: number
+    observation: string
+  }>({ variation: "", quantity: 1, observation: "" })
   
   // Usar o cart do hook diretamente em vez do prop
   const cart = hookCart.items.map(item => ({
-    id: item.productId,
+    id: item.productId, // Manter referência correta
+    productId: item.productId, // Adicionar productId também
     name: item.name,
     price: item.price,
     unit: item.unit,
@@ -36,7 +49,8 @@ export default function CartPage({
     category: 'geral',
     quantity: item.quantity,
     feirante: item.feiranteName,
-    observation: item.observation
+    observation: item.observation,
+    selectedVariation: item.selectedVariation
   }))
   
   console.log('🛒 CartComponent - hookCart:', hookCart)
@@ -45,12 +59,11 @@ export default function CartPage({
   // Usar as funções do useCart hook em vez das props
   const handleUpdateQuantity = (productId: string, feiranteName: string, change: number) => {
     console.log('🔄 CartComponent.handleUpdateQuantity:', { productId, feiranteName, change })
-    const cartItem = cart.find(item => item.id === productId && item.feirante === feiranteName)
-    console.log('🔍 Item encontrado:', cartItem)
+    const cartItem = hookCart.items.find(item => item.productId === productId && item.feiranteName === feiranteName)
+    console.log('🔍 Item encontrado no hookCart:', cartItem)
     if (cartItem) {
       const newQuantity = Math.max(0, cartItem.quantity + change)
       console.log('➕ Nova quantidade:', newQuantity)
-      // Usar o productId que corresponde ao hookCart (que usa productId, não id)
       updateQuantity(productId, newQuantity)
     }
   }
@@ -65,6 +78,89 @@ export default function CartPage({
     clearCart()
   }
 
+  // Funções para o modal
+  const handleEditQuantity = (cartItem: typeof cart[0]) => {
+    // Buscar o produto original
+    const allProducts = getProducts()
+    const product = allProducts.find(p => p.id === cartItem.id) as Product | undefined
+    
+    if (!product) return
+    
+    // Usar unitType se existir, senão usar unit como fallback
+    const type = product.unitType || (product.unit === "kg" ? "kg" : "unidade")
+    
+    if (type === "kg") {
+      // Para produtos por kg, abrir o modal com valores atuais
+      const feiranteData = getFeirantes().find(f => f.name === cartItem.feirante)
+      
+      // Buscar dados atuais do item no carrinho
+      const currentCartItem = hookCart.items.find(item => 
+        item.productId === cartItem.id && item.feiranteName === cartItem.feirante
+      )
+      
+      // Calcular quantidade atual baseada no peso (para produtos por kg)
+      // Se selectedWeight existe, converter de volta para quantidade de incrementos
+      let currentQuantity = cartItem.quantity
+      if (currentCartItem?.selectedWeight) {
+        currentQuantity = Math.round(currentCartItem.selectedWeight / 0.25)
+      }
+      
+      console.log('🔧 CartComponent editando quantidade:', {
+        product: product.name,
+        cartItemQuantity: cartItem.quantity,
+        selectedWeight: currentCartItem?.selectedWeight,
+        calculatedQuantity: currentQuantity,
+        variation: cartItem.selectedVariation,
+        observation: cartItem.observation
+      })
+      
+      setModalInitialValues({
+        variation: cartItem.selectedVariation || "",
+        quantity: currentQuantity,
+        observation: cartItem.observation || ""
+      })
+      
+      setSelectedProductForModal(product)
+      setSelectedFeiranteForModal(feiranteData ? { id: feiranteData.id, name: feiranteData.name } : null)
+      setShowVariationModal(true)
+    } else {
+      // Para outros produtos, incrementar diretamente
+      handleUpdateQuantity(cartItem.id, cartItem.feirante, 1)
+    }
+  }
+
+  const handleConfirmModalEdit = (variation: string, quantity: number, observation: string) => {
+    if (!selectedProductForModal || !selectedFeiranteForModal) return
+
+    // Remover o item atual
+    removeFromCart(selectedProductForModal.id)
+
+    // Calcular peso selecionado para produtos por kg
+    let selectedWeight: number | undefined
+    const type = selectedProductForModal.unitType || (selectedProductForModal.unit === "kg" ? "kg" : "unidade")
+    if (type === "kg") {
+      selectedWeight = quantity * 0.25
+    }
+
+    // Adicionar o item com as novas especificações
+    addToCart({
+      productId: selectedProductForModal.id,
+      name: selectedProductForModal.name,
+      price: selectedProductForModal.price,
+      unit: selectedProductForModal.unit,
+      feiranteId: selectedFeiranteForModal.id,
+      feiranteName: selectedFeiranteForModal.name,
+      image: selectedProductForModal.image,
+      observation,
+      selectedVariation: variation,
+      selectedWeight
+    }, quantity)
+
+    setShowVariationModal(false)
+    setSelectedProductForModal(null)
+    setSelectedFeiranteForModal(null)
+  }
+
   // Agrupar itens por feirante para melhor organização
   const groupedItems = cart.reduce((groups, item) => {
     const feiranteName = item.feirante
@@ -75,10 +171,23 @@ export default function CartPage({
     return groups
   }, {} as Record<string, typeof cart>)
 
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
+  const cartTotal = cart.reduce((total, item) => {
+    // Encontrar o item original no hookCart para ter acesso ao selectedWeight
+    const originalItem = hookCart.items.find(hookItem => 
+      hookItem.productId === item.id && hookItem.feiranteName === item.feirante
+    )
+    
+    if (originalItem?.selectedWeight) {
+      // Para produtos por kg, usar o peso real
+      return total + item.price * originalItem.selectedWeight
+    } else {
+      // Para outros produtos, usar a quantidade
+      return total + item.price * item.quantity
+    }
+  }, 0)
   const deliveryFee = 5.0
   const finalTotal = cartTotal + deliveryFee
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0)
+  const totalItems = cart.length // Contar tipos diferentes de alimentos, não quantidade total
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
@@ -148,7 +257,20 @@ export default function CartPage({
 
             {/* Items by feirante */}
             {Object.entries(groupedItems).map(([feiranteName, items]) => {
-              const feiranteTotal = items.reduce((total, item) => total + item.price * item.quantity, 0)
+              const feiranteTotal = items.reduce((total, item) => {
+                // Encontrar o item original no hookCart para ter acesso ao selectedWeight
+                const originalItem = hookCart.items.find(hookItem => 
+                  hookItem.productId === item.id && hookItem.feiranteName === item.feirante
+                )
+                
+                if (originalItem?.selectedWeight) {
+                  // Para produtos por kg, usar o peso real
+                  return total + item.price * originalItem.selectedWeight
+                } else {
+                  // Para outros produtos, usar a quantidade
+                  return total + item.price * item.quantity
+                }
+              }, 0)
               // Buscar dados reais do feirante
               const allFeirantes = getFeirantes()
               const feiranteData = allFeirantes.find(f => f.name === feiranteName)
@@ -213,10 +335,13 @@ export default function CartPage({
                           {/* Product info */}
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-gray-900 mb-1">{item.name}</h4>
+                            {item.selectedVariation && (
+                              <p className="text-xs text-orange-600 mb-1 font-medium">{item.selectedVariation}</p>
+                            )}
                             <p className="text-sm text-gray-600 mb-2">R$ {item.price.toFixed(2)} / {item.unit}</p>
                             {item.observation && (
                               <p className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
-                                {item.observation}
+                                💬 {item.observation}
                               </p>
                             )}
                           </div>
@@ -236,19 +361,32 @@ export default function CartPage({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleUpdateQuantity(item.id, item.feirante, -1)}
+                                onClick={() => {
+                                  // Sempre abrir modal para editar qualquer produto
+                                  handleEditQuantity(item)
+                                }}
                                 className="w-8 h-8 p-0 hover:bg-white"
                                 disabled={item.quantity <= 1}
                               >
                                 <Minus className="w-3 h-3" />
                               </Button>
                               <span className="min-w-[2rem] text-center text-sm font-medium">
-                                {item.quantity}
+                                {(() => {
+                                  // Encontrar o item original no hookCart para ter acesso ao selectedWeight
+                                  const originalItem = hookCart.items.find(hookItem => 
+                                    hookItem.productId === item.id && hookItem.feiranteName === item.feirante
+                                  )
+                                  
+                                  if (originalItem?.selectedWeight) {
+                                    return `${originalItem.selectedWeight}kg`
+                                  }
+                                  return item.quantity
+                                })()}
                               </span>
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleUpdateQuantity(item.id, item.feirante, 1)}
+                                onClick={() => handleEditQuantity(item)}
                                 className="w-8 h-8 p-0 hover:bg-white"
                               >
                                 <Plus className="w-3 h-3" />
@@ -307,6 +445,23 @@ export default function CartPage({
       <ClientBottomNavigation 
         onScreenChange={onScreenChange} 
         currentScreen="cart" 
+      />
+
+      {/* Modal de edição de quantidade */}
+      <ProductVariationModal
+        isOpen={showVariationModal}
+        onClose={() => {
+          setShowVariationModal(false)
+          setSelectedProductForModal(null)
+          setSelectedFeiranteForModal(null)
+          setModalInitialValues({ variation: "", quantity: 1, observation: "" })
+        }}
+        product={selectedProductForModal}
+        onConfirm={handleConfirmModalEdit}
+        feirante={selectedFeiranteForModal || undefined}
+        initialVariation={modalInitialValues.variation}
+        initialQuantity={modalInitialValues.quantity}
+        initialObservation={modalInitialValues.observation}
       />
     </div>
   )
