@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, ChevronRight, Clock, Calendar } from "lucide-react"
 import { Screen, CartItem } from "../../types"
 import { ClientBottomNavigation } from "../../components/BottomNav"
-import { useCart } from "@/contexts/CartContext"
+import { useCart } from "@/hooks/api/useCart"
 
 interface SchedulePageProps {
   cart: CartItem[]

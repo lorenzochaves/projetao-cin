@@ -74,6 +74,7 @@ export const cartService = {
 
   // Save cart to localStorage
   saveCart(cart: Cart): void {
+    console.log('💾 Salvando carrinho no localStorage:', cart)
     setToStorage(STORAGE_KEYS.CART, cart)
   },
 

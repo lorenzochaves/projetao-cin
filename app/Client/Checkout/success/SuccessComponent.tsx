@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle, Clock, MapPin, Phone, ShoppingBag, ChevronRight } from "lucide-react"
 import { Screen, CartItem } from "../../types"
 import { ClientBottomNavigation } from "../../components/BottomNav"
-import { useCart } from "@/contexts/CartContext"
-import { saveOrder } from "@/lib/utils"
+import { useCart } from "@/hooks/api/useCart"
+import { saveOrder, getFromStorage, setToStorage } from "@/lib/utils"
 
 interface SuccessPageProps {
   cart: CartItem[]
@@ -23,39 +23,48 @@ export default function SuccessPage({ cart, onScreenChange }: SuccessPageProps) 
     const createOrder = async () => {
       if (hookCart.items.length === 0) return
 
+      console.log('🛒 SuccessPage: Creating order with cart items:', hookCart.items)
+
       // Agrupar itens por feirante
       const itemsByFeirante = hookCart.items.reduce((groups, item) => {
-        const feiranteName = item.feiranteName
+        const feiranteName = item.feiranteName // Use correct property name
         if (!groups[feiranteName]) {
           groups[feiranteName] = []
         }
         groups[feiranteName].push({
-          productId: item.productId,
+          productId: item.productId, // Use correct property name
           name: item.name,
           price: item.price,
           quantity: item.quantity,
+          selectedWeight: item.selectedWeight, // Include selectedWeight
           observation: item.observation
         })
         return groups
       }, {} as Record<string, any[]>)
+
+      console.log('📊 SuccessPage: Items grouped by feirante:', itemsByFeirante)
 
       // Criar um pedido para cada feirante
       const orderPromises = Object.entries(itemsByFeirante).map(async ([feiranteName, items]) => {
         const total = items.reduce((sum, item) => {
           // Para produtos com selectedWeight, usar o peso real
           if (item.selectedWeight) {
+            console.log(`💰 Calculating for ${item.name}: price=${item.price} * selectedWeight=${item.selectedWeight} = ${item.price * item.selectedWeight}`)
             return sum + item.price * item.selectedWeight
           }
           // Para outros produtos, usar a quantidade normal
+          console.log(`💰 Calculating for ${item.name}: price=${item.price} * quantity=${item.quantity} = ${item.price * item.quantity}`)
           return sum + item.price * item.quantity
         }, 0)
         const deliveryFee = 5.0
         const finalTotal = total + deliveryFee
 
+        console.log(`📦 Creating order for ${feiranteName}: subtotal=${total}, delivery=${deliveryFee}, total=${finalTotal}`)
+
         const order = {
           id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           clientId: "1", // Mock user ID
-          feiranteId: items[0]?.productId.split('-')[0] || "1", // Extract feirante ID from product ID
+          feiranteId: items[0]?.productId?.split('-')[0] || "1", // Extract feirante ID from product ID
           feiranteName,
           items,
           total: finalTotal,
@@ -71,11 +80,43 @@ export default function SuccessPage({ cart, onScreenChange }: SuccessPageProps) 
           }
         }
 
-        return saveOrder(order)
+        console.log('📝 SuccessPage: About to save order:', order)
+        const savedOrder = saveOrder(order)
+        
+        // Also save to marketer orders for the feirante to see
+        const marketerOrder = {
+          id: order.id,
+          clientId: order.clientId,
+          clientName: "Cliente " + order.clientId, // Mock client name
+          items: items.map(item => ({
+            productId: item.productId,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            selectedWeight: item.selectedWeight,
+            observation: item.observation
+          })),
+          total: finalTotal,
+          status: 'pendente' as const,
+          createdAt: order.createdAt,
+          estimatedDelivery: order.estimatedDelivery,
+          deliveryAddress: order.deliveryAddress,
+          paymentMethod: 'PIX', // Mock payment method
+          observations: ''
+        }
+        
+        // Save to marketer orders
+        const existingMarketerOrders = getFromStorage<any[]>('feira_marketer_orders') || []
+        existingMarketerOrders.push(marketerOrder)
+        setToStorage('feira_marketer_orders', existingMarketerOrders)
+        console.log('📝 SuccessPage: Order also saved to marketer orders')
+        
+        return savedOrder
       })
 
       try {
         const savedOrders = await Promise.all(orderPromises)
+        console.log('✅ SuccessPage: Orders saved successfully:', savedOrders)
         const firstOrder = savedOrders[0]
         if (firstOrder) {
           setOrderId(firstOrder.id)
@@ -90,9 +131,10 @@ export default function SuccessPage({ cart, onScreenChange }: SuccessPageProps) 
         }
         
         // Limpar carrinho após criar o pedido
+        console.log('🧹 SuccessPage: Clearing cart')
         clearCart()
       } catch (error) {
-        console.error('Erro ao criar pedido:', error)
+        console.error('❌ SuccessPage: Error creating order:', error)
       }
     }
 

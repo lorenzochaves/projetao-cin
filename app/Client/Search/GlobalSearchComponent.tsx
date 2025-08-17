@@ -5,14 +5,13 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Search, X, Star, Clock, Plus, Minus } from "lucide-react"
-import { Feirante, Screen, Product, ProductVariation } from "../types"
+import { Feirante, Screen } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { feiranteService } from "@/lib/api/userService"
 import { useProducts } from "@/hooks/api/useProducts"
-import { useCart } from "@/contexts/CartContext"
+import { useCart } from "@/hooks/api/useCart"
 import { useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
-import ProductCard from "../components/ProductCard"
 
 interface GlobalSearchPageProps {
   searchQuery: string

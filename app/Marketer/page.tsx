@@ -1,10 +1,10 @@
 import { MarketerRoute } from "@/components/ProtectedRoute"
-import MarketerHomePage from "./Homepage/page"
+import MarketerMainPage from "./MarketerMain"
 
 export default function MarketerPage() {
   return (
     <MarketerRoute>
-      <MarketerHomePage />
+      <MarketerMainPage />
     </MarketerRoute>
   )
 }

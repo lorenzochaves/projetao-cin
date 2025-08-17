@@ -1,14 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { ChevronLeft, ChevronDown } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { MarketerBottomNavigation } from "@/components/ui/bottom-navigation"
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts'
+
+interface MarketerFinancePageProps {
+  onScreenChange?: (screen: string) => void
+}
 
 const dailyData = [
   { name: 'Seg', value: 400 },
@@ -41,7 +43,7 @@ const comparativeData = [
   { period: '04/12', profit: 1800 },
 ]
 
-export default function MarketerFinancePage() {
+export default function MarketerFinancePage({ onScreenChange }: MarketerFinancePageProps) {
   const [selectedCard, setSelectedCard] = useState('hoje')
   const [historyPeriod, setHistoryPeriod] = useState('hoje')
 
@@ -84,14 +86,17 @@ export default function MarketerFinancePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="px-4 py-4 pb-24">
+    <div className="min-h-screen bg-white pb-20">
+      <div className="px-4 py-4">
         <div className="flex items-center mb-6">
-          <Link href="/Marketer">
-            <Button variant="ghost" size="icon" className="mr-2">
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-          </Link>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="mr-2"
+            onClick={() => onScreenChange?.("home")}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
           <h1 className="text-2xl font-bold">Resumo financeiro</h1>
         </div>
         
@@ -267,8 +272,6 @@ export default function MarketerFinancePage() {
           </div>
         )}
       </div>
-      
-      <MarketerBottomNavigation />
     </div>
   )
 }

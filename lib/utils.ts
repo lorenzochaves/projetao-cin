@@ -1361,9 +1361,12 @@ export function getFromStorage<T>(key: string): T | null {
   
   try {
     const item = localStorage.getItem(key)
-    return item ? JSON.parse(item) : null
+    console.log('🔍 getFromStorage: Reading from localStorage', { key, hasData: !!item, rawData: item })
+    const parsed = item ? JSON.parse(item) : null
+    console.log('📚 getFromStorage: Parsed data:', parsed)
+    return parsed
   } catch (error) {
-    console.error(`Error reading from localStorage key "${key}":`, error)
+    console.error(`❌ getFromStorage: Error reading from localStorage key "${key}":`, error)
     return null
   }
 }
@@ -1372,9 +1375,12 @@ export function setToStorage<T>(key: string, value: T): void {
   if (typeof window === 'undefined') return
   
   try {
-    localStorage.setItem(key, JSON.stringify(value))
+    const stringValue = JSON.stringify(value)
+    console.log('💾 setToStorage: Saving to localStorage', { key, dataLength: stringValue.length, data: value })
+    localStorage.setItem(key, stringValue)
+    console.log('✅ setToStorage: Successfully saved to localStorage')
   } catch (error) {
-    console.error(`Error writing to localStorage key "${key}":`, error)
+    console.error(`❌ setToStorage: Error writing to localStorage key "${key}":`, error)
   }
 }
 
@@ -1477,7 +1483,10 @@ export function getCategories(): Category[] {
 }
 
 export function getOrders(): Order[] {
-  return getFromStorage<Order[]>(STORAGE_KEYS.ORDERS) || []
+  console.log('🔍 getOrders: Retrieving orders from localStorage with key:', STORAGE_KEYS.ORDERS)
+  const orders = getFromStorage<Order[]>(STORAGE_KEYS.ORDERS) || []
+  console.log('📚 getOrders: Found orders:', orders.length, orders)
+  return orders
 }
 
 export function getMarketerOrders(): MarketerOrder[] {
@@ -1632,9 +1641,22 @@ export function isFavorite(userId: string, feiranteId: string): boolean {
 
 // Funções de Pedidos
 export function saveOrder(order: Order): Order {
+  console.log('🔍 saveOrder: Starting order save process')
+  console.log('📝 saveOrder: Order to save:', order)
+  
   const orders = getOrders()
+  console.log('📚 saveOrder: Current orders before adding:', orders.length, orders)
+  
   orders.push(order)
+  console.log('📚 saveOrder: Orders after adding new order:', orders.length, orders)
+  
   setToStorage(STORAGE_KEYS.ORDERS, orders)
+  console.log('💾 saveOrder: Orders saved to localStorage with key:', STORAGE_KEYS.ORDERS)
+  
+  // Verify the save was successful
+  const savedOrders = getOrders()
+  console.log('✅ saveOrder: Verification - orders now in storage:', savedOrders.length, savedOrders)
+  
   return order
 }
 

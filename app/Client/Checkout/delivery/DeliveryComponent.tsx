@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, ChevronRight, Plus, MapPin, Home, Building2 } from "lucide-react"
 import { Screen, CartItem } from "../../types"
 import { ClientBottomNavigation } from "../../components/BottomNav"
-import { useCart } from "@/contexts/CartContext"
+import { useCart } from "@/hooks/api/useCart"
 
 interface DeliveryPageProps {
   cart: CartItem[]

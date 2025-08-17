@@ -8,7 +8,7 @@ import { Heart, MessageCircle, Search, Star, MapPin, Plus, Minus } from "lucide-
 import { Feirante, Product, Screen, CartItem } from "../types"
 import { ClientBottomNavigation } from "../components/BottomNav"
 import { useProducts } from "@/hooks/api/useProducts"
-import { useCart } from "@/contexts/CartContext"
+import { useCart } from "@/hooks/api/useCart"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useState, useEffect } from "react"
 import { getCurrentUser, addToFavorites, removeFromFavorites, isFavorite } from "@/lib/utils"
