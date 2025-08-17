@@ -19,6 +19,8 @@ import { ClientBottomNavigation } from "../components/BottomNav"
 import { getCurrentUser, logout } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { SupportModal } from "@/components/ui/support-modal"
+import { SettingsModal } from "@/components/ui/settings-modal"
 
 interface ProfilePageProps {
   cart: CartItem[]
@@ -27,6 +29,8 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) {
   const [user, setUser] = useState<any>(null)
+  const [supportModalOpen, setSupportModalOpen] = useState(false)
+  const [settingsModalOpen, setSettingsModalOpen] = useState(false)
   const router = useRouter()
 
   const handleLogout = () => {
@@ -148,22 +152,22 @@ export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) 
 
         <div className="mt-8 pt-4 border-t space-y-4">
           <button 
-            onClick={() => onScreenChange("home")}
+            onClick={() => setSettingsModalOpen(true)}
             className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
           >
-            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-              <Settings className="w-4 h-4 text-gray-600" />
+            <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+              <Settings className="w-4 h-4 text-orange-600" />
             </div>
-            <p className="font-medium text-gray-700">Configurações</p>
+            <p className="font-medium text-orange-700">Configurações</p>
           </button>
           <button 
-            onClick={() => onScreenChange("home")}
+            onClick={() => setSupportModalOpen(true)}
             className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors rounded-lg"
           >
-            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-              <HelpCircle className="w-4 h-4 text-gray-600" />
+            <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+              <HelpCircle className="w-4 h-4 text-orange-600" />
             </div>
-            <p className="text-gray-600">Suporte</p>
+            <p className="text-orange-600">Suporte</p>
           </button>
           <button 
             onClick={handleLogout}
@@ -180,6 +184,17 @@ export default function ProfilePage({ cart, onScreenChange }: ProfilePageProps) 
       <ClientBottomNavigation 
         onScreenChange={onScreenChange} 
         currentScreen="profile" 
+      />
+
+      {/* Modals */}
+      <SupportModal
+        isOpen={supportModalOpen}
+        onClose={() => setSupportModalOpen(false)}
+      />
+
+      <SettingsModal
+        isOpen={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
       />
     </div>
   )
