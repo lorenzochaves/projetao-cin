@@ -919,7 +919,128 @@ const INITIAL_DATA = {
     { id: "7", name: "Peixes", icon: "🐟" },
     { id: "8", name: "Temperos", icon: "🌿" }
   ],
-  orders: [],
+  orders: [
+    {
+      id: "1",
+      clientId: "1",
+      feiranteId: "1",
+      feiranteName: "João da Horta",
+      items: [
+        {
+          productId: "1",
+          name: "Alface Americana",
+          price: 3.5,
+          quantity: 2
+        },
+        {
+          productId: "2",
+          name: "Couve Manteiga",
+          price: 2.8,
+          quantity: 1
+        }
+      ],
+      total: 14.8,
+      status: "entregue" as const,
+      createdAt: "2025-08-16T10:30:00Z",
+      deliveredAt: "2025-08-16T12:15:00Z",
+      estimatedDelivery: "2025-08-16T12:00:00Z",
+      deliveryAddress: {
+        street: "Rua das Flores, 123",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51020-120"
+      }
+    },
+    {
+      id: "2",
+      clientId: "1",
+      feiranteId: "2",
+      feiranteName: "Maria das Frutas",
+      items: [
+        {
+          productId: "16",
+          name: "Banana Prata",
+          price: 4.5,
+          quantity: 2
+        },
+        {
+          productId: "17",
+          name: "Maçã Gala",
+          price: 8.9,
+          quantity: 1
+        }
+      ],
+      total: 22.9,
+      status: "preparando" as const,
+      createdAt: "2025-08-17T08:45:00Z",
+      estimatedDelivery: "2025-08-17T10:30:00Z",
+      deliveryAddress: {
+        street: "Rua das Flores, 123",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51020-120"
+      }
+    },
+    {
+      id: "3",
+      clientId: "1",
+      feiranteId: "3",
+      feiranteName: "Carnes do Carlos",
+      items: [
+        {
+          productId: "31",
+          name: "Picanha",
+          price: 65.9,
+          quantity: 1
+        }
+      ],
+      total: 70.9,
+      status: "pendente" as const,
+      createdAt: "2025-08-15T14:20:00Z",
+      estimatedDelivery: "2025-08-15T16:00:00Z",
+      deliveryAddress: {
+        street: "Rua das Flores, 123",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51020-120"
+      }
+    },
+    {
+      id: "4",
+      clientId: "1",
+      feiranteId: "1",
+      feiranteName: "João da Horta",
+      items: [
+        {
+          productId: "7",
+          name: "Tomate Salada",
+          price: 6.9,
+          quantity: 2
+        },
+        {
+          productId: "8",
+          name: "Pepino Japonês",
+          price: 4.8,
+          quantity: 1
+        }
+      ],
+      total: 23.6,
+      status: "entregue" as const,
+      createdAt: "2025-08-14T16:10:00Z",
+      deliveredAt: "2025-08-14T18:30:00Z",
+      estimatedDelivery: "2025-08-14T18:00:00Z",
+      deliveryAddress: {
+        street: "Rua das Flores, 123",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51020-120"
+      }
+    }
+  ],
   marketerOrders: [],
   addresses: [
     {
@@ -1394,6 +1515,34 @@ export function removeFromFavorites(userId: string, feiranteId: string): boolean
 export function isFavorite(userId: string, feiranteId: string): boolean {
   const favorites = getFavorites()
   return favorites.some(f => f.userId === userId && f.feiranteId === feiranteId)
+}
+
+// Funções de Pedidos
+export function saveOrder(order: Order): Order {
+  const orders = getOrders()
+  orders.push(order)
+  setToStorage(STORAGE_KEYS.ORDERS, orders)
+  return order
+}
+
+export function getUserOrders(userId: string): Order[] {
+  const orders = getOrders()
+  return orders.filter(order => order.clientId === userId)
+}
+
+export function updateOrderStatus(orderId: string, status: Order['status']): boolean {
+  const orders = getOrders()
+  const order = orders.find(o => o.id === orderId)
+  
+  if (!order) return false
+  
+  order.status = status
+  if (status === 'entregue') {
+    order.deliveredAt = new Date().toISOString()
+  }
+  
+  setToStorage(STORAGE_KEYS.ORDERS, orders)
+  return true
 }
 
 export { STORAGE_KEYS, INITIAL_DATA }

@@ -45,18 +45,18 @@ export default function GlobalSearchPage({
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   
   const tabs = [
-    { id: "todo", name: "Todo o iFood" },
+    { id: "todo", name: "Todo o Feirou" },
     { id: "feirantes", name: "Feirantes" },
-    { id: "mercados", name: "Mercados" },
-    { id: "farmacia", name: "Farmácias" }
+    { id: "mercados", name: "Folhas" },
+    { id: "farmacia", name: "Frutas" }
   ]
 
   const highlightedItems = [
-    "Morango do amor",
+    "Batata doce",
     "Morango", 
     "Açaí",
-    "Bolo",
-    "Pizza"
+    "Maracujá",
+    "Camarão"
   ]
   
   // Load feirantes and categories
