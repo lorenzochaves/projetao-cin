@@ -1,11 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { ProductModal } from "@/components/ui/product-modal"
 import { useMarketer } from "@/hooks/api/useMarketer"
+import { getCurrentUser } from "@/lib/utils"
 import { ChevronLeft, Search, Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -15,9 +17,43 @@ interface MyStorePageProps {
 }
 
 export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
-  const { products, toggleProductAvailability, deleteProduct } = useMarketer()
+    const { 
+    products, 
+    addProduct, 
+    updateProduct, 
+    deleteProduct, 
+    toggleProductAvailability,
+    refreshData
+  } = useMarketer()
   const [searchQuery, setSearchQuery] = useState("")
   const [filterCategory, setFilterCategory] = useState("all")
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<any>(null)
+  const [currentUser, setCurrentUser] = useState<any>(null)
+
+  // Debug: Log products quando carregar
+  useEffect(() => {
+    console.log('🛍️ MyStore products loaded:', products.length)
+    console.log('📦 Products:', products)
+    
+    // Load current user
+    const user = getCurrentUser()
+    setCurrentUser(user)
+    console.log('👤 Current user:', user)
+  }, [products])
+
+  // Mapear userId para feiranteId
+  const getFeiranteId = () => {
+    if (!currentUser) return "1"
+    
+    const userIdToFeiranteId: Record<string, string> = {
+      "3": "1", // João Silva (João da Horta)
+      "4": "2", // Maria Oliveira (Maria das Frutas)  
+      "5": "3"  // Antônio Silva (Tubérculos do Antônio)
+    }
+    
+    return userIdToFeiranteId[currentUser.id] || "1"
+  }
 
   // Filtrar produtos baseado na busca e categoria
   const filteredProducts = products.filter(product => {
@@ -38,6 +74,44 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
 
   // Obter categorias únicas
   const categories = Array.from(new Set(products.map(p => p.category)))
+
+  const handleAddProduct = () => {
+    setEditingProduct(null)
+    setIsProductModalOpen(true)
+  }
+
+  const handleEditProduct = (product: any) => {
+    setEditingProduct(product)
+    setIsProductModalOpen(true)
+  }
+
+  const handleSaveProduct = async (productData: any) => {
+    try {
+      if (editingProduct) {
+        // Editar produto existente
+        await updateProduct(editingProduct.id, productData)
+        toast.success(`Produto "${productData.name}" atualizado com sucesso!`)
+      } else {
+        // Adicionar novo produto
+        await addProduct({
+          ...productData,
+          feiranteId: getFeiranteId(),
+          feiranteName: currentUser?.name || "Feirante"
+        })
+        toast.success(`Produto "${productData.name}" adicionado com sucesso!`)
+      }
+      
+      // Força atualização dos dados
+      refreshData()
+      
+      // Reset do modal
+      setEditingProduct(null)
+      setIsProductModalOpen(false)
+    } catch (error) {
+      console.error('Error saving product:', error)
+      toast.error("Erro ao salvar produto")
+    }
+  }
 
   const handleDeleteProduct = (productId: string, productName: string) => {
     if (confirm(`Tem certeza que deseja excluir "${productName}"? Esta ação não pode ser desfeita.`)) {
@@ -118,15 +192,17 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
             })}
           </div>
         </div>
+        
         {/* Add Product Button */}
-        <Link href="/Marketer/MyStore/add-product">
-          <Card className="p-4 mb-6 border-2 border-dashed border-orange-300 hover:border-orange-400 hover:bg-orange-50 transition-colors cursor-pointer">
-            <div className="flex items-center justify-center gap-3 text-orange-600">
-              <Plus className="w-6 h-6" />
-              <span className="font-medium">Adicionar Novo Produto</span>
-            </div>
-          </Card>
-        </Link>
+        <Card 
+          className="p-4 mb-6 border-2 border-dashed border-orange-300 hover:border-orange-400 hover:bg-orange-50 transition-colors cursor-pointer"
+          onClick={handleAddProduct}
+        >
+          <div className="flex items-center justify-center gap-3 text-orange-600">
+            <Plus className="w-6 h-6" />
+            <span className="font-medium">Adicionar Novo Produto</span>
+          </div>
+        </Card>
 
         {/* Products */}
         {filteredProducts.length === 0 ? (
@@ -141,12 +217,13 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
               {searchQuery ? "Tente ajustar sua busca" : "Comece adicionando seu primeiro produto"}
             </p>
             {!searchQuery && (
-              <Link href="/Marketer/MyStore/add-product">
-                <Button className="bg-orange-600 hover:bg-orange-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Adicionar Produto
-                </Button>
-              </Link>
+              <Button 
+                className="bg-orange-600 hover:bg-orange-700"
+                onClick={handleAddProduct}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Adicionar Produto
+              </Button>
             )}
           </div>
         ) : (
@@ -248,12 +325,15 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
 
                         {/* Action Buttons */}
                         <div className="flex gap-2 mt-3">
-                          <Link href={`/Marketer/MyStore/edit-product?id=${product.id}`} className="flex-1">
-                            <Button variant="outline" size="sm" className="w-full text-xs">
-                              <Edit className="w-3 h-3 mr-1" />
-                              Editar
-                            </Button>
-                          </Link>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 text-xs"
+                            onClick={() => handleEditProduct(product)}
+                          >
+                            <Edit className="w-3 h-3 mr-1" />
+                            Editar
+                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm" 
@@ -272,6 +352,16 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
           </div>
         )}
       </div>
+
+      {/* Product Modal */}
+      <ProductModal
+        isOpen={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+        onSave={handleSaveProduct}
+        product={editingProduct}
+        feiranteId={getFeiranteId()}
+        feiranteName={currentUser?.name || "Feirante"}
+      />
     </div>
   )
 }

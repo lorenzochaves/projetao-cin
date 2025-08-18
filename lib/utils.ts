@@ -955,28 +955,36 @@ const INITIAL_DATA = {
 export function initializeLocalStorage() {
   if (typeof window === 'undefined') return
 
-  console.log('🔄 Inicializando localStorage...')
+  console.log('🔄 Verificando se localStorage precisa ser inicializado...')
 
-  // Força a limpeza e reinicialização dos dados
+  // Verifica se já existem dados salvos - se sim, não sobrescreve
+  const existingUsers = getFromStorage(STORAGE_KEYS.USERS)
+  const existingProducts = getFromStorage(STORAGE_KEYS.PRODUCTS)
+  
+  if (existingUsers && existingProducts) {
+    console.log('✅ Dados já existem no localStorage, não sobrescrevendo')
+    return
+  }
+
+  console.log('🌱 Inicializando localStorage com dados iniciais...')
+
+  // Apenas salva dados que não existem
   Object.entries(STORAGE_KEYS).forEach(([key, storageKey]) => {
     if (key !== 'CURRENT_USER' && key !== 'AUTH_TOKEN' && key !== 'CART') {
-      localStorage.removeItem(storageKey)
-    }
-  })
-
-  // Agora salva todos os dados
-  Object.entries(STORAGE_KEYS).forEach(([key, storageKey]) => {
-    if (key !== 'CURRENT_USER' && key !== 'AUTH_TOKEN' && key !== 'CART') {
-      const dataKey = key.toLowerCase() as keyof typeof INITIAL_DATA
-      if (INITIAL_DATA[dataKey]) {
-        console.log(`💾 Salvando ${key}:`, INITIAL_DATA[dataKey])
-        localStorage.setItem(storageKey, JSON.stringify(INITIAL_DATA[dataKey]))
+      const existing = getFromStorage(storageKey)
+      if (!existing) {
+        const dataKey = key.toLowerCase() as keyof typeof INITIAL_DATA
+        if (INITIAL_DATA[dataKey]) {
+          console.log(`💾 Salvando ${key}:`, INITIAL_DATA[dataKey])
+          localStorage.setItem(storageKey, JSON.stringify(INITIAL_DATA[dataKey]))
+        }
+      } else {
+        console.log(`⏭️ ${key} já existe, mantendo dados existentes`)
       }
     }
   })
 
   console.log('✅ localStorage inicializado!')
-  console.log('👥 Usuários salvos:', getUsers())
 }
 
 // Função para forçar reinicialização
