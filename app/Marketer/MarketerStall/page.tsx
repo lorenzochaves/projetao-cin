@@ -176,9 +176,10 @@ export default function MarketerStallPage() {
             </div>
           </CardContent>
         </Card>
-        </div>
+      </div>
 
       <MarketerBottomNavigation />
+      </div>
     </div>
   )
 }
