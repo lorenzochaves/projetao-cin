@@ -196,7 +196,7 @@ const INITIAL_DATA = {
       name: "Acelga",
       price: 3.2,
       unit: "maço",
-      image: "https://aguabranca.com.br/wp-content/uploads/2024/09/xacelga-1.jpg.pagespeed.ic.Jt3vp5gw6n.webp",
+      image: "https://ceagesp.gov.br/wp-content/uploads/2019/08/acelga-3-600x450.jpg",
       category: "folhas",
       description: "Acelga fresca com talos brancos",
       stock: 18,

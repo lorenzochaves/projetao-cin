@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { ConfirmationDialog } from "@/components/ui/confirmation-dialog"
+import { logout } from "@/lib/utils"
 
 interface MarketerSettingsPageProps {
   onScreenChange?: (screen: string) => void
@@ -14,9 +15,10 @@ export default function MarketerSettingsPage({ onScreenChange }: MarketerSetting
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const handleLogout = () => {
-    console.log("User logged out successfully")
+    logout()
     setShowLogoutDialog(false)
-    // Here you would typically redirect to login page
+    // Redirect to login page
+    window.location.href = '/Login'
   }
 
   const handleDeleteAccount = () => {

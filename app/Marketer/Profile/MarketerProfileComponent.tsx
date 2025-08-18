@@ -20,7 +20,7 @@ import { ConfirmationDialog } from "@/components/ui/confirmation-dialog"
 import { MarketerSupportModal } from "@/components/ui/marketer-support-modal"
 import { MarketerSettingsModal } from "@/components/ui/marketer-settings-modal"
 import { MarketerAccountModal } from "@/components/ui/marketer-account-modal"
-import { getCurrentUser, getUsers } from "@/lib/utils"
+import { getCurrentUser, getUsers, logout } from "@/lib/utils"
 
 interface MarketerProfileComponentProps {
   onScreenChange?: (screen: string) => void
@@ -55,9 +55,10 @@ export default function MarketerProfileComponent({ onScreenChange }: MarketerPro
   }, [])
 
   const handleLogout = () => {
-    console.log("Vendor logged out successfully")
+    logout()
     setShowLogoutDialog(false)
-    // Redirect to login
+    // Redirect to login page
+    window.location.href = '/Login'
   }
 
   const handleDeleteAccount = () => {
@@ -158,6 +159,7 @@ export default function MarketerProfileComponent({ onScreenChange }: MarketerPro
           </button>
 
           <button 
+            onClick={() => onScreenChange?.("home")}
             className="w-full flex items-center justify-between p-4 border-b hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center gap-3">

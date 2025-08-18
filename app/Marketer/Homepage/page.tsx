@@ -1,12 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useMarketer } from "@/hooks/api/useMarketer"
 import { 
   Package, 
@@ -26,7 +32,16 @@ import {
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts'
 
 // Mock data para o gráfico - em uma implementação real, viria do hook
-const salesData = [
+const salesDataToday = [
+  { day: '6h', orders: 5, revenue: 120 },
+  { day: '9h', orders: 12, revenue: 280 },
+  { day: '12h', orders: 18, revenue: 420 },
+  { day: '15h', orders: 25, revenue: 650 },
+  { day: '18h', orders: 15, revenue: 380 },
+  { day: '21h', orders: 8, revenue: 190 },
+]
+
+const salesDataWeekly = [
   { day: 'S', orders: 40, revenue: 800 },
   { day: 'M', orders: 25, revenue: 600 },
   { day: 'T', orders: 55, revenue: 1100 },
@@ -36,15 +51,99 @@ const salesData = [
   { day: 'S', orders: 18, revenue: 360 },
 ]
 
+const salesDataMonthly = [
+  { day: 'S1', orders: 180, revenue: 4200 },
+  { day: 'S2', orders: 220, revenue: 5100 },
+  { day: 'S3', orders: 160, revenue: 3800 },
+  { day: 'S4', orders: 250, revenue: 5900 },
+]
+
 interface MarketerHomepageProps {
   onScreenChange?: (screen: string) => void
 }
 
 export default function MarketerHomepage({ onScreenChange }: MarketerHomepageProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'weekly' | 'monthly'>('weekly')
+  const [selectedProductPeriod, setSelectedProductPeriod] = useState<'today' | 'weekly' | 'monthly'>('weekly')
+  const [showNotifications, setShowNotifications] = useState(false)
   const { stats, products, orders, getTopProducts } = useMarketer("1") // Mock feirante ID
+  
+  const getTopProductsWithGrowth = useCallback((period: 'today' | 'weekly' | 'monthly') => {
+    // Calculate sales for each product based on orders and add growth data
+    const productSales = products.map((product, index) => {
+      const sales = orders.reduce((total, order) => {
+        const orderItem = order.items.find(item => item.productId === product.id)
+        return orderItem ? total + orderItem.quantity : total
+      }, 0)
+      
+      const revenue = orders.reduce((total, order) => {
+        const orderItem = order.items.find(item => item.productId === product.id)
+        return orderItem ? total + (orderItem.price * orderItem.quantity) : total
+      }, 0)
 
-  const topProducts = getTopProducts()
+      // Generate realistic growth data based on period
+      let growthData;
+      switch (period) {
+        case 'today':
+          growthData = [12, -5, 8, 15, -2, 18, 25, 6, -8, 14][index] || 10
+          break
+        case 'weekly':
+          growthData = [25, 18, -12, 35, 8, 45, -5, 22, 15, 30][index] || 20
+          break
+        case 'monthly':
+          growthData = [85, 120, 65, 145, 98, 175, 55, 110, 78, 135][index] || 95
+          break
+        default:
+          growthData = 0
+      }
+
+      return {
+        ...product,
+        totalSales: sales || Math.floor(Math.random() * 50) + 10, // Mock sales if no real orders
+        totalRevenue: revenue || (Math.floor(Math.random() * 500) + 100), // Mock revenue
+        growth: growthData
+      }
+    })
+
+    return productSales
+      .sort((a, b) => b.totalSales - a.totalSales)
+      .slice(0, 5)
+  }, [products, orders])
+
+  const topProducts = getTopProductsWithGrowth(selectedProductPeriod)
+
+  // Generate notifications from recent orders
+  const getNotifications = useCallback(() => {
+    const today = new Date()
+    const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000)
+    
+    // Get recent orders (last 24 hours) for notifications
+    const recentOrders = orders.filter(order => {
+      const orderDate = new Date(order.createdAt)
+      return orderDate >= yesterday
+    })
+
+    return recentOrders.map(order => ({
+      id: order.id,
+      title: "Novo pedido",
+      message: `${order.clientName} fez um pedido`,
+      time: new Date(order.createdAt).toLocaleTimeString('pt-BR', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      }),
+      status: order.status,
+      orderId: order.id
+    }))
+  }, [orders])
+
+  const notifications = getNotifications()
+
+  const handleNotificationClick = (orderId: string) => {
+    setShowNotifications(false)
+    if (onScreenChange) {
+      onScreenChange('orders')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -56,15 +155,67 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
             <p className="text-gray-600">Bem-vindo de volta, João Silva</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="relative">
-              <Bell className="w-4 h-4" />
-              {stats.pendingOrders > 0 && (
-                <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-              )}
-            </Button>
-            <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+            <DropdownMenu open={showNotifications} onOpenChange={setShowNotifications}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="relative">
+                  <Bell className="w-4 h-4" />
+                  {notifications.length > 0 && (
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <div className="p-3 border-b">
+                  <h3 className="font-semibold text-gray-900">Notificações</h3>
+                  <p className="text-sm text-gray-500">{notifications.length} nova(s) notificação(ões)</p>
+                </div>
+                <div className="max-h-64 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                      <DropdownMenuItem
+                        key={notification.id}
+                        className="p-3 cursor-pointer hover:bg-gray-50"
+                        onClick={() => handleNotificationClick(notification.orderId)}
+                      >
+                        <div className="flex items-start gap-3 w-full">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm">{notification.title}</p>
+                            <p className="text-sm text-gray-600 truncate">{notification.message}</p>
+                            <span className="text-xs text-gray-500">{notification.time}</span>
+                          </div>
+                        </div>
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="p-6 text-center text-gray-500">
+                      <Bell className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                      <p className="text-sm">Nenhuma notificação</p>
+                    </div>
+                  )}
+                </div>
+                {notifications.length > 0 && (
+                  <div className="p-3 border-t">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-full text-orange-600 hover:text-orange-700"
+                      onClick={() => handleNotificationClick('')}
+                    >
+                      Ver todos os pedidos
+                    </Button>
+                  </div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center p-0 hover:bg-orange-600"
+              onClick={() => onScreenChange && onScreenChange('orders')}
+            >
               <Store className="w-5 h-5 text-white" />
-            </div>
+            </Button>
           </div>
         </div>
       </div>
@@ -194,7 +345,11 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
           <CardContent>
             <div className="h-48 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={salesData}>
+                <AreaChart data={
+                  selectedPeriod === 'today' ? salesDataToday :
+                  selectedPeriod === 'weekly' ? salesDataWeekly :
+                  salesDataMonthly
+                }>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis 
                     dataKey="day" 
@@ -231,11 +386,12 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                 {(['monthly', 'weekly', 'today'] as const).map((period) => (
                   <Button
                     key={period}
-                    variant={selectedPeriod === period ? "default" : "ghost"}
+                    variant={selectedProductPeriod === period ? "default" : "ghost"}
                     size="sm"
                     className={`h-8 px-3 text-xs ${
-                      selectedPeriod === period ? 'bg-orange-600 text-white' : 'text-gray-600'
+                      selectedProductPeriod === period ? 'bg-orange-600 text-white' : 'text-gray-600'
                     }`}
+                    onClick={() => setSelectedProductPeriod(period)}
                   >
                     {period === 'monthly' ? 'Mensal' : period === 'weekly' ? 'Semanal' : 'Hoje'}
                   </Button>
@@ -259,11 +415,11 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                     <p className="text-sm text-gray-500">R$ {product.price.toFixed(2)}/{product.unit}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-gray-900">{product.totalSales}</p>
+                    <p className="font-semibold text-gray-900">{product.totalSales} vendas</p>
                     <div className="flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3 text-orange-500" />
-                      <span className="text-xs font-medium text-orange-500">
-                        R$ {product.totalRevenue.toFixed(0)}
+                      <TrendingUp className={`w-3 h-3 ${product.growth >= 0 ? 'text-green-500' : 'text-red-500'}`} />
+                      <span className={`text-xs font-medium ${product.growth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        {product.growth >= 0 ? '+' : ''}{product.growth}%
                       </span>
                     </div>
                   </div>
