@@ -246,18 +246,14 @@ export default function HomePage({
           </div>
         </div>
 
-        {/* Banner de oferta */}
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 p-6 mb-6 rounded-xl text-white">
-          <div className="text-center">
-            <h3 className="text-lg font-bold mb-2">🥬 Oferta Especial!</h3>
-            <p className="text-green-100 mb-2">Verduras orgânicas com 20% OFF</p>
-            <p className="text-sm text-green-200">Válido até domingo</p>
-            <div className="flex justify-center mt-3 gap-1">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
-              <div className="w-2 h-2 bg-green-300 rounded-full"></div>
-            </div>
-          </div>
-        </Card>
+        {/* Banner */}
+        <div className="mb-6 rounded-xl overflow-hidden">
+          <img 
+            src="/banner-feirou.png" 
+            alt="Banner Feirou"
+            className="w-full h-auto object-cover"
+          />
+        </div>
 
         <h2 className="text-lg font-semibold mb-4">
           Com quem você deseja
