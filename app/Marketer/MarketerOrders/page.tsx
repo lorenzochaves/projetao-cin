@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { useMarketer, MarketerOrder } from "@/hooks/api/useMarketer"
+import { getUsers } from "@/lib/utils"
 import { toast } from "sonner"
 
 interface MarketerOrdersPageProps {
@@ -21,6 +22,12 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
   const [showDeliveryModal, setShowDeliveryModal] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState<MarketerOrder | null>(null)
   const [chatMessage, setChatMessage] = useState('')
+
+  // Função para buscar dados do cliente
+  const getClientData = (clientId: string) => {
+    const users = getUsers()
+    return users.find(user => user.id === clientId)
+  }
 
   const handleStatusUpdate = async (orderId: string, newStatus: MarketerOrder['status']) => {
     try {
@@ -115,24 +122,10 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
   const filteredOrders = selectedCard === 'todos' ? orders : getOrdersByStatus(selectedCard as MarketerOrder['status'])
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="px-4 py-6 pt-12">
-          <div className="flex items-center mb-6">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="mr-2"
-              onClick={() => onScreenChange?.("home")}
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-            <h1 className="text-xl font-bold">Meus Pedidos</h1>
-          </div>
-          
-          {/* Status Cards */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
+    <div className="min-h-screen bg-white pb-20">
+      {/* Status Cards */}
+      <div className="px-4 py-6 pt-8">
+        <div className="grid grid-cols-2 gap-3 mb-4">
             <Card 
               className={`p-4 cursor-pointer transition-all duration-200 border-2 ${
                 selectedCard === 'pendente' 
@@ -141,14 +134,14 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
               }`}
               onClick={() => setSelectedCard('pendente')}
             >
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <AlertCircle className="w-6 h-6 text-red-500" />
+              <div className="flex items-center justify-between">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-1">
+                    {getOrdersByStatus('pendente').length}
+                  </div>
+                  <div className="text-sm font-bold text-red-600">Pendentes</div>
                 </div>
-                <div className="text-2xl font-bold text-red-600 mb-1">
-                  {getOrdersByStatus('pendente').length}
-                </div>
-                <div className="text-sm text-gray-600">Pendentes</div>
+                <AlertCircle className="w-10 h-10 text-red-500" />
               </div>
             </Card>
             
@@ -160,14 +153,14 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
               }`}
               onClick={() => setSelectedCard('preparando')}
             >
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Clock className="w-6 h-6 text-yellow-500" />
+              <div className="flex items-center justify-between">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-yellow-600 mb-1">
+                    {getOrdersByStatus('preparando').length}
+                  </div>
+                  <div className="text-sm font-bold text-yellow-600">Preparando</div>
                 </div>
-                <div className="text-2xl font-bold text-yellow-600 mb-1">
-                  {getOrdersByStatus('preparando').length}
-                </div>
-                <div className="text-sm text-gray-600">Preparando</div>
+                <Clock className="w-10 h-10 text-yellow-500" />
               </div>
             </Card>
             
@@ -179,14 +172,14 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
               }`}
               onClick={() => setSelectedCard('pronto')}
             >
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Package className="w-6 h-6 text-blue-500" />
+              <div className="flex items-center justify-between">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-600 mb-1">
+                    {getOrdersByStatus('pronto').length}
+                  </div>
+                  <div className="text-sm font-bold text-blue-600">Prontos</div>
                 </div>
-                <div className="text-2xl font-bold text-blue-600 mb-1">
-                  {getOrdersByStatus('pronto').length}
-                </div>
-                <div className="text-sm text-gray-600">Prontos</div>
+                <Package className="w-10 h-10 text-blue-500" />
               </div>
             </Card>
             
@@ -198,22 +191,21 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
               }`}
               onClick={() => setSelectedCard('entregue')}
             >
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
+              <div className="flex items-center justify-between">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-1">
+                    {getOrdersByStatus('entregue').length}
+                  </div>
+                  <div className="text-sm font-bold text-green-600">Entregues</div>
                 </div>
-                <div className="text-2xl font-bold text-green-600 mb-1">
-                  {getOrdersByStatus('entregue').length}
-                </div>
-                <div className="text-sm text-gray-600">Entregues</div>
+                <CheckCircle className="w-10 h-10 text-green-500" />
               </div>
             </Card>
           </div>
         </div>
-      </div>
 
-      {/* Orders List */}
-      <div className="px-4 py-6">
+        {/* Orders List */}
+        <div className="px-4 py-6">
         {filteredOrders.length === 0 ? (
           <Card className="text-center py-12">
             <CardContent>
@@ -231,18 +223,32 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
           </Card>
         ) : (
           <div className="space-y-4">
-            {filteredOrders.map((order) => (
+            {filteredOrders.map((order) => {
+              // Buscar dados reais do cliente
+              const clientData = getClientData(order.clientId)
+              
+              return (
               <Card key={order.id} className="bg-white shadow-sm">
                 <CardContent className="p-4">
                   {/* Header do pedido */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <User className="w-6 h-6 text-orange-600" />
-                      </div>
+                      {clientData?.avatar ? (
+                        <div className="w-12 h-12 rounded-lg overflow-hidden">
+                          <img
+                            src={clientData.avatar}
+                            alt={clientData.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <User className="w-6 h-6 text-orange-600" />
+                        </div>
+                      )}
                       <div>
                         <h4 className="font-medium text-gray-900">
-                          {order.clientName || `Cliente ${order.clientId.slice(-4)}`}
+                          {clientData ? `${clientData.name} ${clientData.surname}` : order.clientName || `Cliente ${order.clientId.slice(-4)}`}
                         </h4>
                         <p className="text-sm text-gray-500">
                           Pedido #{order.id.slice(-8).toUpperCase()}
@@ -250,11 +256,13 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className={`flex items-center gap-1 mb-1 ${getStatusColor(order.status)}`}>
-                        {getStatusIcon(order.status)}
-                        <span className="text-sm font-medium capitalize">
-                          {order.status}
-                        </span>
+                      <div className={`flex items-center justify-end gap-2 mb-1`}>
+                        <div className={`w-3 h-3 rounded-full ${
+                          order.status === 'pendente' ? 'bg-red-500 animate-pulse' :
+                          order.status === 'preparando' ? 'bg-yellow-500 animate-pulse' :
+                          order.status === 'pronto' ? 'bg-blue-500' :
+                          order.status === 'entregue' ? 'bg-green-500' : 'bg-gray-500'
+                        }`}></div>
                       </div>
                       <Badge variant="outline" className="text-xs">
                         R$ {order.total.toFixed(2)}
@@ -309,23 +317,23 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
                     <div className="space-y-2">
                       {order.items.map((item, index) => (
                         <div key={index} className="flex items-center gap-3">
-                          <div className="w-6 h-6 bg-white rounded flex items-center justify-center border">
-                            <span className="text-xs font-semibold text-gray-700">
+                          <div className="min-w-[2.5rem] h-6 bg-white rounded flex items-center justify-center border px-1">
+                            <span className="text-xs font-semibold text-gray-700 truncate">
                               {item.selectedWeight ? 
                                 `${item.selectedWeight}kg` : 
                                 `${item.quantity}x`
                               }
                             </span>
                           </div>
-                          <div className="flex-1">
-                            <span className="text-sm text-gray-900">{item.name}</span>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-sm text-gray-900 truncate block">{item.name}</span>
                             {item.observation && (
-                              <p className="text-xs text-orange-600 mt-1">
+                              <p className="text-xs text-orange-600 mt-1 truncate">
                                 Obs: {item.observation}
                               </p>
                             )}
                           </div>
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 flex-shrink-0">
                             R$ {(item.selectedWeight ? 
                               item.price * item.selectedWeight : 
                               item.price * item.quantity
@@ -381,7 +389,8 @@ export default function MarketerOrdersPage({ onScreenChange }: MarketerOrdersPag
                   </div>
                 </CardContent>
               </Card>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
