@@ -224,7 +224,12 @@ const INITIAL_DATA = {
       category: "legumes",
       description: "Tomate maduro e saboroso",
       stock: 35,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "tomate-verde", name: "Mais verdes", description: "Ideais para fritar ou salada verde"},
+        {id: "tomate-maduro", name: "Mais maduros", description: "Perfeitos para molhos e consumo imediato"},
+        {id: "tomate-medio", name: "Ponto médio", description: "Equilibrio entre firmeza e sabor"}
+      ]
     },
     {
       id: "8",
@@ -272,7 +277,12 @@ const INITIAL_DATA = {
       category: "legumes",
       description: "Pimentão verde doce",
       stock: 24,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "pimentao-pequeno", name: "Pequenos", description: "Ideais para temperos e saladas"},
+        {id: "pimentao-medio", name: "Médios", description: "Perfeitos para refogados"},
+        {id: "pimentao-grande", name: "Grandes", description: "Ótimos para rechear"}
+      ]
     },
     {
       id: "12",
@@ -334,7 +344,12 @@ const INITIAL_DATA = {
       category: "frutas",
       description: "Banana doce e nutritiva, rica em potássio",
       stock: 50,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "banana-verde", name: "Mais verdes", description: "Ideais para vitaminas e cozinhar"},
+        {id: "banana-madura", name: "Mais maduras", description: "Perfeitas para consumo imediato"},
+        {id: "banana-media", name: "Ponto médio", description: "Equilibrio entre firmeza e doçura"}
+      ]
     },
     {
       id: "17",
@@ -394,7 +409,12 @@ const INITIAL_DATA = {
       category: "frutas",
       description: "Mamão maduro e doce",
       stock: 22,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "mamao-verde", name: "Mais verde", description: "Ideal para doces e conservas"},
+        {id: "mamao-maduro", name: "Bem maduro", description: "Perfeito para consumo imediato"},
+        {id: "mamao-medio", name: "Ponto médio", description: "Equilibrio entre firmeza e doçura"}
+      ]
     },
     {
       id: "22",
@@ -516,7 +536,12 @@ const INITIAL_DATA = {
       category: "tuberculos",
       description: "Batata inglesa para purê e frituras",
       stock: 50,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "batata-pequena", name: "Pequenas", description: "Ideais para cozinhar inteiras"},
+        {id: "batata-media", name: "Médias", description: "Perfeitas para purê e fritas"},
+        {id: "batata-grande", name: "Grandes", description: "Ótimas para assar no forno"}
+      ]
     },
     {
       id: "32",
@@ -540,7 +565,12 @@ const INITIAL_DATA = {
       category: "legumes",
       description: "Cenoura doce e crocante",
       stock: 40,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "cenoura-pequena", name: "Baby cenouras", description: "Pequenas e tenras, ideais para petiscos"},
+        {id: "cenoura-media", name: "Médias", description: "Perfeitas para saladas e refogados"},
+        {id: "cenoura-grande", name: "Grandes", description: "Ótimas para sopas e cozidos"}
+      ]
     },
     {
       id: "34",
@@ -624,7 +654,12 @@ const INITIAL_DATA = {
       category: "legumes",
       description: "Cebola roxa doce",
       stock: 35,
-      isAvailable: true
+      isAvailable: true,
+      variations: [
+        {id: "cebola-pequena", name: "Pequenas", description: "Ideais para temperos e conservas"},
+        {id: "cebola-media", name: "Médias", description: "Perfeitas para refogados"},
+        {id: "cebola-grande", name: "Grandes", description: "Ótimas para caramelizar e rechear"}
+      ]
     },
     {
       id: "41",
