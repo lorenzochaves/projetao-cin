@@ -1,28 +1,22 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { login, debugStorage, getUsers, forceInitializeData } from '@/lib/utils'
+import { login } from '@/lib/utils'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [debugInfo, setDebugInfo] = useState('')
   const router = useRouter()
-
-  useEffect(() => {
-    // Debug inicial
-    const users = getUsers()
-    setDebugInfo(`Usuários carregados: ${users.length}`)
-    console.log('🔍 Usuários disponíveis:', users)
-  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,27 +51,25 @@ export default function LoginPage() {
     }
   }
 
-  const handleDebug = () => {
-    debugStorage()
-    const users = getUsers()
-    setDebugInfo(`Debug executado. Usuários: ${users.length}`)
-  }
-
-  const handleForceInit = () => {
-    forceInitializeData()
-    const users = getUsers()
-    setDebugInfo(`Dados reinicializados! Usuários: ${users.length}`)
-  }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="text-center pb-6 pt-8">
+          {/* Logo FEIROU! */}
+          <div className="mb-4">
+            <Image
+              src="/feirou-amarelo.png"
+              alt="FEIROU!"
+              width={120}
+              height={48}
+              className="object-contain mx-auto"
+            />
+          </div>
           <CardTitle className="text-2xl font-bold text-gray-900">
-            Entrar na Feira
+            Entrar na sua conta
           </CardTitle>
-          <CardDescription>
-            Faça login para acessar sua conta
+          <CardDescription className="text-gray-600">
+            Faça login para acessar a plataforma
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,14 +80,8 @@ export default function LoginPage() {
               </Alert>
             )}
             
-            {debugInfo && (
-              <Alert>
-                <AlertDescription>{debugInfo}</AlertDescription>
-              </Alert>
-            )}
-            
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -103,51 +89,45 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
-                className="w-full"
+                className="w-full h-12 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password" className="text-gray-700 font-medium">Senha</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••"
+                placeholder="••••••••"
                 required
-                className="w-full"
+                className="w-full h-12 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-medium text-lg rounded-lg"
               disabled={loading}
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>
 
-          <div className="mt-6 space-y-3">
-            <Button onClick={handleDebug} variant="outline" className="w-full">
-              Debug Storage
-            </Button>
-            <Button onClick={handleForceInit} variant="outline" className="w-full">
-              Reinicializar Dados
-            </Button>
-          </div>
-
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Usuários de teste:
+              Não tem uma conta?{' '}
+              <Link href="/Login/CreateAccount" className="text-orange-500 hover:text-orange-600 font-medium">
+                Criar conta
+              </Link>
             </p>
-            <div className="mt-2 space-y-1 text-xs text-gray-500">
-              <p><strong>Clientes:</strong> marcela.ribeiro@email.com / lucas.cliente@email.com</p>
-              <p><strong>Feirantes:</strong> joao.feira@email.com / maria.frutas@email.com</p>
-              <p><strong>Entregador:</strong> antonio.carnes@email.com</p>
-              <p><strong>Senha para todos:</strong> 123456</p>
-            </div>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Link href="/UserType" className="text-sm text-gray-500 hover:text-gray-700">
+              ← Voltar para seleção de tipo
+            </Link>
           </div>
         </CardContent>
       </Card>
