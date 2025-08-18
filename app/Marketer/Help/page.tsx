@@ -22,7 +22,7 @@ export default function HelpPage({ onScreenChange }: HelpPageProps) {
   const helpSections = [
     {
       id: "products",
-      title: "Como cadastrar produtos",
+      title: "novo produto",
       icon: Package,
       content: [
         "1. Vá na aba 'Minha Feira' no menu de baixo",
@@ -36,7 +36,7 @@ export default function HelpPage({ onScreenChange }: HelpPageProps) {
     },
     {
       id: "orders",
-      title: "Como ver meus pedidos",
+      title: "meus pedidos",
       icon: DollarSign,
       content: [
         "1. Toque na aba 'Pedidos' no menu de baixo",
@@ -49,7 +49,7 @@ export default function HelpPage({ onScreenChange }: HelpPageProps) {
     },
     {
       id: "prices",
-      title: "Como alterar preços",
+      title: "alterar preços",
       icon: Settings,
       content: [
         "1. Vá em 'Minha Feira' no menu",
@@ -62,7 +62,7 @@ export default function HelpPage({ onScreenChange }: HelpPageProps) {
     },
     {
       id: "app",
-      title: "Como usar o aplicativo",
+      title: "usar app",
       icon: User,
       content: [
         "• Menu de baixo: 5 abas principais",
@@ -121,7 +121,7 @@ export default function HelpPage({ onScreenChange }: HelpPageProps) {
             <div className="grid grid-cols-2 gap-4">
               <Card className="bg-white rounded-xl">
                 <CardContent className="p-4">
-                  <h4 className="font-bold text-gray-900 text-sm mb-1">Como ver pedidos?</h4>
+                  <h4 className="font-bold text-gray-900 text-sm mb-1">Meus pedidos?</h4>
                   <p className="text-gray-600 text-xs">Acompanhe suas vendas</p>
                 </CardContent>
               </Card>
@@ -147,13 +147,13 @@ export default function HelpPage({ onScreenChange }: HelpPageProps) {
                 <button
                   key={section.id}
                   onClick={() => toggleSection(section.id)}
-                  className="bg-white rounded-xl p-4 text-center hover:shadow-md transition-shadow border border-gray-100"
+                  className="bg-orange-500 rounded-xl p-3 text-left hover:bg-orange-600 transition-colors text-white"
                 >
-                  <div className="w-12 h-12 bg-orange-100 rounded-xl mx-auto mb-2 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white/20 rounded-xl mx-auto mb-2 flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <span className="text-xs text-gray-700 font-medium leading-tight">
-                    {section.title.replace("Como ", "")}
+                  <span className="text-xs font-medium leading-tight uppercase block text-center px-1">
+                    {section.title}
                   </span>
                 </button>
               )

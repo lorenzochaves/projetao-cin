@@ -90,7 +90,6 @@ export default function MarketerProfileComponent({ onScreenChange }: MarketerPro
           <h1 className="text-2xl font-bold">{user.name}</h1>
           <p className="text-orange-600 font-medium">{user.stallName || "João da Horta"}</p>
           <p className="text-gray-600">Vendedor desde {user.createdAt ? new Date(user.createdAt).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : 'Junho 2024'}</p>
-          <p className="text-sm text-orange-500 font-medium">Plataforma Gratuita • Sem taxas</p>
         </div>
 
         <div className="space-y-4">

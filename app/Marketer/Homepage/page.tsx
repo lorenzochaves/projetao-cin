@@ -77,7 +77,6 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <Package className="w-6 h-6 text-gray-300" />
-                <span className="text-sm text-gray-300">0%</span>
               </div>
               <div className="space-y-1">
                 <p className="text-2xl font-bold">{stats.totalProducts}</p>
@@ -92,7 +91,6 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <ShoppingCart className="w-6 h-6 text-gray-400" />
-                <span className="text-sm text-gray-500">0%</span>
               </div>
               <div className="space-y-1">
                 <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
@@ -107,7 +105,6 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <Users className="w-6 h-6 text-gray-400" />
-                <span className="text-sm text-gray-500">0%</span>
               </div>
               <div className="space-y-1">
                 <p className="text-2xl font-bold text-gray-900">{stats.totalClients}</p>
@@ -122,7 +119,6 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <DollarSign className="w-6 h-6 text-gray-400" />
-                <span className="text-sm text-gray-500">0%</span>
               </div>
               <div className="space-y-1">
                 <p className="text-2xl font-bold text-gray-900">R$ {(stats.revenue / 1000).toFixed(1)}k</p>
@@ -149,15 +145,15 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
               <Button 
                 onClick={() => onScreenChange?.("orders")}
                 variant="outline" 
-                className="h-14 flex-col gap-2 w-full"
+                className="h-14 flex-col gap-2 w-full relative"
               >
-                <Eye className="w-5 h-5" />
-                <span className="text-sm">Ver Pedidos</span>
                 {stats.pendingOrders > 0 && (
-                  <Badge variant="destructive" className="ml-1 text-xs">
+                  <Badge variant="destructive" className="absolute top-1 right-1 text-xs w-5 h-5 rounded-full p-0 flex items-center justify-center">
                     {stats.pendingOrders}
                   </Badge>
                 )}
+                <Eye className="w-5 h-5" />
+                <span className="text-sm">Ver Pedidos</span>
               </Button>
             </div>
             

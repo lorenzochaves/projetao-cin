@@ -298,49 +298,6 @@ export default function MarketerFinancePage({ onScreenChange }: MarketerFinanceP
           </div>
         </div>
 
-        {/* Additional Bar Chart for Profit Breakdown */}
-        {selectedCard === 'lucro' && (
-          <div className="bg-white rounded-lg border border-gray-100 p-4 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Composição do Lucro</h3>
-            
-            <div className="h-40 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={[{
-                    name: 'Financeiro',
-                    receita: getFinancialData(profitPeriod).receita,
-                    custos: getFinancialData(profitPeriod).custos,
-                    taxas: getFinancialData(profitPeriod).taxas,
-                    lucro: getFinancialData(profitPeriod).lucro
-                  }]}
-                  layout="horizontal"
-                >
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} width={60} />
-                  <Bar dataKey="receita" stackId="a" fill="#10b981" name="Receita" />
-                  <Bar dataKey="custos" stackId="a" fill="#ef4444" name="Custos" />
-                  <Bar dataKey="taxas" stackId="a" fill="#f59e0b" name="Taxas" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            
-            <div className="flex justify-center gap-6 mt-3 text-xs">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-green-500 rounded"></div>
-                <span>Receita</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-red-500 rounded"></div>
-                <span>Custos</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-                <span>Taxas</span>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* History Section - Don't show when Lucro estimado is selected */}
         {selectedCard !== 'lucro' && (
           <div className="bg-white rounded-lg border border-gray-100 p-4">
