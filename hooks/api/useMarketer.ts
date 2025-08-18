@@ -144,8 +144,118 @@ export function useMarketer(providedFeiranteId?: string) {
 
   const loadOrders = useCallback(() => {
     if (typeof window === 'undefined') return
-    const allOrders = getFromStorage<MarketerOrder[]>('feira_marketer_orders') || []
-    const feiranteOrders = allOrders.filter(o => o.items.some(item => item.productId.startsWith(feiranteId)))
+    
+    console.log('🔍 Loading orders for feirante:', feiranteId)
+    
+    let allOrders = getFromStorage<MarketerOrder[]>('feira_marketer_orders') || []
+    console.log('📦 All marketer orders found:', allOrders.length)
+    
+    // Se não há pedidos, criar alguns de exemplo
+    if (allOrders.length === 0) {
+      console.log('🌱 No orders found, creating sample orders...')
+      const sampleOrders: MarketerOrder[] = [
+        {
+          id: "mo-001",
+          clientId: "1",
+          clientName: "Marcela Ribeiro",
+          items: [
+            {
+              productId: "1-1692358923456-abc123def",
+              name: "Tomate Cereja",
+              price: 8.50,
+              quantity: 1,
+              selectedWeight: 1.2,
+              observation: "Bem maduros, por favor"
+            },
+            {
+              productId: "1-1692358923457-def456ghi",
+              name: "Alface Crespa",
+              price: 3.20,
+              quantity: 2,
+              observation: "2 pés bem frescos"
+            }
+          ],
+          total: 16.60,
+          status: "pendente",
+          createdAt: "2025-08-18T08:30:00Z",
+          estimatedDelivery: "2025-08-18T18:00:00Z",
+          deliveryAddress: {
+            street: "Rua das Flores, 123",
+            neighborhood: "Boa Viagem",
+            city: "Recife",
+            state: "PE",
+            zipCode: "51020-120"
+          },
+          paymentMethod: "credit",
+          observations: "Entregar na portaria"
+        },
+        {
+          id: "mo-002",
+          clientId: "2",
+          clientName: "Lucas Santos",
+          items: [
+            {
+              productId: "1-1692358923458-ghi789jkl",
+              name: "Banana Prata",
+              price: 6.80,
+              quantity: 1,
+              selectedWeight: 2.0,
+              observation: "Bananas maduras"
+            }
+          ],
+          total: 13.60,
+          status: "preparando",
+          createdAt: "2025-08-18T09:15:00Z",
+          estimatedDelivery: "2025-08-18T19:00:00Z",
+          deliveryAddress: {
+            street: "Av. Conselheiro Aguiar, 789",
+            neighborhood: "Boa Viagem",
+            city: "Recife",
+            state: "PE",
+            zipCode: "51021-030"
+          },
+          paymentMethod: "debit"
+        },
+        {
+          id: "mo-003",
+          clientId: "1",
+          clientName: "Marcela Ribeiro",
+          items: [
+            {
+              productId: "1-1692358923457-def456ghi",
+              name: "Alface Crespa",
+              price: 3.20,
+              quantity: 3,
+              observation: "3 pés para salada"
+            }
+          ],
+          total: 9.60,
+          status: "pronto",
+          createdAt: "2025-08-18T07:45:00Z",
+          estimatedDelivery: "2025-08-18T17:30:00Z",
+          deliveryAddress: {
+            street: "Rua das Flores, 123",
+            neighborhood: "Boa Viagem",
+            city: "Recife",
+            state: "PE",
+            zipCode: "51020-120"
+          },
+          paymentMethod: "pix"
+        }
+      ]
+      
+      setToStorage('feira_marketer_orders', sampleOrders)
+      allOrders = sampleOrders
+    }
+    
+    console.log('📋 All orders:', allOrders.length)
+    
+    const feiranteOrders = allOrders.filter(o => 
+      o.items.some(item => item.productId.startsWith(feiranteId))
+    )
+    
+    console.log('🎯 Orders for feirante', feiranteId, ':', feiranteOrders.length)
+    
     setOrders(feiranteOrders)
   }, [feiranteId])
 

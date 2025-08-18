@@ -794,7 +794,169 @@ const INITIAL_DATA = {
       }
     }
   ],
-  marketerOrders: [],
+  marketerOrders: [
+    {
+      id: "mo-001",
+      clientId: "1",
+      clientName: "Marcela Ribeiro",
+      items: [
+        {
+          productId: "1-1692358923456-abc123def",
+          name: "Tomate Cereja",
+          price: 8.50,
+          quantity: 1,
+          selectedWeight: 1.2,
+          observation: "Bem maduros, por favor"
+        },
+        {
+          productId: "1-1692358923457-def456ghi",
+          name: "Alface Crespa",
+          price: 3.20,
+          quantity: 2,
+          observation: "2 pés bem frescos"
+        }
+      ],
+      total: 16.60,
+      status: "pendente",
+      createdAt: "2025-08-18T08:30:00Z",
+      estimatedDelivery: "2025-08-18T18:00:00Z",
+      deliveryAddress: {
+        street: "Rua das Flores, 123",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51020-120"
+      },
+      paymentMethod: "credit",
+      observations: "Entregar na portaria"
+    },
+    {
+      id: "mo-002",
+      clientId: "2",
+      clientName: "Lucas Santos",
+      items: [
+        {
+          productId: "1-1692358923458-ghi789jkl",
+          name: "Banana Prata",
+          price: 6.80,
+          quantity: 1,
+          selectedWeight: 2.0,
+          observation: "Bananas maduras"
+        },
+        {
+          productId: "1-1692358923456-abc123def",
+          name: "Tomate Cereja",
+          price: 8.50,
+          quantity: 1,
+          selectedWeight: 0.8
+        }
+      ],
+      total: 20.40,
+      status: "preparando",
+      createdAt: "2025-08-18T09:15:00Z",
+      estimatedDelivery: "2025-08-18T19:00:00Z",
+      deliveryAddress: {
+        street: "Av. Conselheiro Aguiar, 789",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51021-030"
+      },
+      paymentMethod: "debit"
+    },
+    {
+      id: "mo-003",
+      clientId: "1",
+      clientName: "Marcela Ribeiro",
+      items: [
+        {
+          productId: "1-1692358923457-def456ghi",
+          name: "Alface Crespa",
+          price: 3.20,
+          quantity: 3,
+          observation: "3 pés para salada"
+        }
+      ],
+      total: 9.60,
+      status: "pronto",
+      createdAt: "2025-08-18T07:45:00Z",
+      estimatedDelivery: "2025-08-18T17:30:00Z",
+      deliveryAddress: {
+        street: "Rua das Flores, 123",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51020-120"
+      },
+      paymentMethod: "pix"
+    },
+    {
+      id: "mo-004",
+      clientId: "3",
+      clientName: "Ana Silva",
+      items: [
+        {
+          productId: "1-1692358923456-abc123def",
+          name: "Tomate Cereja",
+          price: 8.50,
+          quantity: 1,
+          selectedWeight: 1.5
+        },
+        {
+          productId: "1-1692358923458-ghi789jkl",
+          name: "Banana Prata",
+          price: 6.80,
+          quantity: 1,
+          selectedWeight: 1.8
+        },
+        {
+          productId: "1-1692358923457-def456ghi",
+          name: "Alface Crespa",
+          price: 3.20,
+          quantity: 1
+        }
+      ],
+      total: 28.79,
+      status: "entregue",
+      createdAt: "2025-08-17T16:20:00Z",
+      estimatedDelivery: "2025-08-18T08:00:00Z",
+      deliveryAddress: {
+        street: "Rua do Hospício, 456",
+        neighborhood: "Boa Vista",
+        city: "Recife",
+        state: "PE",
+        zipCode: "50050-050"
+      },
+      paymentMethod: "credit"
+    },
+    {
+      id: "mo-005",
+      clientId: "2",
+      clientName: "Lucas Santos",
+      items: [
+        {
+          productId: "1-1692358923458-ghi789jkl",
+          name: "Banana Prata",
+          price: 6.80,
+          quantity: 1,
+          selectedWeight: 3.0,
+          observation: "Banana para vitamina"
+        }
+      ],
+      total: 20.40,
+      status: "pendente",
+      createdAt: "2025-08-18T10:00:00Z",
+      estimatedDelivery: "2025-08-18T20:00:00Z",
+      deliveryAddress: {
+        street: "Av. Conselheiro Aguiar, 789",
+        neighborhood: "Boa Viagem",
+        city: "Recife",
+        state: "PE",
+        zipCode: "51021-030"
+      },
+      paymentMethod: "debit"
+    }
+  ],
   addresses: [
     {
       id: "1",
@@ -955,14 +1117,14 @@ const INITIAL_DATA = {
 export function initializeLocalStorage() {
   if (typeof window === 'undefined') return
 
-  console.log('🔄 Verificando se localStorage precisa ser inicializado...')
+  console.log('🔄 Inicializando localStorage...')
 
   // Verifica se já existem dados salvos - se sim, não sobrescreve
   const existingUsers = getFromStorage(STORAGE_KEYS.USERS)
   const existingProducts = getFromStorage(STORAGE_KEYS.PRODUCTS)
   
   if (existingUsers && existingProducts) {
-    console.log('✅ Dados já existem no localStorage, não sobrescrevendo')
+    console.log('✅ Dados principais já existem no localStorage')
     return
   }
 
@@ -973,13 +1135,27 @@ export function initializeLocalStorage() {
     if (key !== 'CURRENT_USER' && key !== 'AUTH_TOKEN' && key !== 'CART') {
       const existing = getFromStorage(storageKey)
       if (!existing) {
-        const dataKey = key.toLowerCase() as keyof typeof INITIAL_DATA
-        if (INITIAL_DATA[dataKey]) {
-          console.log(`💾 Salvando ${key}:`, INITIAL_DATA[dataKey])
+        // Mapear chaves corretamente para os dados iniciais
+        const dataKeyMap: Record<string, keyof typeof INITIAL_DATA> = {
+          'USERS': 'users',
+          'FEIRANTES': 'feirantes',
+          'PRODUCTS': 'products',
+          'CATEGORIES': 'categories',
+          'ORDERS': 'orders',
+          'MARKETER_ORDERS': 'marketerOrders',
+          'ADDRESSES': 'addresses',
+          'PAYMENT_METHODS': 'paymentMethods',
+          'FAVORITES': 'favorites',
+          'REVIEWS': 'reviews',
+          'FINANCES': 'finances',
+          'CHATS': 'chats',
+          'CHAT_MESSAGES': 'chatMessages'
+        }
+        
+        const dataKey = dataKeyMap[key]
+        if (dataKey && INITIAL_DATA[dataKey]) {
           localStorage.setItem(storageKey, JSON.stringify(INITIAL_DATA[dataKey]))
         }
-      } else {
-        console.log(`⏭️ ${key} já existe, mantendo dados existentes`)
       }
     }
   })
