@@ -5,7 +5,7 @@ import MarketerHomepage from "./Homepage/page"
 import MarketerOrdersPage from "./MarketerOrders/page"
 import MyStorePage from "./MyStore/page"
 import MarketerFinancePage from "./Finance/page"
-import MarketerSettingsPage from "./Settings/page"
+import MarketerProfileComponent from "./Profile/MarketerProfileComponent"
 import HelpPage from "./Help/page"
 import { MarketerBottomNavigation } from "./components/BottomNav"
 
@@ -29,7 +29,7 @@ export default function MarketerMainPage() {
       case "help":
         return <HelpPage onScreenChange={handleScreenChange} />
       case "profile":
-        return <MarketerSettingsPage onScreenChange={handleScreenChange} />
+        return <MarketerProfileComponent onScreenChange={handleScreenChange} />
       default:
         return <MarketerHomepage onScreenChange={handleScreenChange} />
     }

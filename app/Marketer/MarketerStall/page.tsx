@@ -13,72 +13,59 @@ export default function MarketerStallPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="px-4 py-4">
-          <div className="flex items-center mb-6">
-            <Link href="/Marketer">
-              <Button variant="ghost" size="icon" className="mr-2">
-                <ChevronLeft className="h-6 w-6" />
-              </Button>
-            </Link>
-            <h1 className="text-xl font-bold">Minha banca</h1>
+      <div className="px-4 py-6">
+        {/* Profile Section */}
+        <div className="flex items-center mb-6">
+          <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full mr-4 flex items-center justify-center">
+            <span className="text-white font-bold text-xl">F1</span>
           </div>
-          
-          {/* Profile Section */}
-          <div className="flex items-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full mr-4 flex items-center justify-center">
-              <span className="text-white font-bold text-xl">F1</span>
-            </div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900">Feirante 1</h2>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center">
-                  <Star className="h-4 w-4 fill-current text-yellow-500 mr-1" />
-                  <span className="font-medium">4.8</span>
-                  <span className="text-sm text-gray-500 ml-1">(42)</span>
-                </div>
-                <Badge 
-                  variant="default"
-                  className="bg-green-100 text-green-800 border-green-200"
-                >
-                  Aberto
-                </Badge>
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold text-gray-900">Feirante 1</h2>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center">
+                <Star className="h-4 w-4 fill-current text-yellow-500 mr-1" />
+                <span className="font-medium">4.8</span>
+                <span className="text-sm text-gray-500 ml-1">(42)</span>
               </div>
-              <p className="text-sm text-gray-600 mt-1">Especialidades: Frutas, Verduras, Legumes</p>
+              <Badge 
+                variant="default"
+                className="bg-green-100 text-green-800 border-green-200"
+              >
+                Aberto
+              </Badge>
             </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-3">
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="p-3 text-center">
-                <Package className="h-5 w-5 text-blue-600 mx-auto mb-1" />
-                <p className="text-lg font-bold text-blue-800">{stats.totalProducts}</p>
-                <p className="text-xs text-blue-600">Produtos</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-green-50 border-green-200">
-              <CardContent className="p-3 text-center">
-                <BarChart3 className="h-5 w-5 text-green-600 mx-auto mb-1" />
-                <p className="text-lg font-bold text-green-800">{stats.completedOrders}</p>
-                <p className="text-xs text-green-600">Vendas</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-yellow-50 border-yellow-200">
-              <CardContent className="p-3 text-center">
-                <Star className="h-5 w-5 text-yellow-600 mx-auto mb-1" />
-                <p className="text-lg font-bold text-yellow-800">4.8</p>
-                <p className="text-xs text-yellow-600">Avaliação</p>
-              </CardContent>
-            </Card>
+            <p className="text-sm text-gray-600 mt-1">Especialidades: Frutas, Verduras, Legumes</p>
           </div>
         </div>
-      </div>
 
-      <div className="px-4 py-6 space-y-6">
+        {/* Quick Stats */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="p-3 text-center">
+              <Package className="h-5 w-5 text-blue-600 mx-auto mb-1" />
+              <p className="text-lg font-bold text-blue-800">{stats.totalProducts}</p>
+              <p className="text-xs text-blue-600">Produtos</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="p-3 text-center">
+              <BarChart3 className="h-5 w-5 text-green-600 mx-auto mb-1" />
+              <p className="text-lg font-bold text-green-800">{stats.completedOrders}</p>
+              <p className="text-xs text-green-600">Vendas</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-yellow-50 border-yellow-200">
+            <CardContent className="p-3 text-center">
+              <Star className="h-5 w-5 text-yellow-600 mx-auto mb-1" />
+              <p className="text-lg font-bold text-yellow-800">4.8</p>
+              <p className="text-xs text-yellow-600">Avaliação</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">
           <Link href="/Marketer/MarketerStall/add-product">
@@ -189,7 +176,7 @@ export default function MarketerStallPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+        </div>
 
       <MarketerBottomNavigation />
     </div>

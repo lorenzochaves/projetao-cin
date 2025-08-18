@@ -79,23 +79,10 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b sticky top-0 z-40">
-        <div className="flex items-center gap-4 p-4">
-          <button 
-            onClick={() => onScreenChange("home")}
-            className="p-2 hover:bg-gray-100 rounded-full"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold">Minha Feira</h1>
-            <p className="text-sm text-gray-600">{products.length} produtos cadastrados</p>
-          </div>
-        </div>
-
+      {/* Content */}
+      <div className="px-4 py-6">
         {/* Search and Filter */}
-        <div className="px-4 pb-4 space-y-3">
+        <div className="mb-6 space-y-3">
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -103,7 +90,7 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
               placeholder="Buscar produtos..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10"
+              className="pl-10 h-12 rounded-xl border-gray-200"
             />
           </div>
 
@@ -111,7 +98,7 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
           <div className="flex gap-2 overflow-x-auto pb-2">
             <Badge
               variant={filterCategory === "all" ? "default" : "outline"}
-              className="cursor-pointer whitespace-nowrap"
+              className="cursor-pointer whitespace-nowrap rounded-xl"
               onClick={() => setFilterCategory("all")}
             >
               Todas ({products.length})
@@ -122,7 +109,7 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
                 <Badge
                   key={category}
                   variant={filterCategory === category ? "default" : "outline"}
-                  className="cursor-pointer whitespace-nowrap"
+                  className="cursor-pointer whitespace-nowrap rounded-xl"
                   onClick={() => setFilterCategory(category)}
                 >
                   {getCategoryDisplayName(category)} ({count})
@@ -131,14 +118,10 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
             })}
           </div>
         </div>
-      </div>
-
-      {/* Content */}
-      <div className="px-4 py-4">
         {/* Add Product Button */}
-        <Link href="/Marketer/MarketerStall/add-product">
-          <Card className="p-4 mb-6 border-2 border-dashed border-green-300 hover:border-green-400 hover:bg-green-50 transition-colors cursor-pointer">
-            <div className="flex items-center justify-center gap-3 text-green-600">
+        <Link href="/Marketer/MyStore/add-product">
+          <Card className="p-4 mb-6 border-2 border-dashed border-orange-300 hover:border-orange-400 hover:bg-orange-50 transition-colors cursor-pointer">
+            <div className="flex items-center justify-center gap-3 text-orange-600">
               <Plus className="w-6 h-6" />
               <span className="font-medium">Adicionar Novo Produto</span>
             </div>
@@ -158,8 +141,8 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
               {searchQuery ? "Tente ajustar sua busca" : "Comece adicionando seu primeiro produto"}
             </p>
             {!searchQuery && (
-              <Link href="/Marketer/MarketerStall/add-product">
-                <Button className="bg-green-600 hover:bg-green-700">
+              <Link href="/Marketer/MyStore/add-product">
+                <Button className="bg-orange-600 hover:bg-orange-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Adicionar Produto
                 </Button>
@@ -199,7 +182,7 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
                             onClick={() => handleToggleAvailability(product.id, product.name, product.isAvailable)}
                             className={`p-1.5 rounded-full shadow-md transition-colors ${
                               product.isAvailable 
-                                ? 'bg-green-500 text-white hover:bg-green-600' 
+                                ? 'bg-orange-500 text-white hover:bg-orange-600' 
                                 : 'bg-gray-500 text-white hover:bg-gray-600'
                             }`}
                             title={product.isAvailable ? 'Produto ativo' : 'Produto inativo'}
@@ -235,7 +218,7 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
                             </p>
                           </div>
                           <div className="ml-2">
-                            <p className="font-bold text-green-600 text-sm">
+                            <p className="font-bold text-orange-600 text-sm">
                               R$ {product.price.toFixed(2)}
                             </p>
                             <p className="text-xs text-gray-500 text-right">
@@ -265,7 +248,7 @@ export default function MyStorePage({ onScreenChange }: MyStorePageProps) {
 
                         {/* Action Buttons */}
                         <div className="flex gap-2 mt-3">
-                          <Link href={`/Marketer/MarketerStall/edit-product?id=${product.id}`} className="flex-1">
+                          <Link href={`/Marketer/MyStore/edit-product?id=${product.id}`} className="flex-1">
                             <Button variant="outline" size="sm" className="w-full text-xs">
                               <Edit className="w-3 h-3 mr-1" />
                               Editar

@@ -1,0 +1,111 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { ChevronLeft } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+export default function MarketerEditProductPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const productName = searchParams.get('name')
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    specifications: "",
+    measurement: "",
+    price: ""
+  })
+
+  useEffect(() => {
+    if (productName) {
+      // Here you would typically fetch the product data
+      setFormData({
+        name: productName,
+        specifications: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidi.",
+        measurement: "kg",
+        price: "R$xx,xx"
+      })
+    }
+  }, [productName])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Here you would typically update the product
+    router.back()
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="px-4 py-4 pb-24">
+        <div className="flex items-center mb-6">
+          <Button variant="ghost" size="icon" className="mr-2" onClick={() => router.back()}>
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+          <h1 className="text-xl font-bold">Editar produto</h1>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <Label htmlFor="name" className="text-base font-medium">Nome do produto</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              className="mt-2 h-12 border-gray-300 rounded-lg"
+              required
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="specifications" className="text-base font-medium">Especificações do produto</Label>
+            <Textarea
+              id="specifications"
+              value={formData.specifications}
+              onChange={(e) => setFormData(prev => ({ ...prev, specifications: e.target.value }))}
+              className="mt-2 min-h-[100px] border-gray-300 rounded-lg resize-none"
+              required
+            />
+          </div>
+          
+          <div>
+            <Label htmlFor="measurement" className="text-base font-medium">Medição</Label>
+            <Select value={formData.measurement} onValueChange={(value) => setFormData(prev => ({ ...prev, measurement: value }))}>
+              <SelectTrigger className="mt-2 h-12 border-gray-300 rounded-lg">
+                <SelectValue placeholder="Selecione uma opção" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="kg">Kg</SelectItem>
+                <SelectItem value="mao">Mão/Mói</SelectItem>
+                <SelectItem value="folha">Folha</SelectItem>
+                <SelectItem value="unidade">Unidade</SelectItem>
+                <SelectItem value="bandeja">Bandeja</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label htmlFor="price" className="text-base font-medium">Valor do produto</Label>
+            <Input
+              id="price"
+              value={formData.price}
+              onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+              className="mt-2 h-12 border-gray-300 rounded-lg w-40"
+              required
+            />
+          </div>
+          
+          <div className="pt-6">
+            <Button type="submit" className="w-full h-12 bg-orange-500 hover:bg-orange-600 rounded-lg">
+              Salvar alterações
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}

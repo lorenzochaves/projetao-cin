@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Package, ClipboardList, BarChart3, Store, Heart } from "lucide-react"
+import { Home, Package, ClipboardList, BarChart3, Store, User } from "lucide-react"
 
 interface MarketerBottomNavigationProps {
   onScreenChange: (screen: string) => void
@@ -22,8 +22,8 @@ export function MarketerBottomNavigation({
           className="flex flex-col items-center p-2 min-w-0 flex-1"
           onClick={() => onScreenChange("home")}
         >
-          <Home className={`h-5 w-5 ${isActive("home") ? "text-green-600" : "text-gray-600"}`} />
-          <span className={`text-xs mt-1 ${isActive("home") ? "text-green-600" : "text-gray-600"}`}>
+          <Home className={`h-5 w-5 ${isActive("home") ? "text-orange-600" : "text-gray-600"}`} />
+          <span className={`text-xs mt-1 ${isActive("home") ? "text-orange-600" : "text-gray-600"}`}>
             Início
           </span>
         </button>
@@ -33,8 +33,8 @@ export function MarketerBottomNavigation({
           className="flex flex-col items-center p-2 min-w-0 flex-1"
           onClick={() => onScreenChange("orders")}
         >
-          <ClipboardList className={`h-5 w-5 ${isActive("orders") ? "text-green-600" : "text-gray-600"}`} />
-          <span className={`text-xs mt-1 ${isActive("orders") ? "text-green-600" : "text-gray-600"}`}>
+          <ClipboardList className={`h-5 w-5 ${isActive("orders") ? "text-orange-600" : "text-gray-600"}`} />
+          <span className={`text-xs mt-1 ${isActive("orders") ? "text-orange-600" : "text-gray-600"}`}>
             Pedidos
           </span>
         </button>
@@ -44,8 +44,8 @@ export function MarketerBottomNavigation({
           className="flex flex-col items-center p-2 min-w-0 flex-1"
           onClick={() => onScreenChange("my-store")}
         >
-          <Store className={`h-5 w-5 ${isActive("my-store") ? "text-green-600" : "text-gray-600"}`} />
-          <span className={`text-xs mt-1 ${isActive("my-store") ? "text-green-600" : "text-gray-600"}`}>
+          <Store className={`h-5 w-5 ${isActive("my-store") ? "text-orange-600" : "text-gray-600"}`} />
+          <span className={`text-xs mt-1 ${isActive("my-store") ? "text-orange-600" : "text-gray-600"}`}>
             Minha Feira
           </span>
         </button>
@@ -55,20 +55,20 @@ export function MarketerBottomNavigation({
           className="flex flex-col items-center p-2 min-w-0 flex-1"
           onClick={() => onScreenChange("finance")}
         >
-          <BarChart3 className={`h-5 w-5 ${isActive("finance") ? "text-green-600" : "text-gray-600"}`} />
-          <span className={`text-xs mt-1 ${isActive("finance") ? "text-green-600" : "text-gray-600"}`}>
+          <BarChart3 className={`h-5 w-5 ${isActive("finance") ? "text-orange-600" : "text-gray-600"}`} />
+          <span className={`text-xs mt-1 ${isActive("finance") ? "text-orange-600" : "text-gray-600"}`}>
             Finanças
           </span>
         </button>
 
-        {/* Ajuda */}
+        {/* Perfil */}
         <button 
           className="flex flex-col items-center p-2 min-w-0 flex-1"
-          onClick={() => onScreenChange("help")}
+          onClick={() => onScreenChange("profile")}
         >
-          <Heart className={`h-5 w-5 ${isActive("help") ? "text-green-600" : "text-gray-600"}`} />
-          <span className={`text-xs mt-1 ${isActive("help") ? "text-green-600" : "text-gray-600"}`}>
-            Ajuda
+          <User className={`h-5 w-5 ${isActive("profile") ? "text-orange-600" : "text-gray-600"}`} />
+          <span className={`text-xs mt-1 ${isActive("profile") ? "text-orange-600" : "text-gray-600"}`}>
+            Perfil
           </span>
         </button>
 

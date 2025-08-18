@@ -66,14 +66,6 @@ export default function MarketerSettingsPage({ onScreenChange }: MarketerSetting
           </button>
           
           <button 
-            onClick={() => {/* TODO: Implementar navegação interna */}}
-            className="flex items-center justify-between py-4 border-b border-gray-100 w-full text-left"
-          >
-            <span className="text-lg">Assinatura</span>
-            <ChevronRight className="h-5 w-5 text-gray-400" />
-          </button>
-          
-          <button 
             onClick={() => setShowLogoutDialog(true)}
             className="flex items-center justify-between py-4 border-b border-gray-100 w-full text-left"
           >

@@ -146,26 +146,28 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                   <span className="text-sm">Adicionar Produto</span>
                 </Button>
               </Link>
-              <Link href="/Marketer/MarketerOrders">
-                <Button variant="outline" className="h-14 flex-col gap-2 w-full">
-                  <Eye className="w-5 h-5" />
-                  <span className="text-sm">Ver Pedidos</span>
-                  {stats.pendingOrders > 0 && (
-                    <Badge variant="destructive" className="ml-1 text-xs">
-                      {stats.pendingOrders}
-                    </Badge>
-                  )}
-                </Button>
-              </Link>
+              <Button 
+                onClick={() => onScreenChange?.("orders")}
+                variant="outline" 
+                className="h-14 flex-col gap-2 w-full"
+              >
+                <Eye className="w-5 h-5" />
+                <span className="text-sm">Ver Pedidos</span>
+                {stats.pendingOrders > 0 && (
+                  <Badge variant="destructive" className="ml-1 text-xs">
+                    {stats.pendingOrders}
+                  </Badge>
+                )}
+              </Button>
             </div>
             
             {/* Botão de Ajuda em destaque */}
             <Button 
               onClick={() => onScreenChange?.("help")}
               variant="outline" 
-              className="h-12 w-full flex items-center gap-3 border-blue-200 hover:bg-blue-50 text-blue-700 hover:text-blue-800"
+              className="h-12 w-full flex items-center gap-3 border-orange-200 hover:bg-orange-50 text-orange-700 hover:text-orange-800"
             >
-              <Heart className="w-5 h-5 text-red-500" />
+              <Heart className="w-5 h-5 text-orange-500" />
               <span className="font-medium">Precisa de Ajuda? Estamos aqui!</span>
             </Button>
           </CardContent>
@@ -183,7 +185,7 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                     variant={selectedPeriod === period ? "default" : "ghost"}
                     size="sm"
                     className={`h-8 px-3 text-xs ${
-                      selectedPeriod === period ? 'bg-black text-white' : 'text-gray-600'
+                      selectedPeriod === period ? 'bg-orange-600 text-white' : 'text-gray-600'
                     }`}
                     onClick={() => setSelectedPeriod(period)}
                   >
@@ -208,14 +210,14 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                   <Area 
                     type="monotone" 
                     dataKey="revenue" 
-                    stroke="#000" 
+                    stroke="#ea580c" 
                     strokeWidth={2}
                     fill="url(#gradient)" 
                   />
                   <defs>
                     <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#000" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#000" stopOpacity={0.05}/>
+                      <stop offset="5%" stopColor="#ea580c" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#ea580c" stopOpacity={0.05}/>
                     </linearGradient>
                   </defs>
                 </AreaChart>
@@ -236,7 +238,7 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                     variant={selectedPeriod === period ? "default" : "ghost"}
                     size="sm"
                     className={`h-8 px-3 text-xs ${
-                      selectedPeriod === period ? 'bg-black text-white' : 'text-gray-600'
+                      selectedPeriod === period ? 'bg-orange-600 text-white' : 'text-gray-600'
                     }`}
                   >
                     {period === 'monthly' ? 'Mensal' : period === 'weekly' ? 'Semanal' : 'Hoje'}
@@ -263,8 +265,8 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
                   <div className="text-right">
                     <p className="font-semibold text-gray-900">{product.totalSales}</p>
                     <div className="flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3 text-blue-500" />
-                      <span className="text-xs font-medium text-blue-500">
+                      <TrendingUp className="w-3 h-3 text-orange-500" />
+                      <span className="text-xs font-medium text-orange-500">
                         R$ {product.totalRevenue.toFixed(0)}
                       </span>
                     </div>
@@ -280,37 +282,6 @@ export default function MarketerHomepage({ onScreenChange }: MarketerHomepagePro
             )}
           </CardContent>
         </Card>
-      </div>
-
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
-        <div className="flex items-center justify-around">
-          <Button variant="ghost" className="flex-col gap-1 h-auto py-2">
-            <Store className="w-5 h-5" />
-            <span className="text-xs">Início</span>
-          </Button>
-          <Button variant="ghost" className="flex-col gap-1 h-auto py-2 text-gray-400">
-            <BarChart3 className="w-5 h-5" />
-            <span className="text-xs">Análises</span>
-          </Button>
-          <Link href="/Marketer/MarketerOrders">
-            <Button variant="ghost" className="flex-col gap-1 h-auto py-2 text-gray-400 relative">
-              <ShoppingCart className="w-5 h-5" />
-              <span className="text-xs">Pedidos</span>
-              {stats.pendingOrders > 0 && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">
-                  {stats.pendingOrders}
-                </div>
-              )}
-            </Button>
-          </Link>
-          <Link href="/Marketer/Settings">
-            <Button variant="ghost" className="flex-col gap-1 h-auto py-2 text-gray-400">
-              <Settings className="w-5 h-5" />
-              <span className="text-xs">Configurações</span>
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   )
